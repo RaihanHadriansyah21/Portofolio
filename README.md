@@ -2,6 +2,8 @@
 
 Recruiter-focused bilingual portfolio for **Mohammad Raihan Hadriansyah Prasetya (Reyy)**, positioning applied AI and full-stack product engineering through evidence-led project case studies.
 
+**Live:** [reyy-portfolio.vercel.app](https://reyy-portfolio.vercel.app)
+
 ## Highlights
 
 - English and Indonesian routes
