@@ -13,10 +13,13 @@ export type Project = {
   summary: LocalizedText;
   context: LocalizedText;
   role: LocalizedText;
+  features: LocalizedText[];
   architecture: LocalizedText[];
+  decisions: LocalizedText[];
   evidence: LocalizedText[];
   limitations: LocalizedText[];
-  links: { label: string; href: string }[];
+  repositories: { label: LocalizedText; href: string }[];
+  links: { label: LocalizedText; href: string }[];
 };
 
 export const projects: Project[] = [
@@ -28,37 +31,49 @@ export const projects: Project[] = [
     categories: ["Applied AI", "Full Stack", "Backend"],
     stack: ["Next.js", "TypeScript", "FastAPI", "TensorFlow", "Supabase", "Redis/RQ"],
     summary: {
-      en: "A human-in-the-loop system that helps lecturers review handwritten-answer score classifications across a complete academic workflow.",
-      id: "Sistem human-in-the-loop yang membantu dosen meninjau klasifikasi nilai jawaban tulisan tangan dalam alur akademik yang lengkap.",
+      en: "A human-in-the-loop platform that connects 24-section answer submission, asynchronous image-based score classification, lecturer review, and controlled result release.",
+      id: "Platform human-in-the-loop yang menghubungkan pengumpulan jawaban 24 bagian, klasifikasi nilai berbasis gambar secara asinkron, review dosen, dan perilisan hasil yang terkontrol.",
     },
     context: {
-      en: "SCOVIS connects student submissions, asynchronous model inference, lecturer review, and controlled result release. The model classifies answer images directly; it is not an OCR system.",
-      id: "SCOVIS menghubungkan pengumpulan jawaban mahasiswa, inferensi model asinkron, peninjauan dosen, dan perilisan hasil yang terkontrol. Model mengklasifikasikan gambar jawaban secara langsung; sistem ini bukan OCR.",
+      en: "SCOVIS is an undergraduate thesis team project for handling structured handwritten-answer assessment without turning model output into an automatic final grade. It classifies answer images directly—rather than transcribing them with OCR—and keeps the lecturer responsible for the final decision.",
+      id: "SCOVIS adalah proyek tim tugas akhir untuk menangani penilaian jawaban tulisan tangan yang terstruktur tanpa menjadikan keluaran model sebagai nilai akhir otomatis. Sistem mengklasifikasikan gambar jawaban secara langsung—bukan mentranskripsikannya dengan OCR—dan tetap menempatkan dosen sebagai pengambil keputusan akhir.",
     },
     role: {
-      en: "I worked across the product surface, AI service integration, multi-role workflows, data operations, testing, and deployment readiness as part of a team project.",
-      id: "Saya bekerja lintas permukaan produk, integrasi layanan AI, alur multi-peran, operasi data, pengujian, dan kesiapan deployment sebagai bagian dari proyek tim.",
+      en: "As part of the thesis team, I worked across the Next.js product surface, FastAPI/AI integration, multi-role workflows, Supabase data operations, tests, documentation, and deployment readiness. I do not present the model or the full system as solo work.",
+      id: "Sebagai bagian dari tim tugas akhir, saya bekerja lintas antarmuka produk Next.js, integrasi FastAPI/AI, alur multi-peran, operasi data Supabase, pengujian, dokumentasi, dan kesiapan deployment. Saya tidak mengklaim model maupun keseluruhan sistem sebagai pekerjaan individu.",
     },
+    features: [
+      { en: "Students join courses by code or QR, crop and upload 24 answer sections, submit work, respond to section-level re-upload requests, and view released results.", id: "Mahasiswa bergabung ke mata kuliah melalui kode atau QR, melakukan crop dan upload 24 bagian jawaban, mengirim tugas, merespons permintaan re-upload per bagian, dan melihat hasil yang telah dirilis." },
+      { en: "Lecturers manage courses, tasks, and rosters; start individual or batch AI jobs; compare answer images with recommendations; override scores; comment; request re-uploads; and finalize results.", id: "Dosen mengelola mata kuliah, tugas, dan peserta; menjalankan job AI individual atau batch; membandingkan gambar jawaban dengan rekomendasi; mengubah nilai; memberi komentar; meminta re-upload; dan memfinalisasi hasil." },
+      { en: "Administrators provision users and enrollments, inspect audit and diagnostic views, manage settings, and review active model configuration.", id: "Administrator melakukan provisioning pengguna dan enrollment, memeriksa tampilan audit dan diagnostik, mengelola pengaturan, serta meninjau konfigurasi model aktif." },
+      { en: "Finalized assessment data can be exported through controlled CSV and Excel workflows.", id: "Data penilaian yang telah difinalisasi dapat diekspor melalui alur CSV dan Excel yang terkontrol." },
+    ],
     architecture: [
-      { en: "Next.js interface for student, lecturer, and administrator workflows", id: "Antarmuka Next.js untuk alur mahasiswa, dosen, dan administrator" },
-      { en: "Supabase Auth, PostgreSQL, RLS, RPC, and object storage", id: "Supabase Auth, PostgreSQL, RLS, RPC, dan object storage" },
-      { en: "FastAPI orchestration with Redis/RQ asynchronous jobs", id: "Orkestrasi FastAPI dengan pekerjaan asinkron Redis/RQ" },
-      { en: "TensorFlow/Keras workers with lazy loading and a model registry", id: "Worker TensorFlow/Keras dengan lazy loading dan model registry" },
+      { en: "Next.js 16 and React 19 provide role-specific student, lecturer, and administrator interfaces.", id: "Next.js 16 dan React 19 menyediakan antarmuka khusus untuk peran mahasiswa, dosen, dan administrator." },
+      { en: "Supabase handles authentication, PostgreSQL data, Row Level Security, RPC operations, and answer-image storage.", id: "Supabase menangani autentikasi, data PostgreSQL, Row Level Security, operasi RPC, dan penyimpanan gambar jawaban." },
+      { en: "FastAPI exposes the trusted AI and administration boundary; the audited snapshot documents 31 routes.", id: "FastAPI menjadi batas tepercaya untuk AI dan administrasi; snapshot yang diaudit mendokumentasikan 31 route." },
+      { en: "Redis/RQ runs prediction jobs outside the request path with per-submission locking, one prediction retry, and stale-state reconciliation.", id: "Redis/RQ menjalankan job prediksi di luar request utama dengan lock per submission, satu retry prediksi, dan rekonsiliasi state yang stale." },
+      { en: "A TensorFlow/Keras worker lazily loads an LRU-cached registry of 72 H5 artifacts: three backbone families across 24 answer sections.", id: "Worker TensorFlow/Keras melakukan lazy loading dengan cache LRU terhadap registry 72 artefak H5: tiga keluarga backbone untuk 24 bagian jawaban." },
+    ],
+    decisions: [
+      { en: "Human review is a product invariant: model recommendations remain editable and are not released as final scores without lecturer action.", id: "Review manusia menjadi invariant produk: rekomendasi model tetap dapat diubah dan tidak dirilis sebagai nilai akhir tanpa tindakan dosen." },
+      { en: "Asynchronous inference separates heavy model work from the browser request and exposes job progress to the interface.", id: "Inferensi asinkron memisahkan pekerjaan model yang berat dari request browser serta mengekspos progres job ke antarmuka." },
+      { en: "Manifest, checksum, model-loading, and golden-regression checks protect runtime compatibility; they are intentionally not presented as proof of predictive generalization.", id: "Pemeriksaan manifest, checksum, model loading, dan golden regression melindungi kompatibilitas runtime; semuanya sengaja tidak dipresentasikan sebagai bukti generalisasi prediktif." },
     ],
     evidence: [
-      { en: "31 documented FastAPI routes at the audited snapshot", id: "31 route FastAPI terdokumentasi pada snapshot audit" },
-      { en: "72 H5 artifacts organized as 3 backbone families × 24 answer sections", id: "72 artefak H5 yang tersusun sebagai 3 keluarga backbone × 24 bagian jawaban" },
-      { en: "Public frontend and backend deployment surfaces", id: "Deployment frontend dan backend yang dapat diakses publik" },
+      { en: "The public repositories contain separate, working frontend and backend codebases with documented local validation commands.", id: "Repository publik memuat codebase frontend dan backend yang terpisah dan berfungsi, lengkap dengan perintah validasi lokal yang terdokumentasi." },
+      { en: "The source implements the complete student → AI queue → lecturer review → result-release state flow, including score override and re-upload handling.", id: "Source mengimplementasikan alur state mahasiswa → queue AI → review dosen → perilisan hasil secara lengkap, termasuk perubahan nilai dan penanganan re-upload." },
+      { en: "A public frontend and API health surface make the integration inspectable beyond screenshots.", id: "Frontend publik dan endpoint kesehatan API membuat integrasi dapat diperiksa melampaui screenshot." },
     ],
     limitations: [
       { en: "Artifact compatibility checks do not establish independent predictive accuracy or generalization.", id: "Pemeriksaan kompatibilitas artefak tidak membuktikan akurasi prediktif independen atau generalisasi." },
       { en: "Broader end-to-end rehearsal and dataset-to-model lineage remain areas to strengthen.", id: "Pengujian end-to-end yang lebih luas dan lineage dataset-ke-model masih perlu diperkuat." },
     ],
-    links: [
-      { label: "Live product", href: "https://scovis.vercel.app" },
-      { label: "Frontend", href: "https://github.com/RaihanHadriansyah21/scovis-frontend" },
-      { label: "Backend", href: "https://github.com/RaihanHadriansyah21/scovis-backend" },
+    repositories: [
+      { label: { en: "Frontend repository", id: "Repository frontend" }, href: "https://github.com/RaihanHadriansyah21/scovis-frontend" },
+      { label: { en: "Backend repository", id: "Repository backend" }, href: "https://github.com/RaihanHadriansyah21/scovis-backend" },
     ],
+    links: [{ label: { en: "Live product", id: "Produk live" }, href: "https://scovis.vercel.app" }],
   },
   {
     slug: "dermascan",
@@ -72,30 +87,40 @@ export const projects: Project[] = [
       id: "Prototipe edukasi pendukung keputusan lesi kulit yang menghubungkan model multi-task TFLite, API inferensi, dan antarmuka web.",
     },
     context: {
-      en: "The team project explores how a model artifact can be moved beyond a notebook into a guarded upload, preprocessing, inference, and result flow.",
-      id: "Proyek tim ini mengeksplorasi bagaimana artefak model dapat dibawa keluar dari notebook menuju alur upload, preprocessing, inferensi, dan hasil yang terjaga.",
+      en: "DermaScan is a Coding Camp 2026 capstone team prototype that moves a skin-lesion model artifact beyond a notebook into a guarded web workflow. It returns educational risk and lesion-class outputs with a medical disclaimer; it is not a diagnostic system.",
+      id: "DermaScan adalah prototipe capstone tim Coding Camp 2026 yang membawa artefak model lesi kulit keluar dari notebook menuju alur web yang terjaga. Sistem menghasilkan keluaran risiko dan kelas lesi untuk edukasi dengan disclaimer medis; sistem ini bukan alat diagnosis.",
     },
     role: {
-      en: "My documented contribution covered TFLite conversion, FastAPI integration, Railway/Vercel deployment, and full-stack integration.",
-      id: "Kontribusi saya yang terdokumentasi mencakup konversi TFLite, integrasi FastAPI, deployment Railway/Vercel, dan integrasi full-stack.",
+      en: "My documented contribution covered TFLite model conversion, FastAPI integration, Railway/Vercel deployment work, and end-to-end frontend–backend integration. Repository history shows multiple contributors, so I do not claim sole ownership of the model, dataset work, or React interface.",
+      id: "Kontribusi saya yang terdokumentasi mencakup konversi model TFLite, integrasi FastAPI, pekerjaan deployment Railway/Vercel, dan integrasi frontend–backend secara end-to-end. Riwayat repository menunjukkan beberapa kontributor, sehingga saya tidak mengklaim kepemilikan tunggal atas model, pekerjaan dataset, maupun antarmuka React.",
     },
+    features: [
+      { en: "Drag-and-drop JPG/PNG upload with file-type and size validation before inference.", id: "Upload JPG/PNG melalui drag-and-drop dengan validasi tipe dan ukuran file sebelum inferensi." },
+      { en: "A binary Low Risk / High Risk output and a five-class lesion prediction across AKIEC, BCC, BKL, MEL, and NV.", id: "Keluaran biner Low Risk / High Risk serta prediksi lima kelas lesi: AKIEC, BCC, BKL, MEL, dan NV." },
+      { en: "Risk gauge, class-probability breakdown, lesion education, prevention guidance, and a visible medical disclaimer.", id: "Risk gauge, rincian probabilitas kelas, edukasi lesi, panduan pencegahan, dan disclaimer medis yang terlihat." },
+      { en: "Public web deployment plus a health endpoint for checking whether the inference service and model are available.", id: "Deployment web publik serta health endpoint untuk memeriksa ketersediaan layanan inferensi dan model." },
+    ],
     architecture: [
-      { en: "React upload and probability interface", id: "Antarmuka React untuk upload dan probabilitas" },
-      { en: "FastAPI validation and image preprocessing", id: "Validasi FastAPI dan preprocessing gambar" },
-      { en: "Binary-risk and five-class TFLite outputs", id: "Output TFLite binary-risk dan lima kelas" },
+      { en: "React 18 and Vite manage the upload, scanning, probability, and educational interface.", id: "React 18 dan Vite menangani antarmuka upload, scanning, probabilitas, dan edukasi." },
+      { en: "FastAPI validates multipart uploads and performs EXIF correction, memory-conscious image decoding, color constancy, resize, and center crop.", id: "FastAPI memvalidasi upload multipart lalu menjalankan koreksi EXIF, decoding gambar yang hemat memori, color constancy, resize, dan center crop." },
+      { en: "The backend prefers a multi-task TFLite artifact and can fall back to the saved Keras model when required.", id: "Backend mengutamakan artefak multi-task TFLite dan dapat menggunakan model Keras tersimpan sebagai fallback bila diperlukan." },
+      { en: "Railway hosts the Python inference service while Vercel hosts the web client.", id: "Railway meng-host layanan inferensi Python, sedangkan Vercel meng-host web client." },
+    ],
+    decisions: [
+      { en: "TFLite is used as the preferred cloud runtime artifact to reduce the model-serving footprint; the repository supports a Keras fallback for compatibility.", id: "TFLite digunakan sebagai artefak runtime cloud utama untuk mengurangi footprint model serving; repository mendukung fallback Keras untuk kompatibilitas." },
+      { en: "Preprocessing is encoded in the inference service so the deployed path applies the same resize, crop, and color-constancy contract.", id: "Preprocessing ditanamkan pada layanan inferensi agar jalur deployment menerapkan kontrak resize, crop, dan color constancy yang sama." },
+      { en: "The result UI communicates uncertainty through probabilities and safety copy instead of presenting an output as a medical diagnosis.", id: "UI hasil mengomunikasikan ketidakpastian melalui probabilitas dan safety copy, bukan menyajikan keluaran sebagai diagnosis medis." },
     ],
     evidence: [
-      { en: "Live web deployment and API health surface", id: "Deployment web dan endpoint kesehatan API" },
-      { en: "Upload validation, EXIF correction, and color-constancy implementation", id: "Implementasi validasi upload, koreksi EXIF, dan color constancy" },
+      { en: "The repository includes both TFLite and Keras artifacts, mappings, preprocessing configuration, FastAPI code, React code, and authentic product screenshots.", id: "Repository menyertakan artefak TFLite dan Keras, mapping, konfigurasi preprocessing, source FastAPI, source React, serta screenshot produk autentik." },
+      { en: "The live product and API health surface demonstrate the deployed model-to-product integration.", id: "Produk live dan endpoint kesehatan API menunjukkan integrasi model-ke-produk yang telah dideploy." },
     ],
     limitations: [
       { en: "Educational decision support only; not a diagnostic tool or medical device.", id: "Hanya pendukung keputusan edukasional; bukan alat diagnosis atau perangkat medis." },
       { en: "The repository does not provide an independently reproducible clinical training pipeline.", id: "Repository belum menyediakan pipeline pelatihan klinis yang dapat direproduksi secara independen." },
     ],
-    links: [
-      { label: "Live product", href: "https://dermascan-azure.vercel.app" },
-      { label: "Repository", href: "https://github.com/RaihanHadriansyah21/DermaScan_Project" },
-    ],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/DermaScan_Project" }],
+    links: [{ label: { en: "Live product", id: "Produk live" }, href: "https://dermascan-azure.vercel.app" }],
   },
   {
     slug: "vehicle-classification",
@@ -116,20 +141,32 @@ export const projects: Project[] = [
       en: "I built the experiment workflow from stratified data splitting and training through evaluation and multi-runtime export.",
       id: "Saya membangun alur eksperimen dari pembagian data terstratifikasi dan pelatihan hingga evaluasi serta ekspor multi-runtime.",
     },
+    features: [
+      { en: "Four-way image classification for bus, car, motorcycle, and truck classes.", id: "Klasifikasi gambar empat kelas untuk bus, mobil, motor, dan truk." },
+      { en: "Training augmentation and MobileNetV2-specific preprocessing inside the notebook workflow.", id: "Augmentasi data training dan preprocessing khusus MobileNetV2 di dalam alur notebook." },
+      { en: "Evaluation artifacts include learning curves, a confusion matrix, and example predictions.", id: "Artefak evaluasi mencakup kurva pembelajaran, confusion matrix, dan contoh prediksi." },
+      { en: "The trained model is exported for SavedModel, TensorFlow Lite, and TensorFlow.js runtimes.", id: "Model terlatih diekspor untuk runtime SavedModel, TensorFlow Lite, dan TensorFlow.js." },
+    ],
     architecture: [
       { en: "80/10/10 stratified train, validation, and test split", id: "Pembagian train, validation, dan test terstratifikasi 80/10/10" },
-      { en: "Frozen backbone, global average pooling, dropout, and softmax head", id: "Frozen backbone, global average pooling, dropout, dan softmax head" },
+      { en: "Frozen ImageNet-pretrained MobileNetV2 backbone with global average pooling, dropout, a 128-unit dense layer, and four-class softmax output", id: "Backbone MobileNetV2 pretrained ImageNet yang dibekukan dengan global average pooling, dropout, dense layer 128 unit, dan keluaran softmax empat kelas" },
       { en: "SavedModel, TFLite, and TensorFlow.js exports", id: "Ekspor SavedModel, TFLite, dan TensorFlow.js" },
     ],
+    decisions: [
+      { en: "The pretrained backbone remains frozen, making this a transfer-learning feature-extraction experiment rather than a separate fine-tuning study.", id: "Backbone pretrained tetap dibekukan, sehingga proyek ini merupakan eksperimen feature extraction berbasis transfer learning, bukan studi fine-tuning terpisah." },
+      { en: "Multiple export formats test portability across server, mobile, and browser runtimes.", id: "Beberapa format ekspor digunakan untuk menguji portabilitas pada runtime server, mobile, dan browser." },
+      { en: "The TFLite file is described as converted—not quantized—because the notebook does not configure an optimization or representative-dataset policy.", id: "File TFLite disebut sebagai hasil konversi—bukan quantized—karena notebook tidak mengatur kebijakan optimasi atau representative dataset." },
+    ],
     evidence: [
-      { en: "Recorded held-out test accuracy: 93.46% for this dataset split", id: "Akurasi held-out test tercatat: 93,46% untuk pembagian dataset ini" },
-      { en: "Training curves, confusion matrix, and prediction examples", id: "Kurva pelatihan, confusion matrix, dan contoh prediksi" },
+      { en: "Saved notebook outputs record 96.46% final-epoch training accuracy, 94.77% validation accuracy, and 93.46% held-out test accuracy for this split.", id: "Output notebook tersimpan mencatat akurasi epoch akhir 96,46% pada training, 94,77% pada validation, dan 93,46% pada held-out test untuk split ini." },
+      { en: "The repository packages the notebook, plots, sample images, class labels, and all three model export formats.", id: "Repository menyertakan notebook, plot, contoh gambar, label kelas, dan ketiga format ekspor model." },
     ],
     limitations: [
       { en: "The complete dataset is not packaged in the repository.", id: "Dataset lengkap tidak disertakan dalam repository." },
       { en: "The recorded test result is not an external real-world benchmark.", id: "Hasil test tercatat bukan benchmark eksternal dunia nyata." },
     ],
-    links: [{ label: "Repository", href: "https://github.com/RaihanHadriansyah21/vehicle-image-classification-mobileNetV2" }],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/vehicle-image-classification-mobileNetV2" }],
+    links: [],
   },
   {
     slug: "quizint",
@@ -150,20 +187,33 @@ export const projects: Project[] = [
       en: "Team documentation credits me with leading the Flutter codebase, quiz gameplay, Provider state management, Supabase integration, biometric authentication, QR scanning, and UI flows.",
       id: "Dokumentasi tim mencatat saya memimpin codebase Flutter, gameplay kuis, state management Provider, integrasi Supabase, autentikasi biometrik, pemindaian QR, dan alur UI.",
     },
+    features: [
+      { en: "Learners join classes by code or QR, take timed quizzes, activate Double Score, Freeze Timer, 50:50, and Second Chance power-ups, then review scores and leaderboards.", id: "Mahasiswa bergabung ke kelas melalui kode atau QR, mengerjakan kuis bertimer, memakai power-up Double Score, Freeze Timer, 50:50, dan Second Chance, lalu meninjau nilai serta leaderboard." },
+      { en: "Instructors manage question banks and quiz assignments, inspect analytics, export PDF gradebooks, and connect to optional Google Classroom flows.", id: "Dosen mengelola bank soal dan penugasan kuis, melihat analitik, mengekspor gradebook PDF, serta terhubung ke alur Google Classroom opsional." },
+      { en: "Administrators manage users and platform data through a dedicated role surface.", id: "Administrator mengelola pengguna dan data platform melalui antarmuka peran khusus." },
+      { en: "Optional device authentication, QR scanning, shared preferences, and Shorebird hooks extend the mobile experience beyond standard forms.", id: "Autentikasi perangkat opsional, pemindaian QR, shared preferences, dan hook Shorebird memperluas pengalaman mobile di luar form standar." },
+    ],
     architecture: [
-      { en: "Flutter role-based application surface", id: "Permukaan aplikasi Flutter berbasis peran" },
-      { en: "Supabase authentication and PostgreSQL data workflows", id: "Autentikasi Supabase dan alur data PostgreSQL" },
-      { en: "Device integrations for QR, local authentication, and PDF output", id: "Integrasi perangkat untuk QR, autentikasi lokal, dan keluaran PDF" },
+      { en: "Flutter and Dart provide separate learner, instructor, administrator, and authentication presentation flows.", id: "Flutter dan Dart menyediakan alur presentasi terpisah untuk mahasiswa, dosen, administrator, dan autentikasi." },
+      { en: "Provider coordinates authentication, role data, gameplay, and theme state through dedicated ChangeNotifier modules.", id: "Provider mengoordinasikan state autentikasi, data peran, gameplay, dan tema melalui modul ChangeNotifier khusus." },
+      { en: "Service and model layers connect Supabase Auth/PostgreSQL with a SharedPreferences-backed local fallback.", id: "Layer service dan model menghubungkan Supabase Auth/PostgreSQL dengan fallback lokal berbasis SharedPreferences." },
+      { en: "Native plugins provide biometrics, camera QR scanning, PDF/printing, media, and sharing capabilities.", id: "Plugin native menyediakan biometrik, pemindaian QR melalui kamera, PDF/printing, media, dan kemampuan berbagi." },
+    ],
+    decisions: [
+      { en: "Role-specific presentation folders keep learner, instructor, and administrator workflows explicit while shared providers coordinate state.", id: "Folder presentasi khusus peran menjaga alur mahasiswa, dosen, dan administrator tetap eksplisit, sementara provider bersama mengoordinasikan state." },
+      { en: "The application can enter an offline/cached mode when Supabase configuration is unavailable, which keeps the academic prototype inspectable locally.", id: "Aplikasi dapat masuk ke mode offline/cached ketika konfigurasi Supabase tidak tersedia, sehingga prototipe akademik tetap dapat diperiksa secara lokal." },
+      { en: "Sensitive device actions are delegated to platform plugins instead of being simulated in the UI layer.", id: "Aksi perangkat yang sensitif didelegasikan ke plugin platform, bukan disimulasikan pada layer UI." },
     ],
     evidence: [
-      { en: "Substantial implemented mobile workflow and integration surface", id: "Alur mobile dan permukaan integrasi yang terimplementasi secara substansial" },
-      { en: "Documented division of team responsibilities", id: "Pembagian tanggung jawab tim yang terdokumentasi" },
+      { en: "The repository contains implemented models, providers, services, and role-specific screens rather than interface mockups alone.", id: "Repository memuat model, provider, service, dan screen khusus peran yang terimplementasi, bukan sekadar mockup antarmuka." },
+      { en: "At the audited snapshot, the public Git history records 21 commits under my GitHub identity; team documentation separately credits product and requirements work.", id: "Pada snapshot yang diaudit, riwayat Git publik mencatat 21 commit dengan identitas GitHub saya; dokumentasi tim secara terpisah mencatat kontribusi produk dan requirements." },
     ],
     limitations: [
       { en: "Academic prototype, not a production learning-management system.", id: "Prototipe akademik, bukan learning-management system produksi." },
       { en: "Automated test coverage and external configuration remain limited.", id: "Cakupan pengujian otomatis dan konfigurasi eksternal masih terbatas." },
     ],
-    links: [{ label: "Repository", href: "https://github.com/RaihanHadriansyah21/quizint-learning" }],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/quizint-learning" }],
+    links: [],
   },
   {
     slug: "bitcoin-forecasting",
@@ -184,17 +234,30 @@ export const projects: Project[] = [
       en: "I implemented chronological splitting, train-only scaling, custom attention, weighted MAE, and a custom training loop.",
       id: "Saya mengimplementasikan chronological split, train-only scaling, custom attention, weighted MAE, dan custom training loop.",
     },
+    features: [
+      { en: "Exploratory analysis covers feature correlation, seasonal decomposition, and ACF/PACF behavior before modeling.", id: "Analisis eksploratif mencakup korelasi fitur, seasonal decomposition, dan perilaku ACF/PACF sebelum modeling." },
+      { en: "The input combines Volume USDT, RSI, MACD histogram, Close, and a derived 24-period rolling mean.", id: "Input menggabungkan Volume USDT, RSI, MACD histogram, Close, dan rolling mean 24 periode yang diturunkan." },
+      { en: "Three experiment tracks compare a baseline LSTM, an attention-enhanced LSTM, and an encoder-decoder Seq2Seq model.", id: "Tiga jalur eksperimen membandingkan baseline LSTM, LSTM dengan attention, dan model encoder-decoder Seq2Seq." },
+      { en: "The repository includes saved Keras artifacts and plots for inspecting the sequence-modeling workflow.", id: "Repository menyertakan artefak Keras tersimpan dan plot untuk memeriksa alur sequence modeling." },
+    ],
     architecture: [
       { en: "72-step input window and 24-step forecast horizon", id: "Input window 72 langkah dan forecast horizon 24 langkah" },
       { en: "Chronological 70/20/10 split with train-only scaling", id: "Pembagian kronologis 70/20/10 dengan scaling hanya pada train" },
-      { en: "Baseline, attention, and Seq2Seq comparison", id: "Perbandingan baseline, attention, dan Seq2Seq" },
+      { en: "TensorFlow data windows feed baseline, custom-attention, and encoder-decoder LSTM architectures", id: "Window data TensorFlow memasok arsitektur baseline, custom attention, dan encoder-decoder LSTM" },
+      { en: "The final Seq2Seq path uses model subclassing, a custom training loop, and weighted MAE", id: "Jalur Seq2Seq akhir menggunakan model subclassing, custom training loop, dan weighted MAE" },
+    ],
+    decisions: [
+      { en: "Chronological splitting preserves time order, and scaling is fitted on the training partition before validation and test transformation.", id: "Chronological split mempertahankan urutan waktu, dan scaling di-fit pada partisi training sebelum transformasi validation serta test." },
+      { en: "Custom dense, dropout, and multi-head-attention layers demonstrate lower-level TensorFlow/Keras construction beyond a Sequential baseline.", id: "Custom dense, dropout, dan multi-head-attention layer menunjukkan konstruksi TensorFlow/Keras tingkat lebih rendah di luar baseline Sequential." },
+      { en: "Evaluation remains on the scaled target so the reported MAE is kept in its actual mathematical context.", id: "Evaluasi tetap dilakukan pada target yang telah di-scale, sehingga MAE dilaporkan dalam konteks matematis yang sebenarnya." },
     ],
     evidence: [{ en: "Recorded test MAE: 0.00418 on the scaled target", id: "Test MAE tercatat: 0,00418 pada target yang telah di-scale" }],
     limitations: [
       { en: "The MAE is not a dollar value and does not demonstrate profitable forecasting.", id: "Nilai MAE bukan nilai dolar dan tidak membuktikan forecasting yang menguntungkan." },
       { en: "No repeated backtest, transaction costs, or uncertainty intervals are included.", id: "Belum terdapat repeated backtest, biaya transaksi, atau interval ketidakpastian." },
     ],
-    links: [{ label: "Repository", href: "https://github.com/RaihanHadriansyah21/bitcoin-price-forecasting-seq2seq" }],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/bitcoin-price-forecasting-seq2seq" }],
+    links: [],
   },
   {
     slug: "gojek-sentiment",
@@ -215,17 +278,34 @@ export const projects: Project[] = [
       en: "I implemented the collection, preprocessing, feature extraction, model comparison, and evaluation notebook workflow.",
       id: "Saya mengimplementasikan alur notebook untuk pengumpulan, preprocessing, feature extraction, perbandingan model, dan evaluasi.",
     },
-    architecture: [
-      { en: "Indonesian cleaning and Sastrawi stemming", id: "Pembersihan Bahasa Indonesia dan stemming Sastrawi" },
-      { en: "TF-IDF features with Logistic Regression and source-verified linear SVM", id: "Fitur TF-IDF dengan Logistic Regression dan linear SVM yang diverifikasi dari source" },
-      { en: "Dense neural-network comparison", id: "Perbandingan dense neural network" },
+    features: [
+      { en: "A collection notebook retrieves Google Play reviews, while the analysis notebook cleans Indonesian text and applies tokenization, stop-word handling, and Sastrawi stemming.", id: "Notebook pengumpulan mengambil ulasan Google Play, sedangkan notebook analisis membersihkan teks Bahasa Indonesia serta menerapkan tokenisasi, penanganan stop-word, dan stemming Sastrawi." },
+      { en: "Positive, neutral, and negative targets are generated from external positive and negative lexicons.", id: "Target positif, netral, dan negatif dibentuk dari lexicon positif dan negatif eksternal." },
+      { en: "Logistic Regression, a source-verified linear SVM, and a 128 → 64 → 3 dense neural network are trained and compared.", id: "Logistic Regression, SVM linear yang diverifikasi dari source, dan dense neural network 128 → 64 → 3 dilatih serta dibandingkan." },
+      { en: "The repository packages the processed dataset, sentiment distribution, word cloud, and model-comparison visualizations.", id: "Repository menyertakan dataset terproses, distribusi sentimen, word cloud, dan visualisasi perbandingan model." },
     ],
-    evidence: [{ en: "Recorded rounded test accuracies: approximately 87%, 92%, and 88%", id: "Akurasi test tercatat setelah pembulatan: sekitar 87%, 92%, dan 88%" }],
+    architecture: [
+      { en: "Indonesian cleaning, lexicon scoring, and Sastrawi stemming produce the modeled text and labels", id: "Pembersihan Bahasa Indonesia, scoring lexicon, dan stemming Sastrawi menghasilkan teks serta label untuk modeling" },
+      { en: "Logistic Regression uses TF-IDF unigram/bigram features with a 70/30 split", id: "Logistic Regression menggunakan fitur TF-IDF unigram/bigram dengan split 70/30" },
+      { en: "The SVM path uses Bag of Words, a 90/10 split, C=2, balanced class weights, and a linear kernel", id: "Jalur SVM menggunakan Bag of Words, split 90/10, C=2, class weight seimbang, dan kernel linear" },
+      { en: "The dense network uses TF-IDF, an 80/20 split, two hidden layers, softmax output, and early stopping", id: "Dense network menggunakan TF-IDF, split 80/20, dua hidden layer, keluaran softmax, dan early stopping" },
+    ],
+    decisions: [
+      { en: "The notebook compares classical linear models with a small dense network to show both scikit-learn and TensorFlow workflows.", id: "Notebook membandingkan model linear klasik dengan dense network kecil untuk menunjukkan alur scikit-learn dan TensorFlow." },
+      { en: "Modeling claims follow the executable notebook: the implemented SVM uses a linear kernel with C=2 and balanced class weights.", id: "Klaim modeling mengikuti notebook yang dapat dieksekusi: SVM yang diimplementasikan menggunakan kernel linear dengan C=2 dan class weight seimbang." },
+      { en: "The three paths use different feature spaces and split ratios, so their saved accuracies are presented as within-notebook results rather than a strict apples-to-apples benchmark.", id: "Ketiga jalur menggunakan ruang fitur dan rasio split berbeda, sehingga akurasi tersimpan dipresentasikan sebagai hasil dalam notebook, bukan benchmark yang benar-benar setara." },
+    ],
+    evidence: [
+      { en: "Saved outputs record rounded test accuracies of approximately 87% for Logistic Regression, 92% for the linear SVM, and 88% for the dense network.", id: "Output tersimpan mencatat akurasi test setelah pembulatan sekitar 87% untuk Logistic Regression, 92% untuk SVM linear, dan 88% untuk dense network." },
+      { en: "The complete scraping, preprocessing, labeling, modeling, and comparison notebooks are public alongside a processed CSV.", id: "Notebook pengumpulan, preprocessing, pelabelan, modeling, dan perbandingan tersedia secara publik bersama CSV terproses." },
+    ],
     limitations: [
       { en: "Labels are lexicon-derived, not human-annotated ground truth.", id: "Label berasal dari lexicon, bukan ground truth yang dianotasi manusia." },
       { en: "Vectorization before the split introduces a leakage risk.", id: "Vectorisasi sebelum pembagian data menimbulkan risiko leakage." },
+      { en: "The experiment uses single, model-specific splits without cross-validation, so the recorded scores do not establish general Indonesian sentiment performance.", id: "Eksperimen menggunakan single split yang berbeda per model tanpa cross-validation, sehingga skor tercatat tidak membuktikan performa umum sentimen Bahasa Indonesia." },
     ],
-    links: [{ label: "Repository", href: "https://github.com/RaihanHadriansyah21/gojek-sentiment-analysis-ml-dl" }],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/gojek-sentiment-analysis-ml-dl" }],
+    links: [],
   },
   {
     slug: "cloud-inventory-api",
@@ -246,16 +326,30 @@ export const projects: Project[] = [
       en: "I implemented the API as a foundational cloud-computing coursework project.",
       id: "Saya mengimplementasikan API sebagai proyek coursework fondasi cloud computing.",
     },
-    architecture: [
-      { en: "Flask REST endpoints", id: "Endpoint REST Flask" },
-      { en: "MongoDB persistence on a single-VM-oriented topology", id: "Persistensi MongoDB pada topologi berorientasi single-VM" },
+    features: [
+      { en: "Create products with name, price, and stock fields through POST /produk.", id: "Membuat produk dengan field nama, harga, dan stok melalui POST /produk." },
+      { en: "List all stored products through GET /produk with MongoDB ObjectIds serialized for JSON.", id: "Menampilkan seluruh produk tersimpan melalui GET /produk dengan MongoDB ObjectId yang diserialisasi untuk JSON." },
+      { en: "Update selected fields and delete records by ObjectId through dedicated PUT and DELETE routes.", id: "Memperbarui field terpilih dan menghapus record berdasarkan ObjectId melalui route PUT dan DELETE khusus." },
     ],
-    evidence: [{ en: "Complete product CRUD surface", id: "Permukaan CRUD produk yang lengkap" }],
+    architecture: [
+      { en: "A synchronous Flask application exposes four product CRUD routes.", id: "Aplikasi Flask sinkron mengekspos empat route CRUD produk." },
+      { en: "Flask-PyMongo connects to a local MongoDB swalayanDB database and produk collection.", id: "Flask-PyMongo terhubung ke database MongoDB lokal swalayanDB dan collection produk." },
+      { en: "The service binds to 0.0.0.0:5000 for a single-VM lab topology.", id: "Layanan bind ke 0.0.0.0:5000 untuk topologi lab single-VM." },
+    ],
+    decisions: [
+      { en: "The project intentionally keeps the topology small to demonstrate the HTTP → Flask → MongoDB request path.", id: "Proyek sengaja menjaga topologi tetap kecil untuk mendemonstrasikan jalur request HTTP → Flask → MongoDB." },
+      { en: "ObjectId conversion at the API boundary makes MongoDB identifiers usable in JSON responses and route parameters.", id: "Konversi ObjectId pada batas API membuat identifier MongoDB dapat digunakan dalam respons JSON dan parameter route." },
+    ],
+    evidence: [
+      { en: "The public source implements all four CRUD operations and documents runnable requests.", id: "Source publik mengimplementasikan keempat operasi CRUD dan mendokumentasikan request yang dapat dijalankan." },
+      { en: "The repository is deliberately compact: application code, dependencies, ignore rules, and setup documentation.", id: "Repository sengaja ringkas: source aplikasi, dependency, ignore rules, dan dokumentasi setup." },
+    ],
     limitations: [
       { en: "Foundational lab only: no authentication, tests, pagination, or schema validation.", id: "Hanya lab fondasi: belum ada autentikasi, test, pagination, atau schema validation." },
       { en: "It should not be presented as a production cloud system.", id: "Tidak boleh dipresentasikan sebagai sistem cloud produksi." },
     ],
-    links: [{ label: "Repository", href: "https://github.com/RaihanHadriansyah21/Project-1-Cloud-Computing" }],
+    repositories: [{ label: { en: "GitHub repository", id: "Repository GitHub" }, href: "https://github.com/RaihanHadriansyah21/Project-1-Cloud-Computing" }],
+    links: [],
   },
 ];
 

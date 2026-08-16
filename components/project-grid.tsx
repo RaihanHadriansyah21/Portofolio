@@ -16,7 +16,7 @@ export function ProjectGrid({ projects, locale }: { projects: Project[]; locale:
 
   return (
     <>
-      <div className="filter-bar" aria-label="Filter projects">
+      <div className="filter-bar" role="group" aria-label="Filter projects">
         {categories.map((category) => (
           <button
             type="button"
@@ -31,7 +31,7 @@ export function ProjectGrid({ projects, locale }: { projects: Project[]; locale:
       </div>
       {visible.length > 0 ? (
         <div className="projects-grid">
-          {visible.map((project) => <ProjectCard project={project} locale={locale} key={project.slug} />)}
+          {visible.map((project) => <ProjectCard project={project} locale={locale} headingLevel={2} key={project.slug} />)}
         </div>
       ) : <p>{content.common.noResults}</p>}
     </>
