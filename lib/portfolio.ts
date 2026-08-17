@@ -431,7 +431,7 @@ export const copy = {
 } as const;
 
 export function siteUrl() {
-  const host = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  if (host) return `https://${host}`;
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+
+  return (configuredUrl || "https://portoreyy.vercel.app").replace(/\/$/, "");
 }
