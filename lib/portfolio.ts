@@ -380,7 +380,7 @@ export function projectBySlug(slug: string) {
 
 export const copy = {
   en: {
-    nav: { work: "Work", credentials: "Credentials", about: "About", contact: "Contact" },
+    nav: { work: "Work", credentials: "Certificates", about: "About", contact: "Contact" },
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
       title: "AI/ML Engineer & Full-Stack Developer",
@@ -399,13 +399,13 @@ export const copy = {
       { title: "Web & Mobile", body: "Next.js, React, TypeScript, Tailwind CSS, Flutter, Dart, responsive interfaces, and role-based workflows." },
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, documentation, and measured limitations." },
     ] },
-    learning: { eyebrow: "Selected credentials", title: "Continuous learning with depth behind it.", intro: "Technical courses and submissions support the project evidence; they do not replace it." },
+    learning: { eyebrow: "Selected certificates", title: "Continuous learning with depth behind it.", intro: "Technical courses, certificates, and submissions support the project evidence; they do not replace it." },
     about: { eyebrow: "About", title: "Hello, I’m Mohammad Raihan Hadriansyah Prasetya—Reyy for short.", body: "I have completed my Telecommunication Engineering thesis defense and am transitioning into full-time work while awaiting formal commencement. I am drawn to problems where models, software systems, and real user workflows have to work together—not just look convincing in a notebook." },
     contact: { eyebrow: "Let’s talk", title: "Building an AI or software team with real product ambition?", body: "I am exploring full-time AI/ML and full-stack engineering opportunities in startups and larger technology companies.", cta: "Connect on LinkedIn" },
     common: { viewCase: "View case study", viewAll: "View all projects", repository: "Repository", evidence: "Evidence", limitations: "Limits & next steps", architecture: "How it works", role: "My contribution", back: "Back to projects", all: "All", noResults: "No projects in this filter yet." },
   },
   id: {
-    nav: { work: "Proyek", credentials: "Kredensial", about: "Tentang", contact: "Kontak" },
+    nav: { work: "Proyek", credentials: "Sertifikat", about: "Tentang", contact: "Kontak" },
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
       title: "AI/ML Engineer & Full-Stack Developer",
@@ -424,7 +424,7 @@ export const copy = {
       { title: "Web & Mobile", body: "Next.js, React, TypeScript, Tailwind CSS, Flutter, Dart, antarmuka responsif, dan alur berbasis peran." },
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, dokumentasi, dan batasan yang terukur." },
     ] },
-    learning: { eyebrow: "Kredensial terpilih", title: "Belajar berkelanjutan dengan kedalaman nyata.", intro: "Kelas teknis dan submission mendukung bukti proyek; bukan menggantikannya." },
+    learning: { eyebrow: "Sertifikat terpilih", title: "Belajar berkelanjutan dengan kedalaman nyata.", intro: "Kelas teknis, sertifikat, dan submission mendukung bukti proyek; bukan menggantikannya." },
     about: { eyebrow: "Tentang", title: "Halo, saya Mohammad Raihan Hadriansyah Prasetya—biasa dipanggil Reyy.", body: "Saya telah menyelesaikan sidang tugas akhir Teknik Telekomunikasi dan sedang bertransisi menuju pekerjaan full-time sambil menunggu wisuda. Saya tertarik pada masalah ketika model, sistem perangkat lunak, dan alur pengguna nyata harus bekerja bersama—bukan sekadar terlihat meyakinkan di notebook." },
     contact: { eyebrow: "Mari berbicara", title: "Sedang membangun tim AI atau software dengan ambisi produk yang nyata?", body: "Saya sedang menjajaki peluang full-time AI/ML dan full-stack engineering di startup maupun perusahaan teknologi besar.", cta: "Terhubung di LinkedIn" },
     common: { viewCase: "Lihat case study", viewAll: "Lihat semua proyek", repository: "Repository", evidence: "Bukti", limitations: "Batasan & langkah berikutnya", architecture: "Cara kerja", role: "Kontribusi saya", back: "Kembali ke proyek", all: "Semua", noResults: "Belum ada proyek dalam filter ini." },

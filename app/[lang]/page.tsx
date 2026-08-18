@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
-import { copy, credentials, isLocale, profile, projectBySlug, projects } from "@/lib/portfolio";
+import { copy, credentials, isLocale, projectBySlug, projects } from "@/lib/portfolio";
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -97,7 +98,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             <div className="credential-row" key={credential.title}>
               <span>0{index + 1}</span>
               <div><h3>{credential.title}</h3><p>{credential.issuer} · {credential.focus[lang]}</p></div>
-              <div><strong>{credential.duration || credential.date}</strong><small>{credential.duration ? credential.date : "Credential"}</small></div>
+              <div><strong>{credential.duration || credential.date}</strong><small>{credential.duration ? credential.date : lang === "id" ? "Sertifikat" : "Certificate"}</small></div>
             </div>
           ))}
         </div>
@@ -112,11 +113,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <p className="eyebrow">{content.contact.eyebrow}</p>
         <h2>{content.contact.title}</h2>
         <p>{content.contact.body}</p>
-        <div className="hero-actions">
-          <a className="button button-invert" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a>
-          <a className="button button-ghost" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a className="button button-ghost" href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a>
-        </div>
+        <ContactLogoLoop locale={lang} />
       </section>
     </main>
   );

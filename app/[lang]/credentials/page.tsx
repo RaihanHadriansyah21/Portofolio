@@ -7,8 +7,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!isLocale(lang)) return {};
   const base = siteUrl();
   return {
-    title: lang === "id" ? "Kredensial" : "Credentials",
-    description: "Selected technical learning credentials supporting Reyy's AI and software engineering practice.",
+    title: lang === "id" ? "Sertifikat" : "Certificates",
+    description: lang === "id"
+      ? "Sertifikat pembelajaran teknis terpilih yang mendukung praktik AI dan software engineering Reyy."
+      : "Selected technical learning certificates supporting Reyy's AI and software engineering practice.",
     alternates: {
       canonical: `${base}/${lang}/credentials`,
       languages: { en: `${base}/en/credentials`, id: `${base}/id/credentials` },
@@ -34,13 +36,13 @@ export default async function CredentialsPage({ params }: { params: Promise<{ la
             <div><span>0{index + 1}</span><p>{credential.issuer}</p></div>
             <h2>{credential.title}</h2>
             <p>{credential.focus[lang]}</p>
-            <footer><span>{credential.date}</span><strong>{credential.duration || "Technical credential"}</strong></footer>
+            <footer><span>{credential.date}</span><strong>{credential.duration || (lang === "id" ? "Sertifikat teknis" : "Technical certificate")}</strong></footer>
           </article>
         ))}
       </div>
       <div className="editorial-note">
         <p className="eyebrow">Curation note</p>
-        <p>{lang === "en" ? "The homepage prioritizes six high-signal technical credentials. Workshops, organization, leadership, and attendance records will be added only after privacy-safe asset review." : "Halaman utama memprioritaskan enam kredensial teknis dengan sinyal kuat. Workshop, organisasi, kepemimpinan, dan catatan kehadiran akan ditambahkan setelah peninjauan aset yang aman untuk privasi."}</p>
+        <p>{lang === "en" ? "This page prioritizes six high-signal technical certificates. Workshops, organization, leadership, and attendance records will be added only after privacy-safe asset review." : "Halaman ini memprioritaskan enam sertifikat teknis dengan sinyal kuat. Workshop, organisasi, kepemimpinan, dan catatan kehadiran akan ditambahkan setelah peninjauan aset yang aman untuk privasi."}</p>
       </div>
     </main>
   );
