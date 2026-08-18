@@ -87,7 +87,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       </section>
       <section className="about-next">
         <div><p className="eyebrow">Next chapter</p><h2>{content.contact.title}</h2></div>
-        <div><p>{content.contact.body}</p><a className="button button-primary" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
+        <div><p>{content.contact.body}</p><a className="button button-primary" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a><a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
       </section>
     </main>
   );

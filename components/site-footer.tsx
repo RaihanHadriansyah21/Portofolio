@@ -15,6 +15,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="footer-links">
         <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
         <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+        <a href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a>
         <Link href={`/${locale}/projects`}>{content.nav.work}</Link>
       </div>
       <p className="footer-meta">© {new Date().getFullYear()} {profile.legalName}</p>

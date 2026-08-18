@@ -367,6 +367,7 @@ export const profile = {
   legalName: "Mohammad Raihan Hadriansyah Prasetya",
   github: "https://github.com/RaihanHadriansyah21",
   linkedin: "https://www.linkedin.com/in/reyhadri",
+  instagram: "https://www.instagram.com/reyhadri",
 };
 
 export function isLocale(value: string): value is Locale {

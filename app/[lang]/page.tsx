@@ -25,7 +25,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           </div>
           <div className="hero-status">
             <span>{content.hero.status}</span>
-            <span>GitHub · LinkedIn · Vercel</span>
+            <span>GitHub · LinkedIn · Instagram · Vercel</span>
           </div>
         </div>
 
@@ -115,6 +115,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <div className="hero-actions">
           <a className="button button-invert" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a>
           <a className="button button-ghost" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a className="button button-ghost" href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a>
         </div>
       </section>
     </main>

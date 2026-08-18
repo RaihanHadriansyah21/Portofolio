@@ -1,6 +1,6 @@
-import Link from "next/link";
 import GlassSurface from "@/components/GlassSurface";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import PillNav from "@/components/PillNav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { copy, type Locale } from "@/lib/portfolio";
 
@@ -9,6 +9,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   const home = `/${locale}`;
 
   const links = [
+    { label: locale === "id" ? "Beranda" : "Home", href: home },
     { label: content.nav.work, href: `${home}/projects` },
     { label: content.nav.credentials, href: `${home}/credentials` },
     { label: content.nav.about, href: `${home}/about` },
@@ -36,31 +37,22 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         className="header-glass"
       >
         <div className="header-shell">
-          <Link className="wordmark" href={home} aria-label="Reyy home">
-            Reyy<span>.</span>
-          </Link>
-
-          <nav className="desktop-nav" aria-label="Primary navigation">
-            {links.map((link) => (
-              <Link href={link.href} key={link.href}>
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <PillNav
+            logo="/reyy-mark.svg"
+            logoAlt="Reyy portfolio mark"
+            items={links}
+            className="portfolio-pill-nav"
+            ease="power2.out"
+            baseColor="var(--foreground)"
+            pillColor="var(--surface)"
+            hoveredPillTextColor="var(--background)"
+            pillTextColor="var(--foreground)"
+            initialLoadAnimation
+          />
 
           <div className="header-controls" aria-label="Display preferences">
             <LanguageSwitcher locale={locale} />
             <ThemeToggle />
-            <details className="mobile-menu">
-              <summary aria-label="Open navigation">MENU</summary>
-              <nav aria-label="Mobile navigation">
-                {links.map((link) => (
-                  <Link href={link.href} key={link.href}>
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-            </details>
           </div>
         </div>
       </GlassSurface>
