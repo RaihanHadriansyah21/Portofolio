@@ -40,9 +40,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
+  const languageScript = `document.documentElement.lang=${JSON.stringify(lang)}`;
 
   return (
     <div className="site-frame" lang={lang}>
+      <script dangerouslySetInnerHTML={{ __html: languageScript }} />
       <SiteHeader locale={lang} />
       {children}
       <SiteFooter locale={lang} />

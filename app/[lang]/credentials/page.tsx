@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { copy, credentials, isLocale } from "@/lib/portfolio";
+import { copy, credentials, isLocale, siteUrl } from "@/lib/portfolio";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  return { title: lang === "id" ? "Kredensial" : "Credentials", description: "Selected technical learning credentials supporting Reyy's AI and software engineering practice." };
+  if (!isLocale(lang)) return {};
+  const base = siteUrl();
+  return {
+    title: lang === "id" ? "Kredensial" : "Credentials",
+    description: "Selected technical learning credentials supporting Reyy's AI and software engineering practice.",
+    alternates: {
+      canonical: `${base}/${lang}/credentials`,
+      languages: { en: `${base}/en/credentials`, id: `${base}/id/credentials` },
+    },
+  };
 }
 
 export default async function CredentialsPage({ params }: { params: Promise<{ lang: string }> }) {

@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectGrid } from "@/components/project-grid";
-import { copy, isLocale, projects } from "@/lib/portfolio";
+import { copy, isLocale, projects, siteUrl } from "@/lib/portfolio";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
+  const base = siteUrl();
   return {
     title: lang === "en" ? "Projects" : "Proyek",
     description: lang === "en" ? "Seven evidence-led projects across applied AI, machine learning, full-stack, mobile, and backend engineering." : "Tujuh proyek berbasis bukti dalam applied AI, machine learning, full-stack, mobile, dan backend engineering.",
+    alternates: {
+      canonical: `${base}/${lang}/projects`,
+      languages: { en: `${base}/en/projects`, id: `${base}/id/projects` },
+    },
   };
 }
 

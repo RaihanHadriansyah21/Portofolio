@@ -2,11 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LanyardShowcase } from "@/components/lanyard-showcase";
-import { copy, isLocale, profile } from "@/lib/portfolio";
+import { copy, isLocale, profile, siteUrl } from "@/lib/portfolio";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  return { title: lang === "id" ? "Tentang Reyy" : "About Reyy", description: "The story, engineering focus, and career direction behind Reyy's applied AI and full-stack work." };
+  if (!isLocale(lang)) return {};
+  const base = siteUrl();
+  return {
+    title: lang === "id" ? "Tentang Reyy" : "About Reyy",
+    description: "The story, engineering focus, and career direction behind Reyy's applied AI and full-stack work.",
+    alternates: {
+      canonical: `${base}/${lang}/about`,
+      languages: { en: `${base}/en/about`, id: `${base}/id/about` },
+    },
+  };
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
