@@ -47,7 +47,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             pillColor="var(--surface)"
             hoveredPillTextColor="var(--background)"
             pillTextColor="var(--foreground)"
-            initialLoadAnimation
+            initialLoadAnimation={false}
           />
 
           <div className="header-controls" aria-label="Display preferences">
