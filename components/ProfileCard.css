@@ -707,9 +707,3 @@
     white-space: normal;
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-profile-card .pc-card {
-    animation: none;
-  }
-}

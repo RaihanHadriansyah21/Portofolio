@@ -192,10 +192,15 @@ button { color: inherit; font: inherit; }
 
 .control-button,
 .mobile-menu > summary {
-  display: grid;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
   place-items: center;
   min-width: 3.4rem;
   height: 2.8rem;
+  overflow: hidden;
   padding-inline: 0.75rem;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -206,11 +211,71 @@ button { color: inherit; font: inherit; }
   font-weight: 700;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease;
+}
+
+.control-button::before {
+  position: absolute;
+  bottom: -170%;
+  left: 50%;
+  z-index: -1;
+  width: 150%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--foreground);
+  content: '';
+  transform: translateX(-50%) scale(0.72);
+  transition: bottom 380ms cubic-bezier(0.22, 1, 0.36, 1), transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: bottom, transform;
+}
+
+.control-label-stack {
+  position: relative;
+  z-index: 1;
+  display: block;
+  line-height: 1;
+}
+
+.control-label,
+.control-label-hover {
+  display: block;
+  line-height: 1;
+  transition: opacity 300ms ease, transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.control-label-hover {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  color: var(--background);
+  opacity: 0;
+  transform: translate(-50%, 160%);
 }
 
 .control-button:hover,
-.mobile-menu > summary:hover { border-color: var(--line-strong); background: var(--foreground); color: var(--background); }
+.control-button:focus-visible,
+.mobile-menu > summary:hover { border-color: var(--line-strong); }
+
+.control-button:hover::before,
+.control-button:focus-visible::before {
+  bottom: -38%;
+  transform: translateX(-50%) scale(1);
+}
+
+.control-button:hover .control-label,
+.control-button:focus-visible .control-label {
+  opacity: 0;
+  transform: translateY(-160%);
+}
+
+.control-button:hover .control-label-hover,
+.control-button:focus-visible .control-label-hover {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.mobile-menu > summary:hover { background: var(--foreground); color: var(--background); }
 .mobile-menu { position: relative; display: none; }
 .mobile-menu summary { list-style: none; }
 .mobile-menu summary::-webkit-details-marker { display: none; }
@@ -758,11 +823,6 @@ button { color: inherit; font: inherit; }
     margin-left: 0;
     transform: translateY(-50%);
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {

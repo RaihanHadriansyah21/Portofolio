@@ -15,7 +15,10 @@ export function ThemeToggle() {
       aria-label="Toggle color theme"
       title="Toggle color theme"
     >
-      <span aria-hidden="true">THEME</span>
+      <span className="control-label-stack" aria-hidden="true">
+        <span className="control-label">THEME</span>
+        <span className="control-label-hover">THEME</span>
+      </span>
     </button>
   );
 }

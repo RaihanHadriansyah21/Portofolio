@@ -132,42 +132,17 @@
 .pill.is-active .pill-label,
 .pill.is-active .pill-label-hover { color: var(--hover-text, #111); }
 
+.pill.is-active .hover-circle,
+.pill.is-active .pill-label-hover {
+  visibility: hidden;
+}
+
+.pill.is-active .pill-label {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .pill.is-active::after {
-  position: absolute;
-  bottom: 0.26rem;
-  left: 50%;
-  z-index: 4;
-  width: 0.22rem;
-  height: 0.22rem;
-  border-radius: 50%;
-  background: currentColor;
-  content: '';
-  transform: translateX(-50%);
-}
-
-body:has(#contact:target) .pill[data-nav-home="true"] {
-  background: var(--pill-bg, #111);
-  color: var(--pill-text, #fff);
-}
-
-body:has(#contact:target) .pill[data-nav-home="true"] .pill-label,
-body:has(#contact:target) .pill[data-nav-home="true"] .pill-label-hover {
-  color: inherit;
-}
-
-body:has(#contact:target) .pill[data-nav-home="true"]::after { display: none; }
-
-body:has(#contact:target) .pill[data-hash-target="contact"] {
-  background: var(--base, #fff);
-  color: var(--hover-text, #111);
-}
-
-body:has(#contact:target) .pill[data-hash-target="contact"] .pill-label,
-body:has(#contact:target) .pill[data-hash-target="contact"] .pill-label-hover {
-  color: var(--hover-text, #111);
-}
-
-body:has(#contact:target) .pill[data-hash-target="contact"]::after {
   position: absolute;
   bottom: 0.26rem;
   left: 50%;
@@ -255,31 +230,10 @@ body:has(#contact:target) .pill[data-hash-target="contact"]::after {
   color: var(--background);
 }
 
-body:has(#contact:target) .mobile-menu-link[data-nav-home="true"] {
-  background: transparent;
-  color: var(--foreground);
-}
-
-body:has(#contact:target) .mobile-menu-link[data-hash-target="contact"] {
-  background: var(--foreground);
-  color: var(--background);
-}
-
 @media (max-width: 980px) {
   .pill-nav-container { width: 100%; }
   .pill-nav { width: 100%; justify-content: space-between; }
   .desktop-only { display: none; }
   .mobile-only { display: block; }
   .mobile-menu-button { display: flex; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pill-logo img,
-  .pill .pill-label,
-  .pill .pill-label-hover,
-  .pill .hover-circle,
-  .hamburger-line {
-    transition: none;
-    animation: none;
-  }
 }

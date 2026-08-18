@@ -18,7 +18,12 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
       aria-label={targetLocale === "id" ? "Ganti ke Bahasa Indonesia" : "Switch to English"}
       title={targetLocale === "id" ? "Bahasa Indonesia" : "English"}
     >
-      {targetLocale.toUpperCase()}
+      <span className="control-label-stack">
+        <span className="control-label">{targetLocale.toUpperCase()}</span>
+        <span className="control-label-hover" aria-hidden="true">
+          {targetLocale.toUpperCase()}
+        </span>
+      </span>
     </Link>
   );
 }

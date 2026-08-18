@@ -234,7 +234,7 @@ const ProfileCardComponent = ({
   );
 
   useEffect(() => {
-    if (!enableTilt || !tiltEngine || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!enableTilt || !tiltEngine) return;
 
     const shell = shellRef.current;
     if (!shell) return;
