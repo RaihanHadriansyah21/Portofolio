@@ -33,11 +33,8 @@ const PillNav = ({
   const mobileMenuRef = useRef(null);
   const navItemsRef = useRef(null);
   const logoRef = useRef(null);
-  const reducedMotionRef = useRef(false);
 
   useEffect(() => {
-    reducedMotionRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     const layout = () => {
       circleRefs.current.forEach(circle => {
         if (!circle?.parentElement) return;
@@ -101,7 +98,7 @@ const PillNav = ({
       gsap.set(menu, { visibility: 'hidden', opacity: 0, scaleY: 1 });
     }
 
-    if (initialLoadAnimation && !reducedMotionRef.current) {
+    if (initialLoadAnimation) {
       const logo = logoRef.current;
       const navItems = navItemsRef.current;
 
@@ -136,7 +133,6 @@ const PillNav = ({
   }, [items, ease, initialLoadAnimation]);
 
   const handleEnter = i => {
-    if (reducedMotionRef.current) return;
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -148,7 +144,6 @@ const PillNav = ({
   };
 
   const handleLeave = i => {
-    if (reducedMotionRef.current) return;
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -160,7 +155,6 @@ const PillNav = ({
   };
 
   const handleLogoEnter = () => {
-    if (reducedMotionRef.current) return;
     const img = logoImgRef.current;
     if (!img) return;
     logoTweenRef.current?.kill();
