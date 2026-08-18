@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
 import { copy, credentials, isLocale, profile, projectBySlug, projects } from "@/lib/portfolio";
 
@@ -32,15 +32,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <div className="hero-visual" aria-label="Portrait of Reyy">
           <div className="portrait-grid" aria-hidden="true" />
           <div className="portrait-orbit" aria-hidden="true" />
-          <Image
-            src="/images/reyy-profile.png"
-            alt="Reyy, AI/ML Engineer and Full-Stack Developer"
-            fill
-            priority
-            sizes="(max-width: 820px) 92vw, 42vw"
-            className="portrait-image"
-          />
-          <div className="portrait-caption glass-panel"><span>01</span><p>Models → APIs → Products</p></div>
+          <HeroProfileCard locale={lang} />
         </div>
       </section>
 

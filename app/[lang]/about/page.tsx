@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LanyardShowcase } from "@/components/lanyard-showcase";
 import { copy, isLocale, profile } from "@/lib/portfolio";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -23,6 +24,30 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
     ["Luas dengan pusat yang jelas", "Rentang saya mencakup AI, backend, web, dan mobile, dengan applied AI product engineering sebagai pusatnya."],
   ];
 
+  const journey = lang === "en" ? {
+    eyebrow: "Experience / identity",
+    title: "Technical range grounded in real environments.",
+    body: "My path combines structured AI training, startup technology work, organizational leadership, and a telecommunications foundation. Each setting strengthened a different part of how I build and collaborate.",
+    hint: "Drag the badge to interact with it.",
+    items: [
+      ["2026", "AI Engineer Cohort · Coding Camp powered by DBS Foundation"],
+      ["2025", "Technology Intern · CV. Bima Technologies"],
+      ["2025–26", "Head of Commission 3 · HM TT Telkom University"],
+      ["2022–26", "Telecommunication Engineering · Telkom University"],
+    ],
+  } : {
+    eyebrow: "Pengalaman / identitas",
+    title: "Rentang teknis yang berpijak pada lingkungan nyata.",
+    body: "Perjalanan saya memadukan pelatihan AI terstruktur, pengalaman teknologi di startup, kepemimpinan organisasi, dan fondasi telekomunikasi. Setiap lingkungan memperkuat cara saya membangun dan berkolaborasi.",
+    hint: "Tarik kartu identitas untuk berinteraksi.",
+    items: [
+      ["2026", "AI Engineer Cohort · Coding Camp powered by DBS Foundation"],
+      ["2025", "Technology Intern · CV. Bima Technologies"],
+      ["2025–26", "Ketua Komisi 3 · HM TT Telkom University"],
+      ["2022–26", "S1 Teknik Telekomunikasi · Telkom University"],
+    ],
+  };
+
   return (
     <main id="main-content" className="page-shell section-shell about-page">
       <header className="page-hero about-hero">
@@ -30,6 +55,20 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
         <h1>{content.about.title}</h1>
         <p>{content.about.body}</p>
       </header>
+      <section className="identity-showcase">
+        <div className="identity-copy">
+          <p className="eyebrow">{journey.eyebrow}</p>
+          <h2>{journey.title}</h2>
+          <p>{journey.body}</p>
+          <div className="identity-timeline">
+            {journey.items.map(([year, item]) => <div key={item}><span>{year}</span><p>{item}</p></div>)}
+          </div>
+          <p className="identity-hint">↗ {journey.hint}</p>
+        </div>
+        <div className="identity-lanyard glass-panel">
+          <LanyardShowcase locale={lang} />
+        </div>
+      </section>
       <section className="about-quote glass-panel">
         <span>“</span>
         <blockquote>{lang === "en" ? "I want to be the engineer who can understand the model, design the service around it, and make the result usable for real people." : "Saya ingin menjadi engineer yang memahami model, merancang layanan di sekelilingnya, dan membuat hasilnya dapat digunakan oleh manusia nyata."}</blockquote>
