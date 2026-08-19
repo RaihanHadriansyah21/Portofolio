@@ -50,7 +50,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             initialLoadAnimation={false}
           />
 
-          <div className="header-controls" aria-label="Display preferences">
+          <div className="header-controls" aria-label="Display preferences" role="group">
             <LanguageSwitcher locale={locale} />
             <ThemeToggle />
           </div>

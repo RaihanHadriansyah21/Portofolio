@@ -277,7 +277,6 @@ const PillNav = ({
             href={items[0].href}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
-            role="menuitem"
             ref={el => {
               logoRef.current = el;
             }}
