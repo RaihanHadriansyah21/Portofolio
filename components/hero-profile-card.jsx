@@ -15,8 +15,8 @@ export function HeroProfileCard({ locale }) {
   return (
     <div className="hero-profile-card">
       <ProfileCard
-        avatarUrl="/images/reyy-profile.png"
-        miniAvatarUrl="/images/reyy-profile.png"
+        avatarUrl="/images/reyy-professional.webp"
+        miniAvatarUrl="/images/reyy-professional.webp"
         iconUrl=""
         grainUrl=""
         name="Reyy"

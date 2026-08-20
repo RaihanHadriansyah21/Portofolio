@@ -11,9 +11,9 @@ export function LanyardShowcase({ locale }) {
   return (
     <div className="lanyard-canvas" aria-hidden="true">
       <Lanyard
-        position={[0, 0, 24]}
+        position={[0, 0, 20]}
         gravity={[0, -40, 0]}
-        fov={22}
+        fov={20}
         frontImage="/react-bits/lanyard/reyy-pass-front.svg"
         backImage="/react-bits/lanyard/reyy-pass-back.svg"
         lanyardImage="/react-bits/lanyard/reyy-band.svg"

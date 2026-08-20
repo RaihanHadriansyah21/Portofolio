@@ -61,6 +61,18 @@ export const certificates: Certificate[] = [
     privacyRedacted: true,
   },
   {
+    slug: "english-for-business-communication-90",
+    title: "English for Business Communication - Score 90%",
+    issuer: "The British Institute × DBS Foundation × Dicoding",
+    issuedAt: "2026-06-25",
+    category: "language",
+    kind: "course",
+    preview: "/certificates/previews/english-for-business-communication.webp",
+    width: 1191,
+    height: 1684,
+    privacyRedacted: true,
+  },
+  {
     slug: "membangun-proyek-deep-learning-tingkat-mahir",
     title: "Membangun Proyek Deep Learning Tingkat Mahir",
     issuer: "Dicoding",

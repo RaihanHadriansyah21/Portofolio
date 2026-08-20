@@ -37,6 +37,8 @@ export default function Lanyard({
   lanyardWidth = 1
 }) {
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+  const [contextLost, setContextLost] = useState(false);
+  const removeContextListener = useRef(() => {});
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -44,13 +46,38 @@ export default function Lanyard({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => () => removeContextListener.current(), []);
+
+  if (contextLost) {
+    return (
+      <div className="lanyard-wrapper">
+        <div className="lanyard-static-pass">
+          <span>ENGINEERING ID</span>
+          <strong>REYY.</strong>
+          <p>AI / ML ENGINEER<br />FULL-STACK DEVELOPER</p>
+          <p>MODELS → APIS → PRODUCTS</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="lanyard-wrapper">
       <Canvas
         camera={{ position: position, fov: fov }}
         dpr={[1, isMobile ? 1.5 : 2]}
         gl={{ alpha: transparent }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
+          const canvas = gl.domElement;
+          const handleContextLost = event => {
+            event.preventDefault();
+            setContextLost(true);
+          };
+          removeContextListener.current();
+          canvas.addEventListener('webglcontextlost', handleContextLost);
+          removeContextListener.current = () => canvas.removeEventListener('webglcontextlost', handleContextLost);
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={isMobile ? 1 / 30 : 1 / 60}>
