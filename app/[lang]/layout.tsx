@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { PortfolioChat } from "@/components/portfolio-chat";
 import { copy, isLocale, locales, siteUrl } from "@/lib/portfolio";
 
 export function generateStaticParams() {
@@ -48,6 +49,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <SiteHeader locale={lang} />
       {children}
       <SiteFooter locale={lang} />
+      <PortfolioChat locale={lang} />
     </div>
   );
 }

@@ -1121,6 +1121,307 @@ button { color: inherit; font: inherit; }
   }
 }
 
+/* Portfolio AI guide */
+.portfolio-chat-root {
+  position: fixed;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 250;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+.portfolio-chat-launcher {
+  position: relative;
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  min-height: 3.55rem;
+  padding: 0.48rem 0.8rem 0.48rem 0.48rem;
+  border-radius: 999px;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color 220ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+  animation: portfolio-chat-launch 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.portfolio-chat-launcher:hover {
+  border-color: var(--line-strong);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  transform: translateY(-3px);
+}
+
+.portfolio-chat-launcher-icon,
+.portfolio-chat-identity > span {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.portfolio-chat-launcher-icon { width: 2.55rem; height: 2.55rem; }
+.portfolio-chat-launcher-icon svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
+.portfolio-chat-launcher-label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+}
+.portfolio-chat-launcher-status {
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-inline: 0.05rem;
+  border-radius: 50%;
+  background: var(--foreground);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--foreground) 10%, transparent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.portfolio-chat-panel {
+  display: flex;
+  width: min(27rem, calc(100vw - 2rem));
+  height: min(44rem, calc(100svh - 7.5rem));
+  min-height: 31rem;
+  flex-direction: column;
+  border-radius: 1.55rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--glass-solid) 84%, transparent);
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.5);
+  animation: portfolio-chat-panel-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.portfolio-chat-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.9rem;
+  padding: 0.8rem 0.8rem 0.8rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.portfolio-chat-identity { display: flex; gap: 0.72rem; min-width: 0; align-items: center; }
+.portfolio-chat-identity > span { width: 2.45rem; height: 2.45rem; flex: 0 0 auto; }
+.portfolio-chat-identity svg { width: 1.15rem; height: 1.15rem; fill: currentColor; }
+.portfolio-chat-identity h2 { margin: 0; font-size: 0.9rem; font-weight: 650; letter-spacing: -0.02em; }
+.portfolio-chat-identity p {
+  margin: 0.26rem 0 0;
+  color: var(--subtle);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.49rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+.portfolio-chat-header-actions { display: flex; gap: 0.35rem; align-items: center; }
+.portfolio-chat-header-actions button {
+  min-height: 2.35rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.5rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+.portfolio-chat-header-actions button:hover { border-color: var(--foreground); background: var(--foreground); color: var(--background); }
+.portfolio-chat-header-actions .portfolio-chat-close { width: 2.35rem; padding: 0; font-family: inherit; font-size: 1.2rem; font-weight: 400; }
+
+.portfolio-chat-mode {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+  padding: 0.65rem;
+  border-bottom: 1px solid var(--line);
+}
+.portfolio-chat-mode button {
+  min-width: 0;
+  min-height: 2.25rem;
+  padding: 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--subtle);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.53rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+.portfolio-chat-mode button:hover { color: var(--foreground); }
+.portfolio-chat-mode button.active { border-color: var(--line); background: var(--foreground); color: var(--background); }
+
+.portfolio-chat-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+.portfolio-chat-messages::-webkit-scrollbar { width: 0.55rem; }
+.portfolio-chat-messages::-webkit-scrollbar-track { background: transparent; }
+.portfolio-chat-messages::-webkit-scrollbar-thumb { border: 0.16rem solid transparent; border-radius: 999px; background: var(--scrollbar-thumb); background-clip: padding-box; }
+.portfolio-chat-message { display: grid; gap: 0.38rem; margin-bottom: 1.15rem; animation: portfolio-chat-message-in 300ms ease both; }
+.portfolio-chat-message.user { justify-items: end; }
+.portfolio-chat-role {
+  color: var(--subtle);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+.portfolio-chat-bubble { max-width: 92%; }
+.portfolio-chat-bubble > p {
+  margin: 0;
+  padding: 0.82rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.95rem 0.95rem 0.95rem 0.28rem;
+  background: color-mix(in srgb, var(--surface-raised) 72%, transparent);
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.62;
+  white-space: pre-wrap;
+}
+.portfolio-chat-bubble > p + p { margin-top: 0.45rem; }
+.portfolio-chat-message.user .portfolio-chat-bubble > p {
+  border-color: var(--foreground);
+  border-radius: 0.95rem 0.95rem 0.28rem 0.95rem;
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.portfolio-chat-sources { margin-top: 0.65rem; }
+.portfolio-chat-sources > p {
+  margin: 0 0 0.42rem;
+  color: var(--subtle);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.47rem;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+.portfolio-chat-sources > div { display: grid; gap: 0.35rem; }
+.portfolio-chat-sources a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1.4rem;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.65rem 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 0.72rem;
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+.portfolio-chat-sources a:hover { border-color: var(--line-strong); background: var(--surface-raised); transform: translateX(2px); }
+.portfolio-chat-sources a span { display: grid; min-width: 0; gap: 0.2rem; }
+.portfolio-chat-sources strong { overflow: hidden; font-size: 0.65rem; text-overflow: ellipsis; white-space: nowrap; }
+.portfolio-chat-sources small { overflow: hidden; color: var(--subtle); font-size: 0.55rem; text-overflow: ellipsis; white-space: nowrap; }
+.portfolio-chat-sources svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.4; }
+
+.portfolio-chat-thinking { display: flex; gap: 0.25rem; align-items: center; margin: 0.4rem 0 1rem; color: var(--subtle); }
+.portfolio-chat-thinking span { width: 0.32rem; height: 0.32rem; border-radius: 50%; background: var(--foreground); animation: portfolio-chat-dot 1.1s ease-in-out infinite; }
+.portfolio-chat-thinking span:nth-child(2) { animation-delay: 120ms; }
+.portfolio-chat-thinking span:nth-child(3) { animation-delay: 240ms; }
+.portfolio-chat-thinking p { margin: 0 0 0 0.35rem; font-family: var(--font-geist-mono), monospace; font-size: 0.5rem; }
+.portfolio-chat-error { margin: 0.5rem 0; padding: 0.72rem; border: 1px solid var(--line-strong); border-radius: 0.7rem; color: var(--muted); font-size: 0.68rem; line-height: 1.5; }
+
+.portfolio-chat-prompts { display: grid; gap: 0.38rem; padding: 0 1rem 0.75rem; }
+.portfolio-chat-prompts button {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 0.72rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.65rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+.portfolio-chat-prompts button:hover { border-color: var(--line-strong); color: var(--foreground); transform: translateY(-1px); }
+
+.portfolio-chat-composer { display: grid; grid-template-columns: minmax(0, 1fr) 2.8rem; gap: 0.55rem; padding: 0.7rem 0.8rem 0.45rem; border-top: 1px solid var(--line); }
+.portfolio-chat-composer > div { position: relative; min-width: 0; }
+.portfolio-chat-composer textarea {
+  display: block;
+  width: 100%;
+  min-height: 3.15rem;
+  max-height: 7rem;
+  resize: none;
+  padding: 0.68rem 3rem 0.68rem 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  outline: 0;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.portfolio-chat-composer textarea::placeholder { color: var(--subtle); }
+.portfolio-chat-composer textarea:focus { border-color: var(--line-strong); background: var(--surface); }
+.portfolio-chat-composer textarea:disabled { opacity: 0.65; }
+.portfolio-chat-composer > div > span { position: absolute; right: 0.58rem; bottom: 0.45rem; color: var(--subtle); font-family: var(--font-geist-mono), monospace; font-size: 0.44rem; }
+.portfolio-chat-send {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  align-self: center;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--foreground);
+  color: var(--background);
+  cursor: pointer;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.portfolio-chat-send:hover:not(:disabled) { transform: translateY(-2px) rotate(-2deg); }
+.portfolio-chat-send:disabled { opacity: 0.3; cursor: not-allowed; }
+.portfolio-chat-send svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.portfolio-chat-stop-icon { width: 0.62rem; height: 0.62rem; border-radius: 0.12rem; background: currentColor; }
+.portfolio-chat-privacy { margin: 0; padding: 0 1rem 0.75rem; color: var(--subtle); font-family: var(--font-geist-mono), monospace; font-size: 0.43rem; line-height: 1.45; text-align: center; }
+
+@keyframes portfolio-chat-launch { from { opacity: 0; transform: translateY(1rem) scale(0.94); } }
+@keyframes portfolio-chat-panel-in { from { opacity: 0; transform: translateY(1.5rem) scale(0.965); } }
+@keyframes portfolio-chat-message-in { from { opacity: 0; transform: translateY(0.35rem); } }
+@keyframes portfolio-chat-dot { 0%, 60%, 100% { opacity: 0.28; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-0.2rem); } }
+
+@media (max-width: 580px) {
+  .portfolio-chat-root { right: 0.5rem; bottom: max(0.5rem, env(safe-area-inset-bottom)); left: 0.5rem; }
+  .portfolio-chat-launcher { width: fit-content; margin-left: auto; }
+  .portfolio-chat-panel { width: 100%; height: min(46rem, calc(100svh - 1rem)); min-height: 0; border-radius: 1.25rem; }
+  .portfolio-chat-header { min-height: 4.5rem; padding-left: 0.8rem; }
+  .portfolio-chat-identity > span { width: 2.25rem; height: 2.25rem; }
+  .portfolio-chat-header-actions > button:first-child { display: none; }
+  .portfolio-chat-messages { padding: 0.8rem; }
+  .portfolio-chat-bubble { max-width: 96%; }
+  .portfolio-chat-prompts { padding-inline: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-chat-launcher,
+  .portfolio-chat-panel,
+  .portfolio-chat-message { animation: none; }
+  .portfolio-chat-launcher,
+  .portfolio-chat-sources a,
+  .portfolio-chat-prompts button,
+  .portfolio-chat-send { transition-duration: 0.01ms; }
+}
+
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .glass-panel { background: var(--glass-solid); }
+  .glass-panel,
+  .portfolio-chat-panel { background: var(--glass-solid); }
 }
