@@ -25,11 +25,11 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
 
   const principles = lang === "en" ? [
     ["Evidence over adjectives", "I prefer showing implementation, measured results, and honest constraints instead of inflated labels."],
-    ["Models need products", "Useful AI depends on data contracts, APIs, interfaces, human review, and reliable delivery—not only model code."],
+    ["Models need products", "Useful AI depends on data contracts, APIs, interfaces, human review, and reliable delivery, not only model code."],
     ["Range with a center", "My range spans AI, backend, web, and mobile, while the center remains applied AI product engineering."],
   ] : [
     ["Bukti di atas kata sifat", "Saya memilih menunjukkan implementasi, hasil terukur, dan batasan jujur daripada label yang dilebihkan."],
-    ["Model membutuhkan produk", "AI yang berguna bergantung pada kontrak data, API, antarmuka, human review, dan delivery yang andal—bukan hanya kode model."],
+    ["Model membutuhkan produk", "AI yang berguna bergantung pada kontrak data, API, antarmuka, human review, dan delivery yang andal, bukan hanya kode model."],
     ["Luas dengan pusat yang jelas", "Rentang saya mencakup AI, backend, web, dan mobile, dengan applied AI product engineering sebagai pusatnya."],
   ];
 

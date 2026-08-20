@@ -49,8 +49,8 @@ export const projects: Project[] = [
       id: "Platform human-in-the-loop yang menghubungkan pengumpulan jawaban 24 bagian, klasifikasi nilai berbasis gambar secara asinkron, review dosen, dan perilisan hasil yang terkontrol.",
     },
     context: {
-      en: "SCOVIS is an undergraduate thesis team project for handling structured handwritten-answer assessment without turning model output into an automatic final grade. It classifies answer images directly—rather than transcribing them with OCR—and keeps the lecturer responsible for the final decision.",
-      id: "SCOVIS adalah proyek tim tugas akhir untuk menangani penilaian jawaban tulisan tangan yang terstruktur tanpa menjadikan keluaran model sebagai nilai akhir otomatis. Sistem mengklasifikasikan gambar jawaban secara langsung—bukan mentranskripsikannya dengan OCR—dan tetap menempatkan dosen sebagai pengambil keputusan akhir.",
+      en: "SCOVIS is an undergraduate thesis team project for handling structured handwritten-answer assessment without turning model output into an automatic final grade. It classifies answer images directly instead of transcribing them with OCR, while keeping the lecturer responsible for the final decision.",
+      id: "SCOVIS adalah proyek tim tugas akhir untuk menangani penilaian jawaban tulisan tangan yang terstruktur tanpa menjadikan keluaran model sebagai nilai akhir otomatis. Sistem mengklasifikasikan gambar jawaban secara langsung tanpa transkripsi OCR, sementara dosen tetap menjadi pengambil keputusan akhir.",
     },
     role: {
       en: "As part of the thesis team, I worked across the Next.js product surface, FastAPI/AI integration, multi-role workflows, Supabase data operations, tests, documentation, and deployment readiness. I do not present the model or the full system as solo work.",
@@ -186,7 +186,7 @@ export const projects: Project[] = [
     decisions: [
       { en: "The pretrained backbone remains frozen, making this a transfer-learning feature-extraction experiment rather than a separate fine-tuning study.", id: "Backbone pretrained tetap dibekukan, sehingga proyek ini merupakan eksperimen feature extraction berbasis transfer learning, bukan studi fine-tuning terpisah." },
       { en: "Multiple export formats test portability across server, mobile, and browser runtimes.", id: "Beberapa format ekspor digunakan untuk menguji portabilitas pada runtime server, mobile, dan browser." },
-      { en: "The TFLite file is described as converted—not quantized—because the notebook does not configure an optimization or representative-dataset policy.", id: "File TFLite disebut sebagai hasil konversi—bukan quantized—karena notebook tidak mengatur kebijakan optimasi atau representative dataset." },
+      { en: "The TFLite file is described as converted, not quantized, because the notebook does not configure an optimization or representative-dataset policy.", id: "File TFLite disebut sebagai hasil konversi, bukan quantized, karena notebook tidak mengatur kebijakan optimasi atau representative dataset." },
     ],
     evidence: [
       { en: "Saved notebook outputs record 96.46% final-epoch training accuracy, 94.77% validation accuracy, and 93.46% held-out test accuracy for this split.", id: "Output notebook tersimpan mencatat akurasi epoch akhir 96,46% pada training, 94,77% pada validation, dan 93,46% pada held-out test untuk split ini." },
@@ -449,7 +449,7 @@ export const copy = {
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
       title: "AI/ML Engineer & Full-Stack Developer",
-      intro: "I move machine-learning work beyond the notebook—connecting models to APIs, data, interfaces, and deployment-ready product workflows.",
+      intro: "I move machine-learning work beyond the notebook, connecting models to APIs, data, interfaces, and deployment-ready product workflows.",
       primary: "Explore my work",
       secondary: "Meet Reyy",
       availability: "Open to full-time opportunities",
@@ -457,7 +457,7 @@ export const copy = {
     },
     proof: ["Applied AI systems", "Model-to-product integration", "Web, backend & mobile", "Evidence-led engineering"],
     flagship: { eyebrow: "Flagship case study", title: "AI that stays accountable to people.", intro: "SCOVIS is the clearest expression of how I work: machine learning surrounded by intentional product, data, review, and deployment systems." },
-    selected: { eyebrow: "Selected work", title: "Built across the stack, grounded in evidence.", intro: "Seven public projects, organized by the strength of their engineering story—not displayed as an undifferentiated list." },
+    selected: { eyebrow: "Selected work", title: "Built across the stack, grounded in evidence.", intro: "Seven public projects, ordered by the strength of their engineering story rather than presented as an undifferentiated list." },
     capabilities: { eyebrow: "Capabilities", title: "From experiment to usable system.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, and NLP." },
       { title: "Backend & Data Services", body: "Python, FastAPI, Redis/RQ, Supabase, PostgreSQL, Flask, MongoDB, API contracts, and asynchronous jobs." },
@@ -465,7 +465,7 @@ export const copy = {
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, documentation, and measured limitations." },
     ] },
     learning: { eyebrow: "Selected certificates", title: "Continuous learning with depth behind it.", intro: "Technical courses, certificates, and submissions support the project evidence; they do not replace it." },
-    about: { eyebrow: "About", title: "Hello, I’m Mohammad Raihan Hadriansyah Prasetya—Reyy for short.", body: "I have completed my Telecommunication Engineering thesis defense and am awaiting formal yudisium before graduation while transitioning into full-time work. I am drawn to problems where models, software systems, and real user workflows have to work together—not just look convincing in a notebook." },
+    about: { eyebrow: "About", title: "Hello, I’m Mohammad Raihan Hadriansyah Prasetya. Reyy for short.", body: "I have completed my Telecommunication Engineering thesis defense and am awaiting formal yudisium before graduation while transitioning into full-time work. I am drawn to problems where models, software systems, and real user workflows have to work together, not just look convincing in a notebook." },
     contact: { eyebrow: "Let’s talk", title: "Building an AI or software team with real product ambition?", body: "I am exploring full-time AI/ML and full-stack engineering opportunities in startups and larger technology companies.", cta: "Connect on LinkedIn" },
     common: { viewCase: "View case study", viewAll: "View all projects", repository: "Repository", evidence: "Evidence", limitations: "Limits & next steps", architecture: "How it works", role: "My contribution", back: "Back to projects", all: "All", noResults: "No projects in this filter yet." },
   },
@@ -474,7 +474,7 @@ export const copy = {
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
       title: "AI/ML Engineer & Full-Stack Developer",
-      intro: "Saya membawa pekerjaan machine learning keluar dari notebook—menghubungkan model dengan API, data, antarmuka, dan alur produk yang siap dideploy.",
+      intro: "Saya membawa pekerjaan machine learning keluar dari notebook dengan menghubungkan model ke API, data, antarmuka, dan alur produk yang siap dideploy.",
       primary: "Jelajahi karya saya",
       secondary: "Kenali Reyy",
       availability: "Terbuka untuk peluang full-time",
@@ -482,7 +482,7 @@ export const copy = {
     },
     proof: ["Sistem applied AI", "Integrasi model-ke-produk", "Web, backend & mobile", "Engineering berbasis bukti"],
     flagship: { eyebrow: "Case study utama", title: "AI yang tetap bertanggung jawab kepada manusia.", intro: "SCOVIS adalah representasi terjelas dari cara saya bekerja: machine learning yang dikelilingi sistem produk, data, peninjauan, dan deployment yang dirancang dengan sengaja." },
-    selected: { eyebrow: "Karya terpilih", title: "Dibangun lintas stack, berpijak pada bukti.", intro: "Tujuh proyek publik, diurutkan berdasarkan kekuatan cerita engineering—bukan ditampilkan sebagai daftar tanpa hierarki." },
+    selected: { eyebrow: "Karya terpilih", title: "Dibangun lintas stack, berpijak pada bukti.", intro: "Tujuh proyek publik yang diurutkan berdasarkan kekuatan cerita engineering, bukan ditampilkan sebagai daftar tanpa hierarki." },
     capabilities: { eyebrow: "Kapabilitas", title: "Dari eksperimen menjadi sistem yang dapat digunakan.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, dan NLP." },
       { title: "Backend & Data Services", body: "Python, FastAPI, Redis/RQ, Supabase, PostgreSQL, Flask, MongoDB, kontrak API, dan pekerjaan asinkron." },
@@ -490,7 +490,7 @@ export const copy = {
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, dokumentasi, dan batasan yang terukur." },
     ] },
     learning: { eyebrow: "Sertifikat terpilih", title: "Belajar berkelanjutan dengan kedalaman nyata.", intro: "Kelas teknis, sertifikat, dan submission mendukung bukti proyek; bukan menggantikannya." },
-    about: { eyebrow: "Tentang", title: "Halo, saya Mohammad Raihan Hadriansyah Prasetya—biasa dipanggil Reyy.", body: "Saya telah menyelesaikan sidang tugas akhir Teknik Telekomunikasi dan sedang menunggu yudisium sebelum kelulusan resmi, sambil bertransisi menuju pekerjaan full-time. Saya tertarik pada masalah ketika model, sistem perangkat lunak, dan alur pengguna nyata harus bekerja bersama—bukan sekadar terlihat meyakinkan di notebook." },
+    about: { eyebrow: "Tentang", title: "Halo, saya Mohammad Raihan Hadriansyah Prasetya, biasa dipanggil Reyy.", body: "Saya telah menyelesaikan sidang tugas akhir Teknik Telekomunikasi dan sedang menunggu yudisium sebelum kelulusan resmi, sambil bertransisi menuju pekerjaan full-time. Saya tertarik pada masalah ketika model, sistem perangkat lunak, dan alur pengguna nyata harus bekerja bersama, bukan sekadar terlihat meyakinkan di notebook." },
     contact: { eyebrow: "Mari berbicara", title: "Sedang membangun tim AI atau software dengan ambisi produk yang nyata?", body: "Saya sedang menjajaki peluang full-time AI/ML dan full-stack engineering di startup maupun perusahaan teknologi besar.", cta: "Terhubung di LinkedIn" },
     common: { viewCase: "Lihat case study", viewAll: "Lihat semua proyek", repository: "Repository", evidence: "Bukti", limitations: "Batasan & langkah berikutnya", architecture: "Cara kerja", role: "Kontribusi saya", back: "Kembali ke proyek", all: "Semua", noResults: "Belum ada proyek dalam filter ini." },
   },

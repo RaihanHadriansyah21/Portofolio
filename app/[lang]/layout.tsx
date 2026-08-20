@@ -24,14 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
     openGraph: {
       type: "website",
-      title: "Reyy — AI/ML Engineer & Full-Stack Developer",
+      title: "Reyy | AI/ML Engineer & Full-Stack Developer",
       description: content.hero.intro,
       locale: lang === "en" ? "en_US" : "id_ID",
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Reyy — AI/ML Engineer & Full-Stack Developer" }],
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Reyy | AI/ML Engineer & Full-Stack Developer" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Reyy — AI/ML Engineer & Full-Stack Developer",
+      title: "Reyy | AI/ML Engineer & Full-Stack Developer",
       description: content.hero.intro,
       images: ["/og.png"],
     },

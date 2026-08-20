@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       canonical: `${base}/${lang}/projects/${slug}`,
       languages: { en: `${base}/en/projects/${slug}`, id: `${base}/id/projects/${slug}` },
     },
-    openGraph: { type: "article", title: `${project.title} — Reyy`, description: project.summary[lang], images: [] },
-    twitter: { card: "summary", title: `${project.title} — Reyy`, description: project.summary[lang], images: [] },
+    openGraph: { type: "article", title: `${project.title} | Reyy`, description: project.summary[lang], images: [] },
+    twitter: { card: "summary", title: `${project.title} | Reyy`, description: project.summary[lang], images: [] },
   };
 }
 

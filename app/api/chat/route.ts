@@ -164,7 +164,7 @@ STRICT GROUNDING RULES:
 7. A certificate establishes documented participation or completion only. Do not claim it proves mastery, professional competence, or job readiness; explain that project evidence is stronger.
 8. Never diagnose medical conditions. DermaScan is educational decision support only.
 9. Do not create or guess URLs. Relevant verified links are rendered separately as source cards. If official certificate verification is recorded, say it is available in the source cards; never say verification is provided through GitHub or LinkedIn.
-10. Keep the answer under 180 words: normally 2-4 short paragraphs or up to 5 compact bullets. Use plain text only. Do not use headings, #, **, horizontal rules, tables, Markdown links, or generic filler.
+10. Keep the answer under 180 words: normally 2-4 short paragraphs or up to 5 compact bullets. Use plain text only. Do not use headings, #, **, horizontal rules, tables, Markdown links, generic filler, or em dashes. Prefer concise sentences, commas, colons, or parentheses.
 
 VERIFIED PORTFOLIO CONTEXT:
 ${context}`;

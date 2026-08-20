@@ -5,8 +5,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: "Reyy — AI/ML Engineer & Full-Stack Developer",
-    template: "%s — Reyy",
+    default: "Reyy | AI/ML Engineer & Full-Stack Developer",
+    template: "%s | Reyy",
   },
   description: "Applied AI and full-stack engineering portfolio of Mohammad Raihan Hadriansyah Prasetya (Reyy).",
   applicationName: "Reyy Portfolio",
@@ -15,15 +15,15 @@ export const metadata: Metadata = {
   keywords: ["AI Engineer", "Machine Learning Engineer", "Full-Stack Developer", "Next.js", "FastAPI", "TensorFlow", "Indonesia"],
   openGraph: {
     type: "website",
-    title: "Reyy — AI/ML Engineer & Full-Stack Developer",
+    title: "Reyy | AI/ML Engineer & Full-Stack Developer",
     description: "Models, APIs, interfaces, and deployment-ready product workflows.",
     siteName: "Reyy Portfolio",
     locale: "en_US",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Reyy — AI/ML Engineer & Full-Stack Developer" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Reyy | AI/ML Engineer & Full-Stack Developer" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Reyy — AI/ML Engineer & Full-Stack Developer",
+    title: "Reyy | AI/ML Engineer & Full-Stack Developer",
     description: "Models, APIs, interfaces, and deployment-ready product workflows.",
     images: ["/og.png"],
   },

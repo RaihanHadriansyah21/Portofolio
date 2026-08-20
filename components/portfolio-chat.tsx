@@ -28,6 +28,7 @@ const uiCopy = {
     close: "Close assistant",
     thinking: "Reviewing portfolio evidence…",
     sourceTitle: "Verified sources",
+    sourceCount: (count: number) => `${count} source${count === 1 ? "" : "s"}`,
     error: "The guide could not respond. Please wait a moment and try again.",
     privacy: "No sensitive documents are shared. Chat history stays in this browser session.",
   },
@@ -50,6 +51,7 @@ const uiCopy = {
     close: "Tutup asisten",
     thinking: "Meninjau bukti portofolio…",
     sourceTitle: "Sumber terverifikasi",
+    sourceCount: (count: number) => `${count} sumber`,
     error: "AI guide belum dapat merespons. Tunggu sebentar lalu coba kembali.",
     privacy: "Tidak ada dokumen sensitif yang dibagikan. Riwayat chat hanya tersimpan selama sesi browser ini.",
   },
@@ -97,6 +99,7 @@ function displayText(text: string, role: PortfolioChatMessage["role"]) {
     .replace(/^\s*---+\s*$/gm, "")
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/^\s*[*-]\s+/gm, "• ")
+    .replace(/\s*—\s*/g, ", ")
     .trim();
 }
 
@@ -134,8 +137,11 @@ function SourceCards({ sources, locale }: { sources: PortfolioSource[]; locale: 
   const content = uiCopy[locale];
 
   return (
-    <div className="portfolio-chat-sources">
-      <p>{content.sourceTitle}</p>
+    <details className="portfolio-chat-sources">
+      <summary>
+        <span>{content.sourceTitle}</span>
+        <span>{content.sourceCount(sources.length)}</span>
+      </summary>
       <div>
         {sources.map((source) => (
           <a href={source.href} target={source.href.startsWith("http") ? "_blank" : undefined} rel={source.href.startsWith("http") ? "noreferrer" : undefined} key={source.id}>
@@ -144,7 +150,7 @@ function SourceCards({ sources, locale }: { sources: PortfolioSource[]; locale: 
           </a>
         ))}
       </div>
-    </div>
+    </details>
   );
 }
 
@@ -156,6 +162,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
   const [sessionReady, setSessionReady] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
+  const latestAssistantRef = useRef<HTMLElement>(null);
   const storageKey = `reyy-portfolio-chat-${locale}`;
   const transport = useMemo(
     () => new DefaultChatTransport({ api: "/api/chat", credentials: "same-origin" }),
@@ -168,9 +175,11 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
     transport,
     throttle: 35,
   });
+  const previousStatusRef = useRef(status);
 
   const busy = status === "submitted" || status === "streaming";
   const showPrompts = messages.length <= 1;
+  const latestAssistantId = [...messages].reverse().find((message) => message.role === "assistant")?.id;
 
   useEffect(() => {
     try {
@@ -214,7 +223,19 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
   }, [open]);
 
   useEffect(() => {
-    if (open) messageEndRef.current?.scrollIntoView({ behavior: status === "streaming" ? "auto" : "smooth" });
+    if (!open) {
+      previousStatusRef.current = status;
+      return;
+    }
+
+    const wasBusy = previousStatusRef.current === "submitted" || previousStatusRef.current === "streaming";
+    if (status === "submitted" || status === "streaming") {
+      messageEndRef.current?.scrollIntoView({ behavior: status === "streaming" ? "auto" : "smooth" });
+    } else if (wasBusy) {
+      latestAssistantRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    previousStatusRef.current = status;
   }, [messages, open, status]);
 
   function submitQuestion(question: string) {
@@ -282,7 +303,11 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               const sourceParts = message.parts.filter((part) => part.type === "data-sources");
 
               return (
-                <article className={`portfolio-chat-message ${message.role}`} key={message.id}>
+                <article
+                  className={`portfolio-chat-message ${message.role}`}
+                  key={message.id}
+                  ref={message.id === latestAssistantId ? latestAssistantRef : undefined}
+                >
                   <span className="portfolio-chat-role">{message.role === "user" ? "YOU" : "REYY.AI"}</span>
                   <div className="portfolio-chat-bubble">
                     {textParts.map((part, index) => <p key={`${message.id}-text-${index}`}>{displayText(part.text, message.role)}</p>)}
