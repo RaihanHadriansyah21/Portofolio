@@ -10,6 +10,12 @@ export type Project = {
   tier: "Flagship" | "Featured" | "ML Laboratory" | "Foundation";
   categories: string[];
   stack: string[];
+  preview: {
+    src: string;
+    alt: LocalizedText;
+    fit: "cover" | "contain";
+    position?: string;
+  };
   summary: LocalizedText;
   context: LocalizedText;
   role: LocalizedText;
@@ -30,6 +36,14 @@ export const projects: Project[] = [
     tier: "Flagship",
     categories: ["Applied AI", "Full Stack", "Backend"],
     stack: ["Next.js", "TypeScript", "FastAPI", "TensorFlow", "Supabase", "Redis/RQ"],
+    preview: {
+      src: "/projects/previews/scovis.png",
+      alt: {
+        en: "SCOVIS public landing page with the product identity and AI assessment assistant",
+        id: "Landing page publik SCOVIS dengan identitas produk dan asisten penilaian AI",
+      },
+      fit: "cover",
+    },
     summary: {
       en: "A human-in-the-loop platform that connects 24-section answer submission, asynchronous image-based score classification, lecturer review, and controlled result release.",
       id: "Platform human-in-the-loop yang menghubungkan pengumpulan jawaban 24 bagian, klasifikasi nilai berbasis gambar secara asinkron, review dosen, dan perilisan hasil yang terkontrol.",
@@ -82,6 +96,15 @@ export const projects: Project[] = [
     tier: "Featured",
     categories: ["Applied AI", "Full Stack"],
     stack: ["TensorFlow Lite", "FastAPI", "React", "Railway", "Vercel"],
+    preview: {
+      src: "/projects/previews/dermascan.png",
+      alt: {
+        en: "DermaScan landing page showing the scan workflow and educational positioning",
+        id: "Landing page DermaScan yang menampilkan alur pemindaian dan positioning edukasional",
+      },
+      fit: "cover",
+      position: "center 24%",
+    },
     summary: {
       en: "An educational skin-lesion decision-support prototype connecting a multi-task TFLite model, inference API, and web interface.",
       id: "Prototipe edukasi pendukung keputusan lesi kulit yang menghubungkan model multi-task TFLite, API inferensi, dan antarmuka web.",
@@ -129,6 +152,14 @@ export const projects: Project[] = [
     tier: "Featured",
     categories: ["Machine Learning", "Computer Vision"],
     stack: ["TensorFlow", "MobileNetV2", "TFLite", "TensorFlow.js"],
+    preview: {
+      src: "/projects/previews/vehicle-classification.png",
+      alt: {
+        en: "Saved vehicle-classification predictions comparing actual and predicted classes",
+        id: "Hasil prediksi tersimpan klasifikasi kendaraan yang membandingkan kelas aktual dan prediksi",
+      },
+      fit: "contain",
+    },
     summary: {
       en: "A four-class transfer-learning experiment with model exports for server, mobile, and browser runtimes.",
       id: "Eksperimen transfer learning empat kelas dengan ekspor model untuk runtime server, mobile, dan browser.",
@@ -175,6 +206,14 @@ export const projects: Project[] = [
     tier: "Featured",
     categories: ["Mobile", "Full Stack"],
     stack: ["Flutter", "Dart", "Supabase", "Provider", "Biometrics"],
+    preview: {
+      src: "/projects/previews/quizint.png",
+      alt: {
+        en: "QuizInt mobile application home screen shown in a phone mockup",
+        id: "Tampilan beranda aplikasi mobile QuizInt dalam mockup ponsel",
+      },
+      fit: "cover",
+    },
     summary: {
       en: "A role-based learning prototype combining gamified quizzes, QR onboarding, biometrics, leaderboards, analytics, and PDF export.",
       id: "Prototipe pembelajaran berbasis peran yang menggabungkan kuis gamifikasi, onboarding QR, biometrik, leaderboard, analitik, dan ekspor PDF.",
@@ -222,6 +261,14 @@ export const projects: Project[] = [
     tier: "ML Laboratory",
     categories: ["Machine Learning", "Time Series"],
     stack: ["TensorFlow", "LSTM", "Attention", "Seq2Seq", "Python"],
+    preview: {
+      src: "/projects/previews/bitcoin-forecasting.png",
+      alt: {
+        en: "Saved Seq2Seq inference chart comparing scaled actual and predicted Bitcoin close prices",
+        id: "Grafik inferensi Seq2Seq tersimpan yang membandingkan harga penutupan Bitcoin aktual dan prediksi dalam skala normalisasi",
+      },
+      fit: "contain",
+    },
     summary: {
       en: "A 24-step forecasting laboratory comparing baseline LSTM, attention-enhanced LSTM, and encoder-decoder Seq2Seq models.",
       id: "Laboratorium forecasting 24 langkah yang membandingkan baseline LSTM, LSTM dengan attention, dan encoder-decoder Seq2Seq.",
@@ -266,6 +313,14 @@ export const projects: Project[] = [
     tier: "ML Laboratory",
     categories: ["Machine Learning", "NLP"],
     stack: ["scikit-learn", "TensorFlow", "Sastrawi", "TF-IDF", "Python"],
+    preview: {
+      src: "/projects/previews/gojek-sentiment.png",
+      alt: {
+        en: "Saved model-comparison chart for the Gojek review sentiment experiment",
+        id: "Grafik perbandingan model tersimpan untuk eksperimen sentimen ulasan Gojek",
+      },
+      fit: "contain",
+    },
     summary: {
       en: "An Indonesian review-sentiment experiment comparing Logistic Regression, linear SVM, and a dense neural network.",
       id: "Eksperimen sentimen ulasan Bahasa Indonesia yang membandingkan Logistic Regression, linear SVM, dan dense neural network.",
@@ -314,6 +369,14 @@ export const projects: Project[] = [
     tier: "Foundation",
     categories: ["Backend", "Cloud"],
     stack: ["Flask", "MongoDB", "Python", "REST API"],
+    preview: {
+      src: "/projects/previews/cloud-inventory-api.svg",
+      alt: {
+        en: "Architecture preview of the real Flask inventory endpoints connected to MongoDB",
+        id: "Preview arsitektur endpoint inventory Flask yang terhubung ke MongoDB",
+      },
+      fit: "cover",
+    },
     summary: {
       en: "An academic Flask and MongoDB CRUD API that established my early backend and single-VM cloud foundations.",
       id: "API CRUD akademik dengan Flask dan MongoDB yang membangun fondasi awal backend dan cloud single-VM saya.",

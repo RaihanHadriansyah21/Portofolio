@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { copy, isLocale, locales, projectBySlug, projects, siteUrl } from "@/lib/portfolio";
@@ -76,7 +77,22 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
 
       <section className="case-grid">
         <article className="case-main"><p className="eyebrow">01 / Context</p><h2>{labels.context}</h2><p>{project.context[lang]}</p></article>
-        <aside className="case-note glass-panel"><span>{project.number}</span><p>{lang === "en" ? "Evidence before adjectives." : "Bukti sebelum kata sifat."}</p></aside>
+        <figure className="case-evidence-visual glass-panel">
+          <div className="case-evidence-frame">
+            <Image
+              className={`case-evidence-image is-${project.preview.fit}`}
+              src={project.preview.src}
+              alt={project.preview.alt[lang]}
+              fill
+              sizes="(max-width: 820px) min(100vw - 2rem, 24rem), 17rem"
+              style={{ objectPosition: project.preview.position ?? "center" }}
+            />
+          </div>
+          <figcaption>
+            <span>{project.number}</span>
+            <p>{lang === "en" ? "Real project artifact" : "Artefak proyek nyata"}</p>
+          </figcaption>
+        </figure>
       </section>
       <section className="case-section"><p className="eyebrow">02 / {content.common.role}</p><h2>{content.common.role}</h2><p>{project.role[lang]}</p></section>
 

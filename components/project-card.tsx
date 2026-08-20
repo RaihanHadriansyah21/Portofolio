@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { copy, type Locale, type Project } from "@/lib/portfolio";
 
@@ -21,12 +22,22 @@ export function ProjectCard({
         <span className="project-number">{project.number}</span>
         <span className="project-tier">{project.tier}</span>
       </div>
-      <div className="project-signal" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-      </div>
+      <Link
+        aria-label={`${content.common.viewCase}: ${project.title}`}
+        className="project-preview-link"
+        href={`/${locale}/projects/${project.slug}`}
+      >
+        <Image
+          alt={project.preview.alt[locale]}
+          className={`project-preview-image is-${project.preview.fit}`}
+          fill
+          sizes={featured ? "(max-width: 820px) calc(100vw - 2rem), 58vw" : "(max-width: 580px) calc(100vw - 2rem), (max-width: 1100px) 48vw, 32vw"}
+          src={project.preview.src}
+          style={{ objectPosition: project.preview.position ?? "center" }}
+          unoptimized={project.preview.src.endsWith(".svg")}
+        />
+        <span className="project-preview-cue">{content.common.viewCase} ↗</span>
+      </Link>
       <div className="project-card-copy">
         <p className="eyebrow">{project.categories.join(" · ")}</p>
         <Heading>{project.title}</Heading>
