@@ -628,6 +628,9 @@
 }
 
 .hero-profile-card .pc-contact-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   border-color: rgba(255, 255, 255, 0.22);
   min-height: 2.2rem;
   padding: 0.5rem 0.72rem;
@@ -636,12 +639,42 @@
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
   font-size: 0.62rem;
   line-height: 1;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background 220ms ease,
+    color 220ms ease,
+    box-shadow 260ms ease;
 }
 
-.hero-profile-card .pc-contact-btn:hover {
-  border-color: rgba(255, 255, 255, 0.46);
-  background: rgba(255, 255, 255, 0.1);
+.hero-profile-card .pc-contact-btn::after {
+  position: absolute;
+  inset: -45% auto -45% -55%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+  pointer-events: none;
+  transform: skewX(-18deg);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  content: "";
+}
+
+.hero-profile-card .pc-contact-btn:hover,
+.hero-profile-card .pc-contact-btn:focus-visible {
+  border-color: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
+  box-shadow: 0 0.7rem 1.8rem rgba(0, 0, 0, 0.32), inset 0 1px rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px) scale(1.045);
+}
+
+.hero-profile-card .pc-contact-btn:hover::after,
+.hero-profile-card .pc-contact-btn:focus-visible::after {
+  transform: translateX(380%) skewX(-18deg);
+}
+
+.hero-profile-card .pc-contact-btn:active {
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1);
+  transform: translateY(0) scale(0.97);
 }
 
 .hero-profile-card .pc-details h3,
