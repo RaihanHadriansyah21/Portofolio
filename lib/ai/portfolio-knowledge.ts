@@ -121,7 +121,7 @@ function profileSection(locale: Locale): KnowledgeSection {
   return {
     id: "profile-reyy",
     title: "Reyy profile",
-    tags: ["Reyy", "Mohammad Raihan", "AI ML Engineer", "Full Stack Developer", "Indonesia", "Telkom University"],
+    tags: ["Reyy", "Mohammad Raihan", "AI ML Engineer", "Full Stack Developer", "Indonesia", "Bandung", "Telkom University", "Bima Technologies", "IndiHome", "HMTT", "EPrT"],
     priority: 20,
     sources: [
       { id: "profile-about", title: locale === "id" ? "Tentang Reyy" : "About Reyy", description: content.about.title, href: `/${locale}/about`, kind: "profile" },
@@ -131,11 +131,15 @@ function profileSection(locale: Locale): KnowledgeSection {
     body: [
       `PROFILE: ${profile.legalName}, usually called ${profile.displayName}.`,
       `POSITIONING: AI/ML Engineer and Full-Stack Developer focused on moving machine-learning work beyond notebooks into APIs, data systems, interfaces, and deployment-ready workflows.`,
-      `CURRENT STATUS: Thesis defense in Telecommunication Engineering is complete. Reyy is transitioning toward full-time work while awaiting formal commencement/yudisium. Do not describe him as formally graduated or use an engineering degree title yet.`,
+      `CURRENT STATUS: Thesis defense in Telecommunication Engineering is complete. Reyy is transitioning toward full-time work while awaiting formal yudisium before graduation. Do not describe him as formally graduated or use an engineering degree title yet.`,
+      `LOCATION: ${profile.location}.`,
+      `EXPERIENCE: Information Technology Intern at CV. Bima Technologies in 2025; Telecommunication Installation Intern at PT Telkom Indonesia (IndiHome) in 2021; Head of Commission 3 at HMTT Telkom University for 2025-2026.`,
+      `EDUCATION: Undergraduate Telecommunication Engineering at Telkom University, 2022-2026.`,
+      `ENGLISH: EPrT score 490, equivalent to CEFR B1, taken at Telkom University Language Center on April 30, 2026 and valid through April 30, 2028.`,
       `OPPORTUNITIES: Open to full-time AI/ML, backend, frontend, and full-stack roles at startups or larger technology companies in Indonesia and beyond.`,
       `ABOUT: ${content.about.body}`,
       `CORE STRENGTHS: ${content.proof.join("; ")}.`,
-      `CONTACT: GitHub ${profile.github}; LinkedIn ${profile.linkedin}; Instagram ${profile.instagram}.`,
+      `CONTACT: Email ${profile.email}; GitHub ${profile.github}; LinkedIn ${profile.linkedin}; Instagram ${profile.instagram}.`,
     ].join("\n"),
   };
 }

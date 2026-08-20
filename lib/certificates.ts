@@ -1,7 +1,7 @@
 import type { Locale } from "@/lib/portfolio";
 
-export type CertificateCategory = "ai-ml" | "software-cloud" | "events" | "leadership";
-export type CertificateKind = "program" | "course" | "workshop" | "event" | "activity";
+export type CertificateCategory = "ai-ml" | "software-cloud" | "language" | "events" | "leadership";
+export type CertificateKind = "program" | "course" | "assessment" | "workshop" | "event" | "activity";
 
 export type Certificate = {
   slug: string;
@@ -21,6 +21,7 @@ export type Certificate = {
 export const certificateCategoryLabels: Record<CertificateCategory, Record<Locale, string>> = {
   "ai-ml": { en: "AI & ML", id: "AI & ML" },
   "software-cloud": { en: "Software & Cloud", id: "Software & Cloud" },
+  language: { en: "Language", id: "Bahasa" },
   events: { en: "Events", id: "Event" },
   leadership: { en: "Leadership", id: "Kepemimpinan" },
 };
@@ -28,6 +29,7 @@ export const certificateCategoryLabels: Record<CertificateCategory, Record<Local
 export const certificateKindLabels: Record<CertificateKind, Record<Locale, string>> = {
   program: { en: "Program completion", id: "Kelulusan program" },
   course: { en: "Course completion", id: "Kelulusan kelas" },
+  assessment: { en: "Language assessment", id: "Asesmen bahasa" },
   workshop: { en: "Workshop", id: "Workshop" },
   event: { en: "Event attendance", id: "Kehadiran event" },
   activity: { en: "Leadership activity", id: "Aktivitas kepemimpinan" },
@@ -45,6 +47,18 @@ export const certificates: Certificate[] = [
     width: 1600,
     height: 1132,
     featured: true,
+  },
+  {
+    slug: "english-proficiency-test-eprt-490",
+    title: "English Proficiency Test (EPrT) - Score 490 (CEFR B1)",
+    issuer: "Telkom University Language Center",
+    issuedAt: "2026-04-30",
+    category: "language",
+    kind: "assessment",
+    preview: "/certificates/previews/english-proficiency-test-eprt.png",
+    width: 1070,
+    height: 772,
+    privacyRedacted: true,
   },
   {
     slug: "membangun-proyek-deep-learning-tingkat-mahir",

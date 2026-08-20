@@ -11,8 +11,8 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return {
     title: lang === "id" ? "Sertifikat" : "Certificates",
     description: lang === "id"
-      ? "Galeri lengkap sertifikat teknis, program, workshop, dan aktivitas profesional Reyy yang telah ditinjau untuk privasi."
-      : "Reyy's complete privacy-reviewed gallery of technical certificates, programs, workshops, and professional activities.",
+      ? "Galeri lengkap sertifikat teknis, asesmen bahasa, program, workshop, dan aktivitas profesional Reyy yang telah ditinjau untuk privasi."
+      : "Reyy's complete privacy-reviewed gallery of technical certificates, language assessments, programs, workshops, and professional activities.",
     alternates: {
       canonical: `${base}/${lang}/credentials`,
       languages: { en: `${base}/en/credentials`, id: `${base}/id/credentials` },
@@ -33,8 +33,8 @@ export default async function CredentialsPage({ params }: { params: Promise<{ la
         <p className="eyebrow">{content.learning.eyebrow} / {certificates.length} {lang === "id" ? "bukti unik" : "unique proofs"}</p>
         <h1>{content.learning.title}</h1>
         <p>{lang === "id"
-          ? "Kumpulan kelulusan program, kelas teknis, workshop, event, dan aktivitas kepemimpinan. Setiap preview ditinjau untuk privasi; PDF mentah tidak dipublikasikan."
-          : "A collection of program completions, technical courses, workshops, events, and leadership activities. Every preview is privacy-reviewed; raw PDFs are not published."}</p>
+          ? "Kumpulan kelulusan program, kelas teknis, asesmen bahasa, workshop, event, dan aktivitas kepemimpinan. Setiap preview ditinjau untuk privasi; PDF mentah tidak dipublikasikan."
+          : "A collection of program completions, technical courses, language assessments, workshops, events, and leadership activities. Every preview is privacy-reviewed; raw PDFs are not published."}</p>
       </header>
       <div className="certificate-proof-strip glass-panel" aria-label={lang === "id" ? "Ringkasan sertifikat" : "Certificate summary"} role="region">
         <div><strong>{certificates.length}</strong><span>{lang === "id" ? "Sertifikat unik" : "Unique credentials"}</span></div>

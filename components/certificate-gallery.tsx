@@ -8,7 +8,7 @@ import type { Locale } from "@/lib/portfolio";
 
 type Filter = "all" | CertificateCategory;
 
-const filters: Filter[] = ["all", "ai-ml", "software-cloud", "events", "leadership"];
+const filters: Filter[] = ["all", "ai-ml", "software-cloud", "language", "events", "leadership"];
 
 const galleryCopy = {
   en: {
@@ -123,7 +123,7 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
                 <Image
                   alt={`${copy.dialogLabel}: ${certificate.title}`}
                   height={certificate.height}
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading={index < 3 ? "eager" : "lazy"}
                   quality={75}
                   sizes="(max-width: 720px) calc(100vw - 2rem), (max-width: 1100px) 46vw, 31vw"
                   src={certificate.preview}

@@ -1,6 +1,6 @@
 'use client';
 
-import { FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
+import { FaEnvelope, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import LogoLoop from '@/components/LogoLoop';
 import { profile } from '@/lib/portfolio';
 
@@ -37,6 +37,17 @@ const contactLogos = [
     title: 'Instagram',
     ariaLabel: "Open Reyy's Instagram profile",
     href: profile.instagram
+  },
+  {
+    node: (
+      <span className="contact-logo-chip">
+        <FaEnvelope aria-hidden="true" />
+        <span>Email</span>
+      </span>
+    ),
+    title: 'Email',
+    ariaLabel: 'Email Reyy',
+    href: `mailto:${profile.email}`
   }
 ];
 

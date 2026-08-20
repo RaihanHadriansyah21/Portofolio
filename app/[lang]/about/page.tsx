@@ -36,24 +36,28 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   const journey = lang === "en" ? {
     eyebrow: "Experience / identity",
     title: "Technical range grounded in real environments.",
-    body: "My path combines structured AI training, startup technology work, organizational leadership, and a telecommunications foundation. Each setting strengthened a different part of how I build and collaborate.",
+    body: "My path combines structured AI training, industry technology work, organizational leadership, field telecommunications experience, and an undergraduate engineering foundation. Each setting strengthened a different part of how I build and collaborate.",
     hint: "Drag the badge to interact with it.",
     items: [
       ["2026", "AI Engineer Cohort · Coding Camp powered by DBS Foundation"],
-      ["2025", "Technology Intern · CV. Bima Technologies"],
-      ["2025–26", "Head of Commission 3 · HM TT Telkom University"],
-      ["2022–26", "Telecommunication Engineering · Telkom University"],
+      ["2026", "English proficiency · EPrT 490 (CEFR B1)"],
+      ["2025", "Information Technology Intern · CV. Bima Technologies"],
+      ["2025–26", "Head of Commission 3 · HMTT Telkom University"],
+      ["2022–26", "Undergraduate Telecommunication Engineering · Telkom University"],
+      ["2021", "Telecommunication Installation Intern · PT Telkom Indonesia (IndiHome)"],
     ],
   } : {
     eyebrow: "Pengalaman / identitas",
     title: "Rentang teknis yang berpijak pada lingkungan nyata.",
-    body: "Perjalanan saya memadukan pelatihan AI terstruktur, pengalaman teknologi di startup, kepemimpinan organisasi, dan fondasi telekomunikasi. Setiap lingkungan memperkuat cara saya membangun dan berkolaborasi.",
+    body: "Perjalanan saya memadukan pelatihan AI terstruktur, pengalaman teknologi di lingkungan industri, kepemimpinan organisasi, pengalaman telekomunikasi lapangan, dan fondasi engineering tingkat sarjana. Setiap lingkungan memperkuat cara saya membangun dan berkolaborasi.",
     hint: "Tarik kartu identitas untuk berinteraksi.",
     items: [
       ["2026", "AI Engineer Cohort · Coding Camp powered by DBS Foundation"],
-      ["2025", "Technology Intern · CV. Bima Technologies"],
-      ["2025–26", "Ketua Komisi 3 · HM TT Telkom University"],
-      ["2022–26", "S1 Teknik Telekomunikasi · Telkom University"],
+      ["2026", "Kemampuan bahasa Inggris · EPrT 490 (CEFR B1)"],
+      ["2025", "Information Technology Intern · CV. Bima Technologies"],
+      ["2025–26", "Kepala Komisi 3 · HMTT Telkom University"],
+      ["2022–26", "Mahasiswa S1 Teknik Telekomunikasi · Telkom University"],
+      ["2021", "Telecommunication Installation Intern · PT Telkom Indonesia (IndiHome)"],
     ],
   };
 
@@ -87,7 +91,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       </section>
       <section className="about-next">
         <div><p className="eyebrow">Next chapter</p><h2>{content.contact.title}</h2></div>
-        <div><p>{content.contact.body}</p><a className="button button-primary" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a><a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
+        <div><p>{content.contact.body}</p><a className="button button-primary" href={profile.linkedin} target="_blank" rel="noreferrer">{content.contact.cta} ↗</a><a className="text-link" href={`mailto:${profile.email}`}>Email ↗</a><a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">Instagram ↗</a><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
       </section>
     </main>
   );
