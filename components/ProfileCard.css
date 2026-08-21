@@ -278,7 +278,7 @@
   bottom: var(--ui-inset);
   left: var(--ui-inset);
   right: var(--ui-inset);
-  z-index: 2;
+  z-index: 6;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -288,6 +288,8 @@
   border-radius: calc(max(0px, var(--card-radius) - var(--ui-inset) + var(--ui-radius-bias)));
   padding: 12px 14px;
   pointer-events: auto;
+  isolation: isolate;
+  backface-visibility: hidden;
 }
 
 .pc-user-details {

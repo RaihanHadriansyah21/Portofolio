@@ -329,37 +329,6 @@ const ProfileCardComponent = ({
                   t.style.display = 'none';
                 }}
               />
-              {showUserInfo && (
-                <div className="pc-user-info">
-                  <div className="pc-user-details">
-                    <div className="pc-mini-avatar">
-                      <img
-                        src={miniAvatarUrl || avatarUrl}
-                        alt={`${name || 'User'} mini avatar`}
-                        loading="lazy"
-                        onError={e => {
-                          const t = e.target;
-                          t.style.opacity = '0.5';
-                          t.src = avatarUrl;
-                        }}
-                      />
-                    </div>
-                    <div className="pc-user-text">
-                      <div className="pc-handle">@{handle}</div>
-                      <div className="pc-status">{status}</div>
-                    </div>
-                  </div>
-                  <button
-                    className="pc-contact-btn"
-                    onClick={handleContactClick}
-                    style={{ pointerEvents: 'auto' }}
-                    type="button"
-                    aria-label={`Contact ${name || 'user'}`}
-                  >
-                    {contactText}
-                  </button>
-                </div>
-              )}
             </div>
             <div className="pc-content">
               <div className="pc-details">
@@ -369,6 +338,37 @@ const ProfileCardComponent = ({
             </div>
           </div>
         </section>
+        {showUserInfo && (
+          <div className="pc-user-info">
+            <div className="pc-user-details">
+              <div className="pc-mini-avatar">
+                <img
+                  src={miniAvatarUrl || avatarUrl}
+                  alt={`${name || 'User'} mini avatar`}
+                  loading="lazy"
+                  onError={e => {
+                    const t = e.target;
+                    t.style.opacity = '0.5';
+                    t.src = avatarUrl;
+                  }}
+                />
+              </div>
+              <div className="pc-user-text">
+                <div className="pc-handle">@{handle}</div>
+                <div className="pc-status">{status}</div>
+              </div>
+            </div>
+            <button
+              className="pc-contact-btn"
+              onClick={handleContactClick}
+              style={{ pointerEvents: 'auto' }}
+              type="button"
+              aria-label={`Contact ${name || 'user'}`}
+            >
+              {contactText}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
