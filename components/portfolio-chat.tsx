@@ -447,6 +447,8 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               const sourceParts = message.parts.filter((part) => part.type === "data-sources");
               const isAssistant = message.role === "assistant";
               const isWelcome = idx === 0;
+              const hasText = textParts.some((part) => part.text.trim().length > 0);
+              const isStreamingThis = busy && message.id === latestAssistantId;
 
               return (
                 <article
@@ -456,9 +458,15 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                 >
                   <span className="portfolio-chat-role">{message.role === "user" ? "YOU" : "REYY.AI"}</span>
                   <div className="portfolio-chat-bubble">
+                    {isAssistant && !hasText && isStreamingThis && (
+                      <div className="portfolio-chat-thinking" role="status" style={{ margin: "0.2rem 0 0.5rem" }}>
+                        <span /><span /><span />
+                        <p>{content.thinking}</p>
+                      </div>
+                    )}
                     {textParts.map((part, index) => <p key={`${message.id}-text-${index}`}>{displayText(part.text, message.role)}</p>)}
                     {sourceParts.map((part, index) => <SourceCards sources={part.data} locale={locale} key={`${message.id}-sources-${index}`} />)}
-                    {isAssistant && !isWelcome && (
+                    {isAssistant && !isWelcome && hasText && !isStreamingThis && (
                       <MessageFeedback
                         messageId={message.id}
                         messageContent={textParts.map((p) => p.text).join(" ")}
@@ -470,7 +478,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               );
             })}
 
-            {status === "submitted" && (
+            {(status === "submitted" || (busy && messages.at(-1)?.role === "user")) && (
               <div className="portfolio-chat-thinking" role="status"><span /><span /><span /><p>{content.thinking}</p></div>
             )}
 
