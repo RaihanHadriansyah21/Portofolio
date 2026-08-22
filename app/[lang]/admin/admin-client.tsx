@@ -41,6 +41,12 @@ type AnalyticsData = {
     content: string;
     created_at: string;
   }[];
+  engagement_events?: {
+    cv_previews: number;
+    cv_downloads: number;
+    email_copies: number;
+    command_palette: number;
+  };
 };
 
 const STORAGE_KEY = "reyy_admin_auth_token";
@@ -77,6 +83,12 @@ const copy = {
     freeTierSafe: "Free Tier limit: 1,000,000 tokens/min & 1,500 requests/day. Status: 100% Free Tier Safe.",
     peakHoursTitle: "Peak Activity Hours (WIB / GMT+7)",
     noHourly: "No hourly telemetry yet",
+    engagementTitle: "📄 CV & Visitor Engagement Telemetry",
+    engagementDesc: "Real-time metrics on CV previews, downloads, and interactive shortcuts.",
+    cvViews: "CV In-Browser Previews",
+    cvDownloads: "CV PDF Downloads",
+    emailCopies: "1-Click Email Copies",
+    cmdPalette: "Command Palette (Ctrl+K)",
     leadsTitle: "💼 Recruiter Contacts & Leads",
     leadsDesc: "Contacts left by visitors after chatting with the AI.",
     noLeads: "No recruiter leads submitted yet.",
@@ -129,6 +141,12 @@ const copy = {
     freeTierSafe: "Batas Free Tier: 1.000.000 token/menit & 1.500 request/hari. Status: 100% Aman di Free Tier.",
     peakHoursTitle: "Jam Puncak Aktivitas (WIB / UTC+7)",
     noHourly: "Belum ada data jam aktivitas",
+    engagementTitle: "📄 Telemetri CV & Interaksi Pengunjung",
+    engagementDesc: "Metrik real-time pembacaan CV, download PDF, dan interaksi shortcut.",
+    cvViews: "Preview CV di Browser",
+    cvDownloads: "Download PDF CV",
+    emailCopies: "Salin Email (1-Klik)",
+    cmdPalette: "Command Menu (Ctrl+K)",
     leadsTitle: "💼 Kontak Rekruter & Pesan Masuk",
     leadsDesc: "Kontak yang ditinggalkan pengunjung setelah berdiskusi dengan AI.",
     noLeads: "Belum ada rekruter yang meninggalkan kontak.",
@@ -317,6 +335,13 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
     ? Math.round((data.feedback_summary.up / data.feedback_summary.total) * 100)
     : 0;
 
+  const events = data.engagement_events || {
+    cv_previews: 0,
+    cv_downloads: 0,
+    email_copies: 0,
+    command_palette: 0,
+  };
+
   return (
     <main className="section-shell" style={{ paddingTop: "7.5rem", paddingBottom: "5rem" }}>
       {/* Top Header */}
@@ -427,6 +452,39 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
               ? `${data.feedback_summary.up} 👍 · ${data.feedback_summary.down} 👎`
               : t.noRatings}
           </span>
+        </div>
+      </section>
+
+      {/* Engagement & CV Telemetry Section */}
+      <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12, marginBottom: "2rem" }}>
+        <div style={{ marginBottom: "1.25rem" }}>
+          <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{t.engagementTitle}</h3>
+          <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{t.engagementDesc}</p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
+            <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.cvViews}</span>
+            <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.cv_previews}</h4>
+          </div>
+          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
+            <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.cvDownloads}</span>
+            <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.cv_downloads}</h4>
+          </div>
+          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
+            <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.emailCopies}</span>
+            <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.email_copies}</h4>
+          </div>
+          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
+            <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.cmdPalette}</span>
+            <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.command_palette}</h4>
+          </div>
         </div>
       </section>
 

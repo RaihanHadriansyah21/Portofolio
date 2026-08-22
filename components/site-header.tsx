@@ -1,4 +1,5 @@
 import GlassSurface from "@/components/GlassSurface";
+import { CommandTrigger } from "@/components/command-trigger";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import PillNav from "@/components/PillNav";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -51,6 +52,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           />
 
           <div className="header-controls" aria-label="Display preferences" role="group">
+            <CommandTrigger locale={locale} />
             <LanguageSwitcher locale={locale} />
             <ThemeToggle />
           </div>

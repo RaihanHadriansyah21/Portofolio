@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArchitectureVisualizer } from "@/components/architecture-visualizer";
 import { copy, isLocale, locales, projectBySlug, projects, siteUrl } from "@/lib/portfolio";
 
 export function generateStaticParams() {
@@ -14,6 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const project = projectBySlug(slug);
   if (!project) return {};
   const base = siteUrl();
+  const ogImageUrl = `${base}/api/og?title=${encodeURIComponent(project.title)}&subtitle=${encodeURIComponent(project.tier + " Project")}&tags=${encodeURIComponent(project.stack.slice(0, 4).join(" · "))}`;
 
   return {
     title: project.title,
@@ -22,8 +24,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       canonical: `${base}/${lang}/projects/${slug}`,
       languages: { en: `${base}/en/projects/${slug}`, id: `${base}/id/projects/${slug}` },
     },
-    openGraph: { type: "article", title: `${project.title} | Reyy`, description: project.summary[lang], images: [] },
-    twitter: { card: "summary", title: `${project.title} | Reyy`, description: project.summary[lang], images: [] },
+    openGraph: {
+      type: "article",
+      title: `${project.title} | Reyy`,
+      description: project.summary[lang],
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: project.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | Reyy`,
+      description: project.summary[lang],
+      images: [ogImageUrl],
+    },
   };
 }
 
@@ -109,7 +121,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
         </div>
       </section>
 
-      <section className="case-section"><p className="eyebrow">04 / System</p><h2>{content.common.architecture}</h2><div className="case-list">{project.architecture.map((item, index) => <div key={item.en}><span>{String(index + 1).padStart(2, "0")}</span><p>{item[lang]}</p></div>)}</div></section>
+      <section className="case-section">
+        <p className="eyebrow">04 / System</p>
+        <h2>{content.common.architecture}</h2>
+        {project.slug === "scovis" && <ArchitectureVisualizer locale={lang} />}
+        <div className="case-list">
+          {project.architecture.map((item, index) => <div key={item.en}><span>{String(index + 1).padStart(2, "0")}</span><p>{item[lang]}</p></div>)}
+        </div>
+      </section>
 
       <section className="case-section">
         <p className="eyebrow">05 / Decisions</p>

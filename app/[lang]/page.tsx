@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { HeroActionsClient } from "@/components/hero-actions-client";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
@@ -20,11 +21,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <p className="eyebrow">{content.hero.eyebrow}</p>
           <h1><span>Reyy.</span>{content.hero.title}</h1>
           <p className="hero-intro">{content.hero.intro}</p>
-          <div className="hero-actions">
-            <Link className="button button-primary" href={`/${lang}/projects`}>{content.hero.primary} <span aria-hidden="true">↗</span></Link>
-            <Link className="button button-secondary" href={`/${lang}/about`}>{content.hero.secondary}</Link>
-          </div>
-          <div className="hero-status">
+          <HeroActionsClient locale={lang} />
+          <div className="hero-status" style={{ marginTop: "1.25rem" }}>
             <span>{content.hero.status}</span>
             <span>GitHub · LinkedIn · Instagram · Vercel</span>
           </div>
