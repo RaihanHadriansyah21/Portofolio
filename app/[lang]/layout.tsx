@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { PageTransition } from "@/components/page-transition";
 import { PortfolioProvider } from "@/components/portfolio-provider";
 import { PortfolioChat } from "@/components/portfolio-chat";
+import { RouteProgressBar } from "@/components/route-progress-bar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { copy, isLocale, locales, siteUrl } from "@/lib/portfolio";
@@ -49,8 +51,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <div className="site-frame" lang={lang}>
       <script dangerouslySetInnerHTML={{ __html: languageScript }} />
       <PortfolioProvider locale={lang}>
+        <RouteProgressBar />
         <SiteHeader locale={lang} />
-        {children}
+        <PageTransition>{children}</PageTransition>
         <SiteFooter locale={lang} />
         <PortfolioChat locale={lang} />
       </PortfolioProvider>
