@@ -428,7 +428,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               <span><AssistantMark /></span>
               <div><h2 id="portfolio-chat-title">{content.title}</h2><p>{content.disclosure}</p></div>
             </div>
-            <div className="portfolio-chat-header-actions" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div className="portfolio-chat-header-actions">
               <AIVoiceBriefing locale={locale} />
               <button type="button" onClick={resetChat} title={content.clear}>{content.clear}</button>
               <button className="portfolio-chat-close" type="button" onClick={() => setOpen(false)} aria-label={content.close}>×</button>

@@ -8,21 +8,6 @@ const briefingScripts = {
   id: "Halo, selamat datang di portofolio Mohammad Raihan. Reyy adalah seorang AI dan Machine Learning Engineer serta Full-Stack Developer dari Telkom University. Fokus utamanya adalah membawa model deep learning keluar dari notebook, dan mengintegrasikannya ke sistem web siap pakai. Proyek unggulannya, SCOVIS, mengorkestrasi inferensi puluhan model neural network dengan validasi dosen secara human-in-the-loop. Silakan eksplorasi proyek dan sertifikat terverifikasi Reyy, atau tanyakan apa saja pada asisten AI kami.",
 };
 
-const copy = {
-  en: {
-    play: "🎙️ Listen to 30s Briefing",
-    pause: "⏸ Pause",
-    stop: "⏹ Stop",
-    playing: "Playing Natural Audio Guide…",
-  },
-  id: {
-    play: "🎙️ Dengarkan Ringkasan 30 Detik",
-    pause: "⏸ Jeda",
-    stop: "⏹ Berhenti",
-    playing: "Memutar Audio Guide Natural…",
-  },
-};
-
 export function AIVoiceBriefing({ locale }: { locale: Locale }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -30,8 +15,6 @@ export function AIVoiceBriefing({ locale }: { locale: Locale }) {
     typeof window !== "undefined" ? "speechSynthesis" in window : true
   );
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  const t = copy[locale];
 
   useEffect(() => {
     return () => {
@@ -56,7 +39,6 @@ export function AIVoiceBriefing({ locale }: { locale: Locale }) {
       return voices.find((v) => v.lang.toLowerCase().startsWith("en")) || voices[0] || null;
     }
 
-    // Rank voices: Neural / Natural / Google / Online voices score higher
     return matchingVoices.sort((a, b) => {
       const getScore = (voice: SpeechSynthesisVoice) => {
         const name = voice.name.toLowerCase();
@@ -98,7 +80,7 @@ export function AIVoiceBriefing({ locale }: { locale: Locale }) {
       utterance.lang = locale === "id" ? "id-ID" : "en-US";
     }
 
-    utterance.rate = 0.94; // Calm, articulate cadence
+    utterance.rate = 0.94;
     utterance.pitch = 1.0;
 
     utterance.onstart = () => {
@@ -142,81 +124,95 @@ export function AIVoiceBriefing({ locale }: { locale: Locale }) {
 
   if (!isSupported) return null;
 
+  if (!isPlaying && !isPaused) {
+    return (
+      <button
+        type="button"
+        onClick={handlePlay}
+        title={locale === "id" ? "Dengarkan Ringkasan Suara 30 Detik" : "Listen to 30s Voice Briefing"}
+        aria-label={locale === "id" ? "Dengarkan Ringkasan Suara" : "Listen to Voice Briefing"}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.35rem",
+          cursor: "pointer",
+        }}
+      >
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          style={{ opacity: 0.8 }}
+        >
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+        </svg>
+        <span>AUDIO</span>
+      </button>
+    );
+  }
+
   return (
     <div
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: "0.5rem",
-        padding: "0.3rem 0.75rem",
+        gap: "0.35rem",
+        padding: "0.25rem 0.5rem",
         borderRadius: "999px",
-        background: isPlaying ? "rgba(74, 222, 128, 0.12)" : "rgba(255, 255, 255, 0.05)",
-        border: isPlaying ? "1px solid #4ade80" : "1px solid rgba(255, 255, 255, 0.1)",
-        color: isPlaying ? "#4ade80" : "var(--foreground, #fff)",
-        transition: "all 180ms ease",
+        background: "rgba(74, 222, 128, 0.1)",
+        border: "1px solid #4ade80",
+        color: "#4ade80",
+        minHeight: "2.35rem",
       }}
     >
-      {!isPlaying && !isPaused ? (
-        <button
-          type="button"
-          onClick={handlePlay}
-          style={{
-            background: "none",
-            border: "none",
-            color: "inherit",
-            cursor: "pointer",
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            padding: 0,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.35rem",
-          }}
-        >
-          {t.play}
-        </button>
-      ) : (
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          {/* Animated Waveform */}
-          <div style={{ display: "flex", alignItems: "center", gap: "2px", height: "12px" }}>
-            <span style={{ width: 2, height: isPlaying ? "12px" : "4px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out infinite alternate" : "none" }} />
-            <span style={{ width: 2, height: isPlaying ? "8px" : "4px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out 150ms infinite alternate" : "none" }} />
-            <span style={{ width: 2, height: isPlaying ? "14px" : "4px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out 300ms infinite alternate" : "none" }} />
-          </div>
+      {/* Animated Waveform */}
+      <div style={{ display: "flex", alignItems: "center", gap: "2px", height: "10px", padding: "0 2px" }}>
+        <span style={{ width: 2, height: isPlaying ? "10px" : "3px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out infinite alternate" : "none" }} />
+        <span style={{ width: 2, height: isPlaying ? "7px" : "3px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out 150ms infinite alternate" : "none" }} />
+        <span style={{ width: 2, height: isPlaying ? "12px" : "3px", background: "#4ade80", borderRadius: 1, animation: isPlaying ? "wave 600ms ease-in-out 300ms infinite alternate" : "none" }} />
+      </div>
 
-          <span style={{ fontSize: "0.72rem", fontWeight: 600 }}>{isPlaying ? t.playing : t.pause}</span>
+      <button
+        type="button"
+        onClick={isPlaying ? handlePause : handlePlay}
+        title={isPlaying ? "Pause" : "Play"}
+        style={{
+          background: "none",
+          border: "none",
+          color: "inherit",
+          cursor: "pointer",
+          fontSize: "0.72rem",
+          padding: "0 0.15rem",
+          minHeight: "unset",
+        }}
+      >
+        {isPlaying ? "⏸" : "▶"}
+      </button>
 
-          <button
-            type="button"
-            onClick={isPlaying ? handlePause : handlePlay}
-            style={{
-              background: "none",
-              border: "none",
-              color: "inherit",
-              cursor: "pointer",
-              fontSize: "0.75rem",
-              padding: "0 0.2rem",
-            }}
-          >
-            {isPlaying ? "⏸" : "▶"}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleStop}
-            style={{
-              background: "none",
-              border: "none",
-              color: "inherit",
-              cursor: "pointer",
-              fontSize: "0.75rem",
-              padding: "0 0.2rem",
-            }}
-          >
-            ⏹
-          </button>
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={handleStop}
+        title="Stop"
+        style={{
+          background: "none",
+          border: "none",
+          color: "inherit",
+          cursor: "pointer",
+          fontSize: "0.72rem",
+          padding: "0 0.15rem",
+          minHeight: "unset",
+        }}
+      >
+        ⏹
+      </button>
     </div>
   );
 }
