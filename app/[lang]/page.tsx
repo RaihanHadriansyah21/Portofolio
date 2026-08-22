@@ -22,7 +22,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <h1><span>Reyy.</span>{content.hero.title}</h1>
           <p className="hero-intro">{content.hero.intro}</p>
           <HeroActionsClient locale={lang} />
-          <div className="hero-status" style={{ marginTop: "1.25rem" }}>
+          <div className="hero-status">
             <span>{content.hero.status}</span>
             <span>GitHub · LinkedIn · Instagram · Vercel</span>
           </div>
