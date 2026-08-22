@@ -126,9 +126,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
         <p className="eyebrow">04 / System</p>
         <h2>{content.common.architecture}</h2>
         {project.slug === "scovis" && <ArchitectureVisualizer locale={lang} />}
-        {(project.slug === "dermascan" || project.slug === "vehicle-classification") && (
-          <MLPlayground locale={lang} />
-        )}
+        {project.slug === "dermascan" && <MLPlayground locale={lang} />}
         <div className="case-list">
           {project.architecture.map((item, index) => <div key={item.en}><span>{String(index + 1).padStart(2, "0")}</span><p>{item[lang]}</p></div>)}
         </div>
