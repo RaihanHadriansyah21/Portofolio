@@ -96,6 +96,34 @@ function CommandMenuModal({
         onOpenChat?.();
       },
     },
+    {
+      id: "ml-playground",
+      category: "actions",
+      label: {
+        en: "Open ML Model Inference Playground",
+        id: "Buka Playground Inferensi Model ML",
+      },
+      shortcut: "ML",
+      icon: "🧠",
+      perform: () => {
+        onClose();
+        router.push(`/${locale}/projects/dermascan`);
+      },
+    },
+    {
+      id: "role-matcher",
+      category: "actions",
+      label: {
+        en: "Recruiter Role Fit Matcher",
+        id: "Kalkulator Kecocokan Lowongan (Role Fit)",
+      },
+      shortcut: "FIT",
+      icon: "🎯",
+      perform: () => {
+        onClose();
+        router.push(`/${locale}#role-matcher`);
+      },
+    },
     // Navigation
     {
       id: "nav-home",

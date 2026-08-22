@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HeroActionsClient } from "@/components/hero-actions-client";
+import { RoleFitMatcher } from "@/components/role-fit-matcher";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
@@ -63,6 +64,10 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           </div>
         </div>
       </section>
+
+      <div className="section-shell" id="role-matcher">
+        <RoleFitMatcher locale={lang} />
+      </div>
 
       <section className="section-shell section-block">
         <div className="section-heading split-heading">

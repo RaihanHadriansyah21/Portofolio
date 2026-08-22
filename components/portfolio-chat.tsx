@@ -3,6 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { AIVoiceBriefing } from "@/components/ai-voice-briefing";
 import type { ChatMode, PortfolioChatMessage, PortfolioSource } from "@/lib/ai/types";
 import type { Locale } from "@/lib/portfolio";
 
@@ -427,7 +428,8 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               <span><AssistantMark /></span>
               <div><h2 id="portfolio-chat-title">{content.title}</h2><p>{content.disclosure}</p></div>
             </div>
-            <div className="portfolio-chat-header-actions">
+            <div className="portfolio-chat-header-actions" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <AIVoiceBriefing locale={locale} />
               <button type="button" onClick={resetChat} title={content.clear}>{content.clear}</button>
               <button className="portfolio-chat-close" type="button" onClick={() => setOpen(false)} aria-label={content.close}>×</button>
             </div>
