@@ -145,7 +145,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
 
   if (!data) {
     return (
-      <main className="section-shell" style={{ minHeight: "80vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <main className="section-shell" style={{ minHeight: "85vh", display: "flex", alignItems: "center", justifyContent: "center", paddingTop: "6.5rem", paddingBottom: "4rem" }}>
         <div className="glass-panel" style={{ maxWidth: 420, width: "100%", padding: "2.5rem 2rem", borderRadius: 16 }}>
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
             <span style={{ fontSize: "1.75rem", display: "inline-block", marginBottom: "0.5rem" }}>🔒</span>
@@ -201,12 +201,12 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
 
   const upRate = data.feedback_summary.total > 0
     ? Math.round((data.feedback_summary.up / data.feedback_summary.total) * 100)
-    : 100;
+    : 0;
 
   return (
-    <main className="section-shell" style={{ paddingBottom: "5rem" }}>
+    <main className="section-shell" style={{ paddingTop: "6.5rem", paddingBottom: "5rem" }}>
       {/* Top Header */}
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginTop: "2rem", marginBottom: "2rem" }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "2rem" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
@@ -272,11 +272,13 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
 
         <div className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12 }}>
           <p style={{ fontSize: "0.75rem", letterSpacing: "0.08em", opacity: 0.6, margin: 0, textTransform: "uppercase" }}>SATISFACTION</p>
-          <h2 style={{ fontSize: "2rem", fontWeight: 700, margin: "0.5rem 0 0", color: upRate >= 80 ? "#4ade80" : "inherit" }}>
-            {data.feedback_summary.total > 0 ? `${upRate}%` : "100%"}
+          <h2 style={{ fontSize: "2rem", fontWeight: 700, margin: "0.5rem 0 0", color: data.feedback_summary.total > 0 && upRate >= 80 ? "#4ade80" : "inherit" }}>
+            {data.feedback_summary.total > 0 ? `${upRate}%` : "—"}
           </h2>
           <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>
-            {data.feedback_summary.up} 👍 · {data.feedback_summary.down} 👎
+            {data.feedback_summary.total > 0
+              ? `${data.feedback_summary.up} 👍 · ${data.feedback_summary.down} 👎`
+              : (locale === "id" ? "Belum ada rating" : "No ratings yet")}
           </span>
         </div>
       </section>
@@ -347,7 +349,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           </div>
 
           <h4 style={{ fontSize: "0.9rem", fontWeight: 600, marginTop: "1.25rem", marginBottom: "0.75rem" }}>
-            {locale === "id" ? "Jam Puncak Aktivitas (7 Hari)" : "Peak Activity Hours (7 Days)"}
+            {locale === "id" ? "Jam Puncak Aktivitas (WIB)" : "Peak Activity Hours (WIB / GMT+7)"}
           </h4>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
             {data.peak_hours.length === 0 ? (
@@ -355,7 +357,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
             ) : (
               data.peak_hours.map((item) => (
                 <div key={item.hour} style={{ background: "rgba(255,255,255,0.08)", padding: "0.35rem 0.65rem", borderRadius: 6, fontSize: "0.8rem" }}>
-                  <strong>{String(item.hour).padStart(2, "0")}:00</strong> · {item.count} chats
+                  <strong>{String(item.hour).padStart(2, "0")}:00 WIB</strong> · {item.count} {locale === "id" ? "sesi" : "chats"}
                 </div>
               ))
             )}

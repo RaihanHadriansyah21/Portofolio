@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { messageId, sessionId, rating } = body;
+    const { messageId, messageContent, sessionId, rating } = body;
 
     if (!messageId || !rating || (rating !== "up" && rating !== "down")) {
       return Response.json({ error: "Invalid feedback payload" }, { status: 400 });
@@ -37,8 +37,9 @@ export async function POST(request: Request) {
     // Upsert feedback
     const { error } = await supabase.from("chat_feedback").upsert(
       {
-        message_id: messageId,
-        session_id: sessionId || null,
+        message_id: String(messageId),
+        message_content: typeof messageContent === "string" ? messageContent.slice(0, 1000) : null,
+        session_id: typeof sessionId === "string" ? sessionId : null,
         rating,
       },
       { onConflict: "message_id" },

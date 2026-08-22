@@ -170,7 +170,7 @@ function SourceCards({ sources, locale }: { sources: PortfolioSource[]; locale: 
   );
 }
 
-function MessageFeedback({ messageId, locale }: { messageId: string; locale: Locale }) {
+function MessageFeedback({ messageId, messageContent, locale }: { messageId: string; messageContent?: string; locale: Locale }) {
   const content = uiCopy[locale];
   const [rated, setRated] = useState<"up" | "down" | null>(null);
 
@@ -180,7 +180,7 @@ function MessageFeedback({ messageId, locale }: { messageId: string; locale: Loc
     fetch("/api/chat/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messageId, rating }),
+      body: JSON.stringify({ messageId, messageContent, rating }),
     }).catch(() => {});
   }
 
@@ -458,7 +458,13 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                   <div className="portfolio-chat-bubble">
                     {textParts.map((part, index) => <p key={`${message.id}-text-${index}`}>{displayText(part.text, message.role)}</p>)}
                     {sourceParts.map((part, index) => <SourceCards sources={part.data} locale={locale} key={`${message.id}-sources-${index}`} />)}
-                    {isAssistant && !isWelcome && <MessageFeedback messageId={message.id} locale={locale} />}
+                    {isAssistant && !isWelcome && (
+                      <MessageFeedback
+                        messageId={message.id}
+                        messageContent={textParts.map((p) => p.text).join(" ")}
+                        locale={locale}
+                      />
+                    )}
                   </div>
                 </article>
               );
