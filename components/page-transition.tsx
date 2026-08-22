@@ -8,7 +8,19 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Scroll to top smoothly on page transition
+    // If navigating to a page with a hash (e.g. /id#contact), scroll to the anchor smoothly
+    if (typeof window !== "undefined" && window.location.hash) {
+      const targetId = window.location.hash.replace("#", "");
+      const timer = setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+
+    // Otherwise scroll to top on clean route change
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
 

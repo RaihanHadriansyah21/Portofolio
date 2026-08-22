@@ -242,9 +242,20 @@ const PillNav = ({
 
   const isRouterLink = href => href && !isExternalLink(href);
 
-  const handleItemClick = href => {
-    const hash = href.split('#')[1] || '';
-    setActiveHash(hash);
+  const handleItemClick = (href) => {
+    const [path, hash] = href.split('#');
+    setActiveHash(hash || '');
+
+    if (hash) {
+      // If we are already on the target path, scroll smoothly to the anchor
+      if (pathname === path || !path) {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', `${pathname}#${hash}`);
+        }
+      }
+    }
   };
 
   const isActiveLink = (href, index) => {

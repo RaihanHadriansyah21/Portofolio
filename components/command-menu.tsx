@@ -165,6 +165,21 @@ function CommandMenuModal({
         router.push(`/${locale}/about`);
       },
     },
+    {
+      id: "nav-contact",
+      category: "navigation",
+      label: { en: "Go to Contact / Let's Talk Section", id: "Buka Bagian Kontak / Mari Berbicara" },
+      icon: "✉️",
+      perform: () => {
+        onClose();
+        const el = document.getElementById("contact");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        } else {
+          router.push(`/${locale}#contact`);
+        }
+      },
+    },
     // Projects Direct Jump
     ...projects.map((p) => ({
       id: `proj-${p.slug}`,
