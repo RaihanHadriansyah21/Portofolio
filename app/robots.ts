@@ -3,5 +3,13 @@ import { siteUrl } from "@/lib/portfolio";
 
 export default function robots(): MetadataRoute.Robots {
   const base = siteUrl();
-  return { rules: { userAgent: "*", allow: "/" }, sitemap: `${base}/sitemap.xml`, host: base };
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      disallow: ["/*/admin", "/admin"],
+    },
+    sitemap: `${base}/sitemap.xml`,
+    host: base,
+  };
 }

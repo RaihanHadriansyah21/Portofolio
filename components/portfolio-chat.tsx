@@ -30,7 +30,15 @@ const uiCopy = {
     sourceTitle: "Verified sources",
     sourceCount: (count: number) => `${count} source${count === 1 ? "" : "s"}`,
     error: "The guide could not respond. Please wait a moment and try again.",
-    privacy: "No sensitive documents are shared. Chat history stays in this browser session.",
+    privacy: "Conversations may be reviewed to improve this guide. No sensitive data is collected.",
+    feedbackThanks: "Thanks for feedback!",
+    leadPrompt: "Recruiting or hiring? Leave a note for Reyy:",
+    leadName: "Your name",
+    leadEmail: "Work email",
+    leadMessage: "Message or role (optional)",
+    leadSubmit: "Send Note",
+    leadSuccess: "✓ Note sent to Reyy. Thank you!",
+    leadDismiss: "Dismiss",
   },
   id: {
     button: "Tanya AI guide Reyy",
@@ -53,7 +61,15 @@ const uiCopy = {
     sourceTitle: "Sumber terverifikasi",
     sourceCount: (count: number) => `${count} sumber`,
     error: "AI guide belum dapat merespons. Tunggu sebentar lalu coba kembali.",
-    privacy: "Tidak ada dokumen sensitif yang dibagikan. Riwayat chat hanya tersimpan selama sesi browser ini.",
+    privacy: "Percakapan dapat ditinjau untuk meningkatkan panduan ini. Tidak ada data sensitif yang dikumpulkan.",
+    feedbackThanks: "Terima kasih atas feedback Anda!",
+    leadPrompt: "Sedang merekrut? Tinggalkan kontak untuk Reyy:",
+    leadName: "Nama Anda",
+    leadEmail: "Email kantor / kontak",
+    leadMessage: "Pesan atau posisi (opsional)",
+    leadSubmit: "Kirim Pesan",
+    leadSuccess: "✓ Pesan terkirim ke Reyy. Terima kasih!",
+    leadDismiss: "Tutup",
   },
 } as const;
 
@@ -154,12 +170,139 @@ function SourceCards({ sources, locale }: { sources: PortfolioSource[]; locale: 
   );
 }
 
+function MessageFeedback({ messageId, locale }: { messageId: string; locale: Locale }) {
+  const content = uiCopy[locale];
+  const [rated, setRated] = useState<"up" | "down" | null>(null);
+
+  function sendRating(rating: "up" | "down") {
+    if (rated) return;
+    setRated(rating);
+    fetch("/api/chat/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messageId, rating }),
+    }).catch(() => {});
+  }
+
+  if (rated) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.72rem", opacity: 0.6, marginTop: "0.4rem" }}>
+        <span>{rated === "up" ? "👍" : "👎"}</span>
+        <span>{content.feedbackThanks}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", marginTop: "0.4rem", opacity: 0.7 }}>
+      <button
+        type="button"
+        onClick={() => sendRating("up")}
+        title="Helpful response"
+        style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", fontSize: "0.8rem", borderRadius: 4 }}
+      >
+        👍
+      </button>
+      <button
+        type="button"
+        onClick={() => sendRating("down")}
+        title="Could be better"
+        style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", fontSize: "0.8rem", borderRadius: 4 }}
+      >
+        👎
+      </button>
+    </div>
+  );
+}
+
+function RecruiterLeadCapture({ locale, onDismiss }: { locale: Locale; onDismiss: () => void }) {
+  const content = uiCopy[locale];
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/chat/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div style={{ background: "rgba(74, 222, 128, 0.1)", border: "1px solid rgba(74, 222, 128, 0.3)", borderRadius: 8, padding: "0.75rem", fontSize: "0.82rem", color: "#4ade80", margin: "0.5rem 0.75rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span>{content.leadSuccess}</span>
+        <button type="button" onClick={onDismiss} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", opacity: 0.8 }}>×</button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "0.75rem", margin: "0.5rem 0.75rem", fontSize: "0.82rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+        <strong style={{ fontSize: "0.8rem" }}>{content.leadPrompt}</strong>
+        <button type="button" onClick={onDismiss} style={{ background: "none", border: "none", opacity: 0.5, cursor: "pointer", fontSize: "0.9rem" }}>×</button>
+      </div>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+        <div style={{ display: "flex", gap: "0.4rem" }}>
+          <input
+            type="text"
+            placeholder={content.leadName}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{ flex: 1, padding: "0.4rem 0.6rem", borderRadius: 4, background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.15)", color: "inherit", fontSize: "0.8rem" }}
+          />
+          <input
+            type="email"
+            placeholder={content.leadEmail}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={{ flex: 1, padding: "0.4rem 0.6rem", borderRadius: 4, background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.15)", color: "inherit", fontSize: "0.8rem" }}
+          />
+        </div>
+        <input
+          type="text"
+          placeholder={content.leadMessage}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          style={{ width: "100%", padding: "0.4rem 0.6rem", borderRadius: 4, background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.15)", color: "inherit", fontSize: "0.8rem" }}
+        />
+        <button
+          type="submit"
+          disabled={sending || !name.trim() || !email.trim()}
+          style={{ padding: "0.4rem 0.8rem", borderRadius: 4, background: "var(--foreground, #fff)", color: "var(--background, #000)", border: "none", fontWeight: 600, fontSize: "0.78rem", cursor: "pointer", marginTop: "0.2rem" }}
+        >
+          {sending ? "Sending..." : content.leadSubmit}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 export function PortfolioChat({ locale }: { locale: Locale }) {
   const content = uiCopy[locale];
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<ChatMode>("recruiter");
   const [input, setInput] = useState("");
   const [sessionReady, setSessionReady] = useState(false);
+  const [leadDismissed, setLeadDismissed] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantRef = useRef<HTMLElement>(null);
@@ -179,6 +322,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
 
   const busy = status === "submitted" || status === "streaming";
   const showPrompts = messages.length <= 1;
+  const showLeadPrompt = !leadDismissed && messages.filter((m) => m.role === "user").length >= 2;
   const latestAssistantId = [...messages].reverse().find((message) => message.role === "assistant")?.id;
 
   useEffect(() => {
@@ -298,9 +442,11 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
           </div>
 
           <div className="portfolio-chat-messages" aria-live="polite" aria-busy={busy}>
-            {messages.map((message) => {
+            {messages.map((message, idx) => {
               const textParts = message.parts.filter((part) => part.type === "text");
               const sourceParts = message.parts.filter((part) => part.type === "data-sources");
+              const isAssistant = message.role === "assistant";
+              const isWelcome = idx === 0;
 
               return (
                 <article
@@ -312,6 +458,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                   <div className="portfolio-chat-bubble">
                     {textParts.map((part, index) => <p key={`${message.id}-text-${index}`}>{displayText(part.text, message.role)}</p>)}
                     {sourceParts.map((part, index) => <SourceCards sources={part.data} locale={locale} key={`${message.id}-sources-${index}`} />)}
+                    {isAssistant && !isWelcome && <MessageFeedback messageId={message.id} locale={locale} />}
                   </div>
                 </article>
               );
@@ -324,6 +471,10 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
             {error && <p className="portfolio-chat-error" role="alert">{content.error}</p>}
             <div ref={messageEndRef} />
           </div>
+
+          {showLeadPrompt && (
+            <RecruiterLeadCapture locale={locale} onDismiss={() => setLeadDismissed(true)} />
+          )}
 
           {showPrompts && (
             <div className="portfolio-chat-prompts" aria-label={locale === "id" ? "Pertanyaan contoh" : "Suggested questions"}>

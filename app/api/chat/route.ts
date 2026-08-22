@@ -9,6 +9,7 @@ import {
 import { retrievePortfolioKnowledge } from "@/lib/ai/portfolio-knowledge";
 import type { ChatMode, PortfolioChatMessage } from "@/lib/ai/types";
 import type { Locale } from "@/lib/portfolio";
+import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -52,6 +53,24 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function requestIp(request: Request) {
   const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   return forwarded || request.headers.get("x-real-ip") || "local";
+}
+
+async function hashIp(ip: string): Promise<string> {
+  const data = new TextEncoder().encode(ip + (process.env.SUPABASE_URL || "salt"));
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4);
+}
+
+function logToDb(action: () => Promise<unknown>) {
+  action().catch((error) => {
+    console.error("[chat-db]", error instanceof Error ? error.message : error);
+  });
 }
 
 function checkRateLimit(identifier: string) {
@@ -212,6 +231,32 @@ export async function POST(request: Request) {
     return jsonError("The portfolio assistant is temporarily unavailable.", 503);
   }
 
+  // --- Database logging (fire-and-forget, never blocks the response) ---
+  const sessionId = crypto.randomUUID();
+  const db = supabase;
+  if (db) {
+    const visitorHashPromise = hashIp(requestIp(request));
+    logToDb(async () => {
+      const visitorHash = await visitorHashPromise;
+      await db.from("chat_sessions").insert({
+        id: sessionId,
+        visitor_hash: visitorHash,
+        locale,
+        mode,
+        user_agent: request.headers.get("user-agent")?.slice(0, 512) || null,
+        referrer: request.headers.get("referer")?.slice(0, 512) || null,
+      });
+    });
+    logToDb(async () => {
+      await db.from("chat_messages").insert({
+        session_id: sessionId,
+        role: "user",
+        content: latestQuestion.slice(0, 2000),
+        token_estimate: estimateTokens(latestQuestion),
+      });
+    });
+  }
+
   const knowledge = retrievePortfolioKnowledge(latestQuestion, locale, mode);
   const fallback = locale === "id"
     ? "Asisten AI sedang sibuk. Silakan coba lagi sebentar atau buka sumber portofolio yang tersedia."
@@ -237,6 +282,19 @@ export async function POST(request: Request) {
           } satisfies GoogleLanguageModelOptions,
         },
         abortSignal: request.signal,
+        onFinish: ({ text }) => {
+          if (db && text) {
+            logToDb(async () => {
+              await db.from("chat_messages").insert({
+                session_id: sessionId,
+                role: "assistant",
+                content: text.slice(0, 4000),
+                sources: knowledge.sources,
+                token_estimate: estimateTokens(text),
+              });
+            });
+          }
+        },
       });
 
       writer.merge(
@@ -255,6 +313,7 @@ export async function POST(request: Request) {
       "Cache-Control": "no-store, max-age=0",
       "X-Content-Type-Options": "nosniff",
       "Referrer-Policy": "same-origin",
+      "X-Chat-Session-Id": sessionId,
     },
   });
 }
