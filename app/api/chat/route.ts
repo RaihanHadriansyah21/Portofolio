@@ -152,6 +152,15 @@ function validateMessages(value: unknown): PortfolioChatMessage[] | null {
   return messages;
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function parseSessionId(value: unknown): string {
+  if (typeof value === "string" && UUID_REGEX.test(value.trim())) {
+    return value.trim().toLowerCase();
+  }
+  return crypto.randomUUID();
+}
+
 function parseMode(value: unknown): ChatMode {
   return value === "technical" || value === "explore" || value === "recruiter" ? value : "recruiter";
 }
@@ -224,6 +233,7 @@ export async function POST(request: Request) {
 
   const locale = parseLocale(body.locale);
   const mode = parseMode(body.mode);
+  const sessionId = parseSessionId(body.sessionId);
   const latestQuestion = textParts(messages.at(-1) as unknown as Record<string, unknown>);
   if (!latestQuestion) return jsonError("A question is required.", 400);
 
@@ -232,20 +242,22 @@ export async function POST(request: Request) {
   }
 
   // --- Database logging (fire-and-forget, never blocks the response) ---
-  const sessionId = crypto.randomUUID();
   const db = supabase;
   if (db) {
     const visitorHashPromise = hashIp(requestIp(request));
     logToDb(async () => {
       const visitorHash = await visitorHashPromise;
-      await db.from("chat_sessions").insert({
-        id: sessionId,
-        visitor_hash: visitorHash,
-        locale,
-        mode,
-        user_agent: request.headers.get("user-agent")?.slice(0, 512) || null,
-        referrer: request.headers.get("referer")?.slice(0, 512) || null,
-      });
+      await db.from("chat_sessions").upsert(
+        {
+          id: sessionId,
+          visitor_hash: visitorHash,
+          locale,
+          mode,
+          user_agent: request.headers.get("user-agent")?.slice(0, 512) || null,
+          referrer: request.headers.get("referer")?.slice(0, 512) || null,
+        },
+        { onConflict: "id", ignoreDuplicates: true },
+      );
     });
     logToDb(async () => {
       await db.from("chat_messages").insert({

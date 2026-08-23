@@ -65,11 +65,11 @@ const roleProfiles: RoleProfile[] = [
         },
       },
       {
-        slug: "e-mathtoco",
-        title: "E-MathToco",
+        slug: "quizint",
+        title: "QuizInt",
         highlight: {
-          en: "Interactive mathematics learning platform with game mechanics.",
-          id: "Platform pembelajaran matematika interaktif dengan mekanik game.",
+          en: "Role-based mobile learning platform with Supabase & Flutter.",
+          id: "Platform pembelajaran mobile berbasis peran dengan Supabase & Flutter.",
         },
       },
     ],

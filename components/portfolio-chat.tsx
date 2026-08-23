@@ -171,7 +171,17 @@ function SourceCards({ sources, locale }: { sources: PortfolioSource[]; locale: 
   );
 }
 
-function MessageFeedback({ messageId, messageContent, locale }: { messageId: string; messageContent?: string; locale: Locale }) {
+function MessageFeedback({
+  messageId,
+  messageContent,
+  sessionId,
+  locale,
+}: {
+  messageId: string;
+  messageContent?: string;
+  sessionId: string;
+  locale: Locale;
+}) {
   const content = uiCopy[locale];
   const [rated, setRated] = useState<"up" | "down" | null>(null);
 
@@ -181,7 +191,7 @@ function MessageFeedback({ messageId, messageContent, locale }: { messageId: str
     fetch("/api/chat/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messageId, messageContent, rating }),
+      body: JSON.stringify({ messageId, messageContent, sessionId, rating }),
     }).catch(() => {});
   }
 
@@ -216,7 +226,15 @@ function MessageFeedback({ messageId, messageContent, locale }: { messageId: str
   );
 }
 
-function RecruiterLeadCapture({ locale, onDismiss }: { locale: Locale; onDismiss: () => void }) {
+function RecruiterLeadCapture({
+  locale,
+  sessionId,
+  onDismiss,
+}: {
+  locale: Locale;
+  sessionId: string;
+  onDismiss: () => void;
+}) {
   const content = uiCopy[locale];
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -232,7 +250,7 @@ function RecruiterLeadCapture({ locale, onDismiss }: { locale: Locale; onDismiss
       const res = await fetch("/api/chat/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, sessionId }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -297,6 +315,24 @@ function RecruiterLeadCapture({ locale, onDismiss }: { locale: Locale; onDismiss
   );
 }
 
+function getInitialSessionId(locale: Locale): string {
+  if (typeof window !== "undefined") {
+    try {
+      const key = `reyy-portfolio-chat-session-${locale}`;
+      const stored = window.sessionStorage.getItem(key);
+      if (stored && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(stored)) {
+        return stored;
+      }
+      const fresh = crypto.randomUUID();
+      window.sessionStorage.setItem(key, fresh);
+      return fresh;
+    } catch {
+      return crypto.randomUUID();
+    }
+  }
+  return crypto.randomUUID();
+}
+
 export function PortfolioChat({ locale }: { locale: Locale }) {
   const content = uiCopy[locale];
   const [open, setOpen] = useState(false);
@@ -304,10 +340,12 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
   const [input, setInput] = useState("");
   const [sessionReady, setSessionReady] = useState(false);
   const [leadDismissed, setLeadDismissed] = useState(false);
+  const [chatSessionId, setChatSessionId] = useState<string>(() => getInitialSessionId(locale));
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const latestAssistantRef = useRef<HTMLElement>(null);
   const storageKey = `reyy-portfolio-chat-${locale}`;
+  const chatSessionKey = `reyy-portfolio-chat-session-${locale}`;
   const transport = useMemo(
     () => new DefaultChatTransport({ api: "/api/chat", credentials: "same-origin" }),
     [],
@@ -386,7 +424,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
   function submitQuestion(question: string) {
     const trimmed = question.trim();
     if (!trimmed || busy || trimmed.length > MAX_INPUT_LENGTH) return;
-    void sendMessage({ text: trimmed }, { body: { locale, mode } });
+    void sendMessage({ text: trimmed }, { body: { locale, mode, sessionId: chatSessionId } });
     setInput("");
   }
 
@@ -406,7 +444,12 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
     if (busy) stop();
     const resetMessages = [welcomeMessage(locale)];
     setMessages(resetMessages);
-    window.sessionStorage.removeItem(storageKey);
+    const freshSession = crypto.randomUUID();
+    setChatSessionId(freshSession);
+    try {
+      window.sessionStorage.removeItem(storageKey);
+      window.sessionStorage.setItem(chatSessionKey, freshSession);
+    } catch {}
     setInput("");
     window.setTimeout(() => inputRef.current?.focus(), 0);
   }
@@ -472,6 +515,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                       <MessageFeedback
                         messageId={message.id}
                         messageContent={textParts.map((p) => p.text).join(" ")}
+                        sessionId={chatSessionId}
                         locale={locale}
                       />
                     )}
@@ -480,7 +524,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
               );
             })}
 
-            {(status === "submitted" || (busy && messages.at(-1)?.role === "user")) && (
+            {status === "submitted" && messages.at(-1)?.role === "user" && (
               <div className="portfolio-chat-thinking" role="status"><span /><span /><span /><p>{content.thinking}</p></div>
             )}
 
@@ -489,7 +533,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
           </div>
 
           {showLeadPrompt && (
-            <RecruiterLeadCapture locale={locale} onDismiss={() => setLeadDismissed(true)} />
+            <RecruiterLeadCapture locale={locale} sessionId={chatSessionId} onDismiss={() => setLeadDismissed(true)} />
           )}
 
           {showPrompts && (

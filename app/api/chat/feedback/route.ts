@@ -34,12 +34,15 @@ export async function POST(request: Request) {
       return Response.json({ error: "Invalid feedback payload" }, { status: 400 });
     }
 
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const validSessionId = typeof sessionId === "string" && UUID_REGEX.test(sessionId.trim()) ? sessionId.trim() : null;
+
     // Upsert feedback
     const { error } = await supabase.from("chat_feedback").upsert(
       {
         message_id: String(messageId),
         message_content: typeof messageContent === "string" ? messageContent.slice(0, 1000) : null,
-        session_id: typeof sessionId === "string" ? sessionId : null,
+        session_id: validSessionId,
         rating,
       },
       { onConflict: "message_id" },

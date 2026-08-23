@@ -2,7 +2,14 @@ import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
-const VALID_EVENTS = ["cv_preview", "cv_download", "command_palette", "copy_email"] as const;
+const VALID_EVENTS = [
+  "cv_preview",
+  "cv_download",
+  "command_palette",
+  "copy_email",
+  "role_matcher",
+  "voice_briefing",
+] as const;
 type ValidEventType = (typeof VALID_EVENTS)[number];
 
 function hasValidOrigin(request: Request) {

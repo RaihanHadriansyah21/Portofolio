@@ -123,13 +123,15 @@ export async function POST(request: Request) {
     const cleanName = name.trim().slice(0, 100);
     const cleanEmail = email.trim().toLowerCase().slice(0, 120);
     const cleanMessage = typeof message === "string" ? message.trim().slice(0, 500) : null;
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const validSessionId = typeof sessionId === "string" && UUID_REGEX.test(sessionId.trim()) ? sessionId.trim() : null;
 
     // 1. Save to Supabase for persistence and Admin Dashboard display
     const { error } = await supabase.from("chat_leads").insert({
       name: cleanName,
       email: cleanEmail,
       message: cleanMessage,
-      session_id: typeof sessionId === "string" ? sessionId : null,
+      session_id: validSessionId,
     });
 
     if (error) {
