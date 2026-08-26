@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
@@ -13,25 +13,39 @@ const Lanyard = dynamic(() => import('./Lanyard'), {
   ),
 });
 
+function subscribeResize(callback) {
+  window.addEventListener('resize', callback);
+  return () => window.removeEventListener('resize', callback);
+}
+
+function getMobileSnapshot() {
+  return Boolean(
+    window.innerWidth <= 768 ||
+    (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+  );
+}
+
+function getServerMobileSnapshot() {
+  return false;
+}
+
+function useIsMobile() {
+  return useSyncExternalStore(subscribeResize, getMobileSnapshot, getServerMobileSnapshot);
+}
+
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 export function LanyardShowcase({ locale }) {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
+  const mounted = useMounted();
   const [enable3DOnMobile, setEnable3DOnMobile] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const checkMobile = () => {
-      const isTouchOrSmall =
-        window.innerWidth <= 768 ||
-        (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-      setIsMobile(Boolean(isTouchOrSmall));
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const shouldRender3D = !isMobile || enable3DOnMobile;
 
