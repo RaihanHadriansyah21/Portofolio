@@ -129,40 +129,43 @@ export function ContactForm({ locale }: { locale: Locale }) {
           borderRadius: "16px",
           padding: "2.5rem 2rem",
           textAlign: "center",
-          maxWidth: "620px",
+          maxWidth: "680px",
           margin: "2rem auto 0",
-          border: "1px solid rgba(74, 222, 128, 0.3)",
-          background: "rgba(15, 17, 20, 0.75)",
+          border: "1px solid #4ade80",
+          background: "var(--surface)",
+          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35)",
           animation: "fadeIn 250ms ease-out",
         }}
       >
         <div
           style={{
-            width: "52px",
-            height: "52px",
+            width: "56px",
+            height: "56px",
             borderRadius: "50%",
             background: "rgba(74, 222, 128, 0.15)",
             color: "#4ade80",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "1.6rem",
+            fontSize: "1.75rem",
+            fontWeight: 700,
             margin: "0 auto 1.25rem",
+            border: "1px solid rgba(74, 222, 128, 0.4)",
           }}
         >
           ✓
         </div>
-        <h3 style={{ fontSize: "1.35rem", fontWeight: 700, margin: "0 0 0.5rem" }}>
+        <h3 style={{ fontSize: "1.4rem", fontWeight: 700, margin: "0 0 0.5rem", color: "var(--foreground)" }}>
           {t.successTitle}
         </h3>
-        <p style={{ fontSize: "0.9rem", opacity: 0.75, lineHeight: 1.6, maxWidth: "460px", margin: "0 auto 1.5rem" }}>
+        <p style={{ fontSize: "0.92rem", color: "var(--muted)", lineHeight: 1.6, maxWidth: "480px", margin: "0 auto 1.5rem" }}>
           {t.successSubtitle}
         </p>
         <button
           type="button"
           onClick={handleReset}
           className="button button-secondary"
-          style={{ fontSize: "0.85rem", padding: "0.6rem 1.2rem" }}
+          style={{ fontSize: "0.88rem", padding: "0.65rem 1.4rem", cursor: "pointer" }}
         >
           {t.sendAnother}
         </button>
@@ -175,36 +178,37 @@ export function ContactForm({ locale }: { locale: Locale }) {
       className="glass-panel"
       style={{
         borderRadius: "16px",
-        padding: "2rem",
+        padding: "2.25rem 2rem",
         maxWidth: "680px",
         margin: "2rem auto 0",
-        border: "1px solid rgba(255, 255, 255, 0.12)",
-        background: "rgba(15, 17, 20, 0.65)",
+        border: "1px solid var(--line-strong)",
+        background: "var(--surface)",
+        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.3)",
       }}
     >
-      <div style={{ marginBottom: "1.5rem" }}>
+      <div style={{ marginBottom: "1.75rem" }}>
         <span
           style={{
             fontSize: "0.72rem",
             fontWeight: 700,
-            letterSpacing: "0.08em",
+            letterSpacing: "0.1em",
             textTransform: "uppercase",
             color: "#4ade80",
             display: "inline-block",
-            marginBottom: "0.3rem",
+            marginBottom: "0.4rem",
           }}
         >
           ● {t.badge}
         </span>
-        <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0 }}>
+        <h3 style={{ fontSize: "1.35rem", fontWeight: 700, margin: "0 0 0.4rem", color: "var(--foreground)" }}>
           {t.title}
         </h3>
-        <p style={{ fontSize: "0.85rem", opacity: 0.7, margin: "0.35rem 0 0", lineHeight: 1.5 }}>
+        <p style={{ fontSize: "0.88rem", color: "var(--muted)", margin: 0, lineHeight: 1.55 }}>
           {t.subtitle}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
         {/* Anti-spam honeypot - hidden from real visitors */}
         <div style={{ display: "none" }} aria-hidden="true">
           <label htmlFor="website-trap">Website</label>
@@ -223,7 +227,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-            gap: "1rem",
+            gap: "1.25rem",
           }}
         >
           <div>
@@ -231,10 +235,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
               htmlFor="contact-name"
               style={{
                 display: "block",
-                fontSize: "0.78rem",
+                fontSize: "0.8rem",
                 fontWeight: 600,
-                marginBottom: "0.4rem",
-                opacity: 0.85,
+                marginBottom: "0.45rem",
+                color: "var(--foreground)",
               }}
             >
               {t.nameLabel} <span style={{ color: "#ef4444" }}>*</span>
@@ -250,14 +254,14 @@ export function ContactForm({ locale }: { locale: Locale }) {
               disabled={isSubmitting}
               style={{
                 width: "100%",
-                padding: "0.7rem 0.9rem",
-                borderRadius: "8px",
-                border: "1px solid rgba(255, 255, 255, 0.12)",
-                background: "rgba(0, 0, 0, 0.3)",
-                color: "inherit",
-                fontSize: "0.88rem",
+                padding: "0.75rem 0.95rem",
+                borderRadius: "10px",
+                border: "1px solid var(--line-strong)",
+                background: "var(--surface-raised)",
+                color: "var(--foreground)",
+                fontSize: "0.9rem",
                 outline: "none",
-                transition: "border-color 150ms ease",
+                transition: "all 150ms ease",
               }}
             />
           </div>
@@ -267,10 +271,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
               htmlFor="contact-email"
               style={{
                 display: "block",
-                fontSize: "0.78rem",
+                fontSize: "0.8rem",
                 fontWeight: 600,
-                marginBottom: "0.4rem",
-                opacity: 0.85,
+                marginBottom: "0.45rem",
+                color: "var(--foreground)",
               }}
             >
               {t.emailLabel} <span style={{ color: "#ef4444" }}>*</span>
@@ -286,14 +290,14 @@ export function ContactForm({ locale }: { locale: Locale }) {
               disabled={isSubmitting}
               style={{
                 width: "100%",
-                padding: "0.7rem 0.9rem",
-                borderRadius: "8px",
-                border: "1px solid rgba(255, 255, 255, 0.12)",
-                background: "rgba(0, 0, 0, 0.3)",
-                color: "inherit",
-                fontSize: "0.88rem",
+                padding: "0.75rem 0.95rem",
+                borderRadius: "10px",
+                border: "1px solid var(--line-strong)",
+                background: "var(--surface-raised)",
+                color: "var(--foreground)",
+                fontSize: "0.9rem",
                 outline: "none",
-                transition: "border-color 150ms ease",
+                transition: "all 150ms ease",
               }}
             />
           </div>
@@ -305,10 +309,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
             htmlFor="contact-role"
             style={{
               display: "block",
-              fontSize: "0.78rem",
+              fontSize: "0.8rem",
               fontWeight: 600,
-              marginBottom: "0.4rem",
-              opacity: 0.85,
+              marginBottom: "0.45rem",
+              color: "var(--foreground)",
             }}
           >
             {t.roleLabel}
@@ -323,36 +327,36 @@ export function ContactForm({ locale }: { locale: Locale }) {
             disabled={isSubmitting}
             style={{
               width: "100%",
-              padding: "0.7rem 0.9rem",
-              borderRadius: "8px",
-              border: "1px solid rgba(255, 255, 255, 0.12)",
-              background: "rgba(0, 0, 0, 0.3)",
-              color: "inherit",
-              fontSize: "0.88rem",
+              padding: "0.75rem 0.95rem",
+              borderRadius: "10px",
+              border: "1px solid var(--line-strong)",
+              background: "var(--surface-raised)",
+              color: "var(--foreground)",
+              fontSize: "0.9rem",
               outline: "none",
-              transition: "border-color 150ms ease",
+              transition: "all 150ms ease",
             }}
           />
         </div>
 
         {/* Message Textarea */}
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.45rem" }}>
             <label
               htmlFor="contact-message"
               style={{
-                fontSize: "0.78rem",
+                fontSize: "0.8rem",
                 fontWeight: 600,
-                opacity: 0.85,
+                color: "var(--foreground)",
               }}
             >
               {t.messageLabel}
             </label>
-            <span style={{ fontSize: "0.72rem", opacity: 0.5 }}>{message.length} / 500</span>
+            <span style={{ fontSize: "0.74rem", color: "var(--muted)" }}>{message.length} / 500</span>
           </div>
           <textarea
             id="contact-message"
-            rows={3}
+            rows={4}
             maxLength={500}
             placeholder={t.messagePlaceholder}
             value={message}
@@ -360,23 +364,23 @@ export function ContactForm({ locale }: { locale: Locale }) {
             disabled={isSubmitting}
             style={{
               width: "100%",
-              padding: "0.7rem 0.9rem",
-              borderRadius: "8px",
-              border: "1px solid rgba(255, 255, 255, 0.12)",
-              background: "rgba(0, 0, 0, 0.3)",
-              color: "inherit",
-              fontSize: "0.88rem",
-              lineHeight: 1.5,
+              padding: "0.75rem 0.95rem",
+              borderRadius: "10px",
+              border: "1px solid var(--line-strong)",
+              background: "var(--surface-raised)",
+              color: "var(--foreground)",
+              fontSize: "0.9rem",
+              lineHeight: 1.55,
               resize: "vertical",
               outline: "none",
               fontFamily: "inherit",
-              transition: "border-color 150ms ease",
+              transition: "all 150ms ease",
             }}
           />
         </div>
 
         {errorMessage && (
-          <p style={{ color: "#ef4444", fontSize: "0.82rem", margin: "0.2rem 0 0" }}>
+          <p style={{ color: "#ef4444", fontSize: "0.84rem", margin: "0.2rem 0 0", fontWeight: 500 }}>
             {errorMessage}
           </p>
         )}
@@ -388,9 +392,11 @@ export function ContactForm({ locale }: { locale: Locale }) {
           style={{
             width: "100%",
             justifyContent: "center",
-            padding: "0.8rem 1.4rem",
-            fontSize: "0.9rem",
-            cursor: isSubmitting ? "not-allowed" : "pointer",
+            padding: "0.85rem 1.5rem",
+            fontSize: "0.95rem",
+            fontWeight: 600,
+            cursor: isSubmitting || !name.trim() || !email.trim() ? "not-allowed" : "pointer",
+            marginTop: "0.5rem",
           }}
         >
           {isSubmitting ? t.sendingBtn : t.submitBtn}
