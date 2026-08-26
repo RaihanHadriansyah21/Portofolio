@@ -36,6 +36,8 @@ type AnalyticsData = {
     session_id: string | null;
     created_at: string;
   }[];
+  // Bug #3 fix: real total count from DB, not capped at 20
+  total_leads_count: number;
   low_rated: {
     message_id: string;
     content: string;
@@ -512,9 +514,11 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           <p style={{ fontSize: "0.8rem", opacity: 0.7, marginBottom: "0.5rem" }}>{t.modesLabel}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
             {data.mode_distribution.map((item) => {
-              const pct =
-                data.overview.total_sessions > 0
-                  ? Math.round((item.count / data.overview.total_sessions) * 100)
+              // Bug #1 fix: use sum of distribution itself as denominator,
+              // not total_sessions (which includes NULL-mode rows)
+              const modeTotal = data.mode_distribution.reduce((s, i) => s + i.count, 0);
+              const pct = modeTotal > 0
+                  ? Math.round((item.count / modeTotal) * 100)
                   : 0;
               const modeKey = item.mode as keyof typeof t.modeNames;
               const modeLabel = t.modeNames[modeKey] || item.mode;
@@ -544,9 +548,10 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           <p style={{ fontSize: "0.8rem", opacity: 0.7, marginBottom: "0.5rem" }}>{t.langLabel}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {data.locale_distribution.map((item) => {
-              const pct =
-                data.overview.total_sessions > 0
-                  ? Math.round((item.count / data.overview.total_sessions) * 100)
+              // Bug #1 fix: same as mode — use locale distribution total
+              const localeTotal = data.locale_distribution.reduce((s, i) => s + i.count, 0);
+              const pct = localeTotal > 0
+                  ? Math.round((item.count / localeTotal) * 100)
                   : 0;
               const langKey = item.locale as keyof typeof t.langNames;
               const langLabel = t.langNames[langKey] || item.locale.toUpperCase();
@@ -581,6 +586,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8, marginBottom: "1rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
               <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>{t.estToken}</span>
+              {/* Bug #2 fix: token_usage_30d now uses char-length estimation in RPC when token_estimate is null */}
               <strong style={{ fontSize: "1.25rem" }}>{data.token_usage_30d.toLocaleString()} tokens</strong>
             </div>
             <p style={{ fontSize: "0.75rem", opacity: 0.6, margin: "0.25rem 0 0" }}>{t.freeTierSafe}</p>
@@ -618,8 +624,9 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
             <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{t.leadsTitle}</h3>
             <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{t.leadsDesc}</p>
           </div>
+          {/* Bug #3 fix: show real total from DB (total_leads_count), not capped-at-20 array length */}
           <span style={{ background: "rgba(255,255,255,0.1)", padding: "0.2rem 0.6rem", borderRadius: 12, fontSize: "0.8rem" }}>
-            {t.leadsCount(data.recent_leads.length)}
+            {t.leadsCount(data.total_leads_count ?? data.recent_leads.length)}
           </span>
         </div>
 
