@@ -6,6 +6,8 @@ import type { Locale } from "@/lib/portfolio";
 type AnalyticsData = {
   overview: {
     total_sessions: number;
+    // Bug #5 fix: unique hashed-IP visitor count from DB
+    unique_visitors: number;
     today: number;
     week: number;
     month: number;
@@ -38,6 +40,12 @@ type AnalyticsData = {
   }[];
   // Bug #3 fix: real total count from DB, not capped at 20
   total_leads_count: number;
+  // Bug #6 fix: 30-day scoped feedback for apples-to-apples with token_usage_30d panel
+  feedback_summary_30d: {
+    total: number;
+    up: number;
+    down: number;
+  };
   low_rated: {
     message_id: string;
     content: string;
@@ -341,6 +349,11 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
     ? Math.round((data.feedback_summary.up / data.feedback_summary.total) * 100)
     : 0;
 
+  // Bug #6 fix: 30d scoped satisfaction for Token Health panel
+  const fb30 = data.feedback_summary_30d ?? { total: 0, up: 0, down: 0 };
+  const hasFeedback30 = fb30.total > 0;
+  const upRate30 = hasFeedback30 ? Math.round((fb30.up / fb30.total) * 100) : null;
+
   const events = data.engagement_events || {
     cv_previews: 0,
     cv_downloads: 0,
@@ -402,11 +415,24 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
       <section
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
           gap: "1rem",
           marginBottom: "2rem",
         }}
       >
+        {/* Bug #5 fix: show unique_visitors as first KPI card */}
+        <div className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12 }}>
+          <p style={{ fontSize: "0.75rem", letterSpacing: "0.08em", opacity: 0.6, margin: 0, textTransform: "uppercase" }}>
+            {locale === "id" ? "PENGUNJUNG UNIK" : "UNIQUE VISITORS"}
+          </p>
+          <h2 style={{ fontSize: "2rem", fontWeight: 700, margin: "0.5rem 0 0", color: "#4ade80" }}>
+            {data.overview.unique_visitors ?? "—"}
+          </h2>
+          <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>
+            {locale === "id" ? "dari" : "of"} {data.overview.total_sessions} {t.sessionsUnit}
+          </span>
+        </div>
+
         <div className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12 }}>
           <p style={{ fontSize: "0.75rem", letterSpacing: "0.08em", opacity: 0.6, margin: 0, textTransform: "uppercase" }}>
             {t.today}
@@ -586,10 +612,31 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8, marginBottom: "1rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
               <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>{t.estToken}</span>
-              {/* Bug #2 fix: token_usage_30d now uses char-length estimation in RPC when token_estimate is null */}
               <strong style={{ fontSize: "1.25rem" }}>{data.token_usage_30d.toLocaleString()} tokens</strong>
             </div>
             <p style={{ fontSize: "0.75rem", opacity: 0.6, margin: "0.25rem 0 0" }}>{t.freeTierSafe}</p>
+          </div>
+
+          {/* Bug #6 fix: 30d satisfaction rate in the same panel so scope is consistent */}
+          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8, marginBottom: "1rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>
+                {locale === "id" ? "Kepuasan 30 Hari Terakhir" : "30-Day Satisfaction Rate"}
+              </span>
+              <strong
+                style={{
+                  fontSize: "1.25rem",
+                  color: upRate30 === null ? "inherit" : upRate30 >= 80 ? "#4ade80" : upRate30 >= 50 ? "#facc15" : "#f87171",
+                }}
+              >
+                {upRate30 !== null ? `${upRate30}%` : "—"}
+              </strong>
+            </div>
+            <p style={{ fontSize: "0.75rem", opacity: 0.6, margin: "0.25rem 0 0" }}>
+              {hasFeedback30
+                ? `${fb30.up} 👍 · ${fb30.down} 👎 ${locale === "id" ? "dalam 30 hari" : "in last 30 days"}`
+                : locale === "id" ? "Belum ada rating dalam 30 hari" : "No ratings in last 30 days"}
+            </p>
           </div>
 
           <h4 style={{ fontSize: "0.9rem", fontWeight: 600, marginTop: "1.25rem", marginBottom: "0.75rem" }}>
