@@ -24,12 +24,18 @@ Reyy has completed his Telecommunication Engineering thesis defense and is await
 - Dark theme by default and a complete light theme.
 - Seven project case studies with role context, architecture, decisions, evidence, limitations, repositories, and visual previews.
 - SCOVIS as the flagship applied AI and full-stack case study.
+- **Five interactive project visualizers**: Architecture Visualizer (SCOVIS), ML Playground (DermaScan), Vehicle Model Inspector (Vehicle Classification), QuizInt Mobile Emulator (QuizInt), and Flask/MongoDB CRUD API Inspector (Cloud Inventory API).
+- A **Quick Recruiter Contact Form** in the contact section with Supabase lead persistence and instant Resend email notification.
+- **1-Click Recruiter Summary** button on the About page that copies a formatted candidate profile to clipboard.
+- **Contextual AI Action Chips** below assistant responses for one-click navigation to projects, CV modal, and contact.
+- **Adaptive 3D Lanyard** with CSS 3D flip-card mobile fallback and on-demand physics toggle.
 - A privacy-reviewed gallery of 44 unique certificates and professional learning records.
 - Eleven direct issuer verification links where official public verification is available.
 - A grounded Gemini AI Guide with recruiter, technical, and exploration modes.
 - Source cards that let visitors open the relevant case study, repository, live product, certificate verification, or profile.
 - Responsive layouts, keyboard-visible interactions, SEO metadata, sitemap, robots policy, favicon, and social preview.
 - Curated React Bits interactions adapted to the monochrome visual system.
+- Playwright E2E test suite covering all 7 project routes, localization, credentials gallery, and About page.
 
 ## Featured work
 
@@ -72,6 +78,9 @@ The API also applies same-origin validation, request and message-size limits, a 
 - React Three Fiber, Drei, Rapier, Three.js, and Meshline for the Lanyard identity experience.
 - React Icons for accessible social links.
 - React Bits components adapted to the project: GlassSurface, PillNav, ProfileCard, Lanyard, and LogoLoop.
+- Supabase (PostgreSQL) for chat lead persistence and analytics telemetry.
+- Resend API for automated recruiter contact email alerts.
+- Playwright for E2E browser testing across all routes and locales.
 - Vercel for deployment and environment management.
 
 ## Project structure
@@ -126,6 +135,21 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 npm run lint
 npm run build
 ```
+
+### E2E Tests (Playwright)
+
+Run end-to-end tests against a local production build:
+
+```bash
+# Install Playwright browsers once
+npx playwright install chromium
+
+# Build and start production server, then run tests
+npm run build && npm run start &
+npx playwright test
+```
+
+Test coverage: all 7 project detail routes, homepage contact form, English/Indonesian localization, credentials gallery, and About page identity.
 
 Before deployment, also review `git status` and the staged diff so raw certificates, environment files, local source assets, or unrelated changes are not committed.
 
