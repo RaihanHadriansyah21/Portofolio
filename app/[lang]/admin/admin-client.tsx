@@ -91,7 +91,6 @@ const copy = {
     cvDownloads: "CV PDF Downloads",
     emailCopies: "1-Click Email Copies",
     cmdPalette: "Command Palette (Ctrl+K)",
-    roleMatcher: "Role Fit Matcher Uses",
     voiceBriefing: "AI Voice Briefings Played",
     leadsTitle: "💼 Recruiter Contacts & Leads",
     leadsDesc: "Contacts left by visitors after chatting with the AI.",
@@ -151,7 +150,6 @@ const copy = {
     cvDownloads: "Download PDF CV",
     emailCopies: "Salin Email (1-Klik)",
     cmdPalette: "Command Menu (Ctrl+K)",
-    roleMatcher: "Penggunaan Role Fit Matcher",
     voiceBriefing: "Pemutaran AI Voice Briefing",
     leadsTitle: "💼 Kontak Rekruter & Pesan Masuk",
     leadsDesc: "Kontak yang ditinggalkan pengunjung setelah berdiskusi dengan AI.",
@@ -490,10 +488,6 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
             <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.cmdPalette}</span>
             <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.command_palette}</h4>
-          </div>
-          <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
-            <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.roleMatcher}</span>
-            <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.role_matcher ?? 0}</h4>
           </div>
           <div style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
             <span style={{ fontSize: "0.8rem", opacity: 0.6 }}>{t.voiceBriefing}</span>

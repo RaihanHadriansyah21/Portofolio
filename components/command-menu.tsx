@@ -110,20 +110,6 @@ function CommandMenuModal({
         router.push(`/${locale}/projects/dermascan`);
       },
     },
-    {
-      id: "role-matcher",
-      category: "actions",
-      label: {
-        en: "Recruiter Role Fit Matcher",
-        id: "Kalkulator Kecocokan Lowongan (Role Fit)",
-      },
-      shortcut: "FIT",
-      icon: "🎯",
-      perform: () => {
-        onClose();
-        router.push(`/${locale}#role-matcher`);
-      },
-    },
     // Navigation
     {
       id: "nav-home",
