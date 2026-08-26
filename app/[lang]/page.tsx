@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HeroActionsClient } from "@/components/hero-actions-client";
+import { ContactForm } from "@/components/contact-form";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
@@ -112,6 +113,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <h2>{content.contact.title}</h2>
         <p>{content.contact.body}</p>
         <ContactLogoLoop locale={lang} />
+        <ContactForm locale={lang} />
       </section>
     </main>
   );

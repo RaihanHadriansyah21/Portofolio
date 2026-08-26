@@ -3,6 +3,8 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { usePortfolio } from "./portfolio-provider";
 import { AIVoiceBriefing } from "@/components/ai-voice-briefing";
 import type { ChatMode, PortfolioChatMessage, PortfolioSource } from "@/lib/ai/types";
 import type { Locale } from "@/lib/portfolio";
@@ -226,6 +228,129 @@ function MessageFeedback({
   );
 }
 
+function ActionChips({
+  text,
+  locale,
+  onOpenCV,
+  onNavigate,
+}: {
+  text: string;
+  locale: Locale;
+  onOpenCV: () => void;
+  onNavigate: (href: string) => void;
+}) {
+  const lower = text.toLowerCase();
+  const chips: { id: string; label: string; icon: string; onClick: () => void }[] = [];
+
+  if (lower.includes("scovis")) {
+    chips.push({
+      id: "scovis",
+      label: locale === "id" ? "Studi Kasus SCOVIS" : "SCOVIS Case Study",
+      icon: "📁",
+      onClick: () => onNavigate(`/${locale}/projects/scovis`),
+    });
+  }
+
+  if (lower.includes("dermascan")) {
+    chips.push({
+      id: "dermascan",
+      label: locale === "id" ? "Playground DermaScan" : "DermaScan ML Sandbox",
+      icon: "🧠",
+      onClick: () => onNavigate(`/${locale}/projects/dermascan`),
+    });
+  }
+
+  if (lower.includes("vehicle") || lower.includes("kendaraan") || lower.includes("mobilenet")) {
+    chips.push({
+      id: "vehicle",
+      label: locale === "id" ? "Klasifikasi Kendaraan" : "Vehicle Classifier",
+      icon: "🚗",
+      onClick: () => onNavigate(`/${locale}/projects/vehicle-classification`),
+    });
+  }
+
+  if (lower.includes("quizint")) {
+    chips.push({
+      id: "quizint",
+      label: "QuizInt Mobile",
+      icon: "📱",
+      onClick: () => onNavigate(`/${locale}/projects/quizint`),
+    });
+  }
+
+  if (lower.includes("cv") || lower.includes("resume") || lower.includes("riwayat") || lower.includes("curriculum vitae")) {
+    chips.push({
+      id: "cv",
+      label: locale === "id" ? "Buka Preview CV" : "Preview ATS CV",
+      icon: "📄",
+      onClick: onOpenCV,
+    });
+  }
+
+  if (lower.includes("sertifikat") || lower.includes("certificate") || lower.includes("kredensial") || lower.includes("dicoding")) {
+    chips.push({
+      id: "certs",
+      label: locale === "id" ? "Galeri Sertifikat" : "Certificates Gallery",
+      icon: "📜",
+      onClick: () => onNavigate(`/${locale}/credentials`),
+    });
+  }
+
+  if (
+    lower.includes("kontak") ||
+    lower.includes("contact") ||
+    lower.includes("email") ||
+    lower.includes("interview") ||
+    lower.includes("hubungi") ||
+    lower.includes("kirim pesan")
+  ) {
+    chips.push({
+      id: "contact",
+      label: locale === "id" ? "Kirim Pesan Langsung" : "Direct Message",
+      icon: "✉️",
+      onClick: () => onNavigate(`/${locale}#contact`),
+    });
+  }
+
+  if (chips.length === 0) return null;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.35rem",
+        marginTop: "0.5rem",
+      }}
+    >
+      {chips.slice(0, 3).map((chip) => (
+        <button
+          key={chip.id}
+          type="button"
+          onClick={chip.onClick}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.35rem",
+            padding: "0.25rem 0.6rem",
+            borderRadius: "6px",
+            background: "rgba(255, 255, 255, 0.08)",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            color: "var(--foreground, #fff)",
+            fontSize: "0.74rem",
+            fontWeight: 500,
+            cursor: "pointer",
+            transition: "all 120ms ease",
+          }}
+        >
+          <span>{chip.icon}</span>
+          <span>{chip.label} ↗</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function RecruiterLeadCapture({
   locale,
   sessionId,
@@ -335,6 +460,8 @@ function getInitialSessionId(locale: Locale): string {
 
 export function PortfolioChat({ locale }: { locale: Locale }) {
   const content = uiCopy[locale];
+  const router = useRouter();
+  const { openCV } = usePortfolio();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<ChatMode>("recruiter");
   const [input, setInput] = useState("");
@@ -511,6 +638,25 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                     )}
                     {textParts.map((part, index) => <p key={`${message.id}-text-${index}`}>{displayText(part.text, message.role)}</p>)}
                     {sourceParts.map((part, index) => <SourceCards sources={part.data} locale={locale} key={`${message.id}-sources-${index}`} />)}
+                    {isAssistant && !isWelcome && hasText && !isStreamingThis && (
+                      <ActionChips
+                        text={textParts.map((p) => p.text).join(" ")}
+                        locale={locale}
+                        onOpenCV={() => openCV("ai-ml")}
+                        onNavigate={(href) => {
+                          if (href.includes("#contact")) {
+                            const el = document.getElementById("contact");
+                            if (el) {
+                              el.scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              router.push(href);
+                            }
+                          } else {
+                            router.push(href);
+                          }
+                        }}
+                      />
+                    )}
                     {isAssistant && !isWelcome && hasText && !isStreamingThis && (
                       <MessageFeedback
                         messageId={message.id}

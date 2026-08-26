@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArchitectureVisualizer } from "@/components/architecture-visualizer";
 import { MLPlayground } from "@/components/ml-playground";
+import { VehicleModelInspector } from "@/components/vehicle-model-inspector";
 import { copy, isLocale, locales, projectBySlug, projects, siteUrl } from "@/lib/portfolio";
 
 export function generateStaticParams() {
@@ -127,6 +128,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
         <h2>{content.common.architecture}</h2>
         {project.slug === "scovis" && <ArchitectureVisualizer locale={lang} />}
         {project.slug === "dermascan" && <MLPlayground locale={lang} />}
+        {project.slug === "vehicle-classification" && <VehicleModelInspector locale={lang} />}
         <div className="case-list">
           {project.architecture.map((item, index) => <div key={item.en}><span>{String(index + 1).padStart(2, "0")}</span><p>{item[lang]}</p></div>)}
         </div>
