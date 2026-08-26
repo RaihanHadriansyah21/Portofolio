@@ -24,7 +24,7 @@ type KnowledgeSection = {
 const aliases: Record<string, string[]> = {
   ai: ["artificial intelligence", "kecerdasan buatan", "machine learning", "ml"],
   backend: ["api", "fastapi", "flask", "server", "database", "redis", "supabase"],
-  certificate: ["credential", "credentials", "sertifikat", "certification", "course", "kelas"],
+  certificate: ["credential", "credentials", "sertifikat", "certification", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission"],
   frontend: ["react", "next.js", "nextjs", "ui", "web", "interface", "antarmuka"],
   mobile: ["flutter", "dart", "aplikasi mobile"],
   project: ["projects", "proyek", "portfolio", "portofolio", "karya"],
@@ -159,21 +159,54 @@ function certificateSections(locale: Locale): KnowledgeSection[] {
       },
     ];
 
+    const bodyLines = [
+      `CERTIFICATE: ${certificate.title}`,
+      `ISSUER: ${certificate.issuer}`,
+      `ISSUED: ${certificate.issuedAt}`,
+      `CATEGORY: ${category}`,
+      `TYPE: ${kind}`,
+    ];
+
+    if (certificate.hours) {
+      bodyLines.push(`DURATION / HOURS: ${certificate.hours} ${locale === "id" ? "Jam Pembelajaran" : "Learning Hours"}`);
+    }
+
+    if (certificate.skills && certificate.skills.length > 0) {
+      bodyLines.push(`SKILLS COVERED: ${certificate.skills.join(", ")}`);
+    }
+
+    if (certificate.syllabus && certificate.syllabus.length > 0) {
+      bodyLines.push(`CURRICULUM / SYLLABUS:\n${certificate.syllabus.map((s) => `- ${s}`).join("\n")}`);
+    }
+
+    if (certificate.submission) {
+      bodyLines.push(`FINAL PROJECT / SUBMISSION: ${certificate.submission}`);
+    }
+
+    bodyLines.push(
+      `OFFICIAL VERIFICATION: ${certificate.verificationUrl ? "Available through the supplied source card." : "No direct public issuer verification link is recorded."}`
+    );
+    bodyLines.push(
+      `PRIVACY: The public website uses a reviewed preview and never exposes the raw PDF.`
+    );
+
+    const tags = [
+      certificate.title,
+      certificate.issuer,
+      category,
+      kind,
+      certificate.category,
+      certificate.kind,
+      ...(certificate.skills || []),
+    ];
+
     return {
       id: `certificate-${certificate.slug}`,
       title: certificate.title,
-      tags: [certificate.title, certificate.issuer, category, kind, certificate.category, certificate.kind],
-      priority: certificate.featured ? 6 : certificate.kind === "course" || certificate.kind === "program" ? 3 : 1,
+      tags,
+      priority: certificate.featured ? 7 : certificate.kind === "course" || certificate.kind === "program" ? 4 : 1,
       sources,
-      body: [
-        `CERTIFICATE: ${certificate.title}`,
-        `ISSUER: ${certificate.issuer}`,
-        `ISSUED: ${certificate.issuedAt}`,
-        `CATEGORY: ${category}`,
-        `TYPE: ${kind}`,
-        `OFFICIAL VERIFICATION: ${certificate.verificationUrl ? "Available through the supplied source card." : "No direct public issuer verification link is recorded."}`,
-        `PRIVACY: The public website uses a reviewed preview and never exposes the raw PDF.`,
-      ].join("\n"),
+      body: bodyLines.join("\n"),
     };
   });
 }
@@ -219,7 +252,7 @@ export function retrievePortfolioKnowledge(query: string, locale: Locale, mode: 
     .map((section) => ({ section, score: scoreSection(section, terms, mode) }))
     .sort((a, b) => b.score - a.score);
 
-  const hasCertificateIntent = terms.some((term) => ["certificate", "credential", "sertifikat", "course", "kelas"].includes(term));
+  const hasCertificateIntent = terms.some((term) => ["certificate", "credential", "sertifikat", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission"].includes(term));
   const candidates = hasCertificateIntent ? ranked : ranked.filter((item) => item.section.id.startsWith("project-"));
   const minimumScore = terms.length === 0 ? Number.POSITIVE_INFINITY : 2;
   const normalizedQuery = normalize(query);

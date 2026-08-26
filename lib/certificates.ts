@@ -16,6 +16,10 @@ export type Certificate = {
   featured?: boolean;
   privacyRedacted?: boolean;
   verificationUrl?: string;
+  hours?: number;
+  skills?: string[];
+  syllabus?: string[];
+  submission?: string;
 };
 
 export const certificateCategoryLabels: Record<CertificateCategory, Record<Locale, string>> = {
@@ -47,6 +51,11 @@ export const certificates: Certificate[] = [
     width: 1600,
     height: 1132,
     featured: true,
+    skills: ["AI Engineering", "Machine Learning", "Deep Learning", "Generative AI", "Computer Vision", "NLP", "Model Deployment"],
+    syllabus: [
+      "Program akselerasi komprehensif AI Engineer oleh DBS Foundation & Dicoding",
+      "Mencakup seluruh alur: Python, Machine Learning, Deep Learning Fundamental, Deep Learning Mahir, dan Generative AI"
+    ],
   },
   {
     slug: "english-proficiency-test-eprt-490",
@@ -59,6 +68,11 @@ export const certificates: Certificate[] = [
     width: 1070,
     height: 772,
     privacyRedacted: true,
+    skills: ["English Proficiency", "Listening Comprehension", "Grammar & Structure", "Reading Comprehension"],
+    syllabus: [
+      "Skor total 490 (setara CEFR B1) dari Telkom University Language Center",
+      "Validitas pengujian: 30 April 2026 hingga 30 April 2028"
+    ],
   },
   {
     slug: "english-for-business-communication-90",
@@ -71,6 +85,11 @@ export const certificates: Certificate[] = [
     width: 1191,
     height: 1684,
     privacyRedacted: true,
+    skills: ["Business English", "Professional Communication", "Technical Presentation", "Email & Workplace Correspondence"],
+    syllabus: [
+      "Penyelesaian kursus Business English dengan nilai kelulusan 90%",
+      "Diselenggarakan oleh The British Institute × DBS Foundation × Dicoding"
+    ],
   },
   {
     slug: "membangun-proyek-deep-learning-tingkat-mahir",
@@ -84,6 +103,18 @@ export const certificates: Certificate[] = [
     height: 1132,
     featured: true,
     verificationUrl: "https://www.dicoding.com/certificates/GRX5W06E3Z0M",
+    hours: 90,
+    skills: ["TensorFlow", "Custom Training Loops", "Computer Vision", "NLP Transformers", "Recommender Systems", "Model Optimization"],
+    syllabus: [
+      "Tensor manipulation, Eager Execution, dan Graph Mode (7 jam)",
+      "Custom Training Loop dan Callbacks Optimization (8 jam 10 menit)",
+      "Efisiensi dan utilisasi hardware pada pelatihan model (8 jam 55 menit)",
+      "Context-aware Recommender Systems (10 jam)",
+      "Explainable AI dan Transformer-based NLP (13 jam)",
+      "Transformer Vision Models dan Semantic Segmentation (12 jam)",
+      "Deep Metric Evaluation dan Hyperparameter Analysis (15 jam)"
+    ],
+    submission: "Proyek time series multivariate multi-step menggunakan custom TensorFlow training loop dan model subclassing.",
   },
   {
     slug: "belajar-fundamental-deep-learning",
@@ -97,6 +128,20 @@ export const certificates: Certificate[] = [
     height: 1132,
     featured: true,
     verificationUrl: "https://www.dicoding.com/certificates/81P2OO2W8ZOY",
+    hours: 110,
+    skills: ["Deep Learning", "CNN", "RNN", "NLP", "Reinforcement Learning", "Model Deployment", "Multimodal"],
+    syllabus: [
+      "Representasi data mendalam dan arsitektur neural network (3 jam 55 menit)",
+      "Library dan ekosistem Deep Learning (5 jam 25 menit)",
+      "Text preprocessing, labeling, dan klasifikasi teks NLP (7 jam 10 menit)",
+      "Sequence modeling dengan RNN dan LSTM (4 jam 40 menit)",
+      "Evaluasi, tuning, dan regularisasi model (7 jam 30 menit)",
+      "Neural Recommendation Systems (3 jam 35 menit)",
+      "Reinforcement Learning (Markov Decision Process, Q-Learning) (3 jam 45 menit)",
+      "Cross-platform Model Deployment dan optimasi inferensi (9 jam 35 menit)",
+      "Multimodal Deep Learning (Vision & Text) (5 jam 25 menit)"
+    ],
+    submission: "Proyek pembangunan model deep learning klasifikasi gambar dari dataset nyata.",
   },
   {
     slug: "belajar-machine-learning-untuk-pemula",
@@ -110,6 +155,19 @@ export const certificates: Certificate[] = [
     height: 1132,
     featured: true,
     verificationUrl: "https://www.dicoding.com/certificates/98XW02MN9XM3",
+    hours: 90,
+    skills: ["Machine Learning", "Scikit-Learn", "Supervised Learning", "Unsupervised Learning", "Feature Engineering", "Hyperparameter Tuning"],
+    syllabus: [
+      "Dasar-dasar dan siklus hidup Machine Learning (4 jam 20 menit)",
+      "Machine Learning Workflow: pengumpulan, pembersihan, dan evaluasi data (10 jam 50 menit)",
+      "Supervised Learning: Klasifikasi (KNN, Decision Tree) (6 jam 25 menit)",
+      "Supervised Learning: Regresi Linear dan evaluasi metrik (5 jam 35 menit)",
+      "Unsupervised Learning: K-Means Clustering (5 jam 15 menit)",
+      "Strategi Feature Engineering untuk data tabular (5 jam 55 menit)",
+      "Mitigasi Overfitting dan Underfitting (5 jam 35 menit)",
+      "Optimasi Model dengan Hyperparameter Tuning (5 jam 10 menit)"
+    ],
+    submission: "Proyek pembangunan model supervised dan unsupervised learning pada dataset tabular dunia nyata.",
   },
   {
     slug: "belajar-penerapan-data-science-dengan-microsoft-fabric",
@@ -123,6 +181,16 @@ export const certificates: Certificate[] = [
     height: 1132,
     featured: true,
     verificationUrl: "https://www.dicoding.com/certificates/KEXLQ0Q0WPG2",
+    hours: 6,
+    skills: ["Microsoft Fabric", "Data Science", "Data Wrangler", "MLflow", "Batch Prediction", "Enterprise Analytics"],
+    syllabus: [
+      "Analitik End-to-End dengan platform Microsoft Fabric (35 menit)",
+      "Manajemen notebook, experiment, dan model terpadu (40 menit)",
+      "Eksplorasi dan visualisasi data dengan Notebook (1 jam 20 menit)",
+      "Preprocessing dan feature transformation dengan Data Wrangler (1 jam 0 menit)",
+      "Pelatihan dan tracking model eksperimen dengan MLflow (55 menit)",
+      "Deployment model dan eksekusi Batch Prediction terotomasi (50 menit)"
+    ],
   },
   {
     slug: "membangun-aplikasi-gen-ai-dengan-microsoft-azure",
@@ -159,6 +227,14 @@ export const certificates: Certificate[] = [
     width: 1600,
     height: 1132,
     verificationUrl: "https://www.dicoding.com/certificates/72ZDJE8QLZYW",
+    hours: 10,
+    skills: ["Artificial Intelligence", "Machine Learning Basics", "Deep Learning Overview", "Data for AI"],
+    syllabus: [
+      "Konsep dasar dan sejarah Artificial Intelligence (1 jam 30 menit)",
+      "Peran data dan pemanfaatannya dalam ekosistem AI (1 jam 25 menit)",
+      "Pengantar Machine Learning dan paradigma pembelajaran mesin (2 jam 30 menit)",
+      "Pengantar Deep Learning dan studi kasus implementasi (2 jam 30 menit)"
+    ],
   },
   {
     slug: "merancang-percakapan-cerdas-di-azure-ai-foundry",
@@ -170,6 +246,11 @@ export const certificates: Certificate[] = [
     preview: "/certificates/previews/merancang-percakapan-cerdas-di-azure-ai-foundry.webp",
     width: 1600,
     height: 1132,
+    hours: 4,
+    skills: ["Azure AI Foundry", "Conversational AI", "Chat Agents", "System Prompts"],
+    syllabus: [
+      "Merancang conversational agent cerdas dengan Azure AI Foundry (4 jam)"
+    ],
   },
   {
     slug: "offline-workshop-generative-ai",
@@ -270,6 +351,16 @@ export const certificates: Certificate[] = [
     width: 1600,
     height: 1132,
     verificationUrl: "https://www.dicoding.com/certificates/NVP7NYLDVZR0",
+    hours: 15,
+    skills: ["Git", "GitHub", "Version Control", "Branching & Merging", "Conflict Resolution", "Code Review"],
+    syllabus: [
+      "Fondasi Git dan GitHub dalam manajemen source code (1 jam 45 menit)",
+      "Dasar Git: init, commit, checkout, tracking status (2 jam 5 menit)",
+      "Git Branching, merging, dan penyelesaian conflict (2 jam 10 menit)",
+      "Kolaborasi tim: forking, squashing commits, pull request, dan code review (2 jam 50 menit)",
+      "Studi kasus manajemen repository aktif (1 jam 15 menit)",
+      "Optimalisasi GitHub Profile dan Readme portofolio (1 jam 20 menit)"
+    ],
   },
   {
     slug: "memulai-dasar-pemrograman",
@@ -294,6 +385,21 @@ export const certificates: Certificate[] = [
     width: 1600,
     height: 1132,
     verificationUrl: "https://www.dicoding.com/certificates/RVZK0K9DOZD5",
+    hours: 60,
+    skills: ["Python", "OOP", "Unit Testing", "Data Structures", "PEP8", "Algorithms"],
+    syllabus: [
+      "Pengenalan Python, virtual environment, dan ekosistem (5 jam 30 menit)",
+      "Tipe data, ekspresi, dan manipulasi data (3 jam 55 menit)",
+      "Aksi sekuensial dan implementasi algoritma (2 jam 10 menit)",
+      "Control Flow: percabangan, perulangan, error handling (6 jam 20 menit)",
+      "Array, Matriks, dan operasi pemrosesan data (6 jam 50 menit)",
+      "Fungsi, prosedur, dan modularisasi kode (6 jam 5 menit)",
+      "Object-Oriented Programming (OOP) dan pewarisan (5 jam 25 menit)",
+      "Style Guide PEP8 dan konvensi penulisan kode (3 jam 35 menit)",
+      "Automated Unit Testing pada Python (1 jam 35 menit)",
+      "Pengenalan library populer (Data Science, ML, Web) (3 jam 20 menit)"
+    ],
+    submission: "Ujian evaluasi akhir komprehensif pemrograman Python.",
   },
   {
     slug: "pengenalan-logika-pemrograman",
