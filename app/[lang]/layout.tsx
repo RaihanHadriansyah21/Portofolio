@@ -46,10 +46,67 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const languageScript = `document.documentElement.lang=${JSON.stringify(lang)}`;
+  const base = siteUrl();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": `${base}/#person`,
+        name: "Mohammad Raihan Hadriansyah Prasetya",
+        alternateName: ["Reyy", "Raihan Hadriansyah", "Reyhadri"],
+        jobTitle: "AI/ML Engineer & Full-Stack Developer",
+        description: "AI/ML Engineer and Full-Stack Developer specializing in Applied Machine Learning, Model Serving, FastAPI, Next.js, and Supabase.",
+        url: base,
+        image: `${base}/images/reyy-professional.webp`,
+        email: "reyyhadri@gmail.com",
+        sameAs: [
+          "https://github.com/RaihanHadriansyah21",
+          "https://www.linkedin.com/in/reyhadri",
+          "https://www.instagram.com/reyhadri",
+        ],
+        alumniOf: {
+          "@type": "CollegeOrUniversity",
+          name: "Telkom University",
+        },
+        knowsAbout: [
+          "Applied Machine Learning",
+          "Deep Learning",
+          "TensorFlow",
+          "TensorFlow Lite",
+          "FastAPI",
+          "Next.js",
+          "React",
+          "TypeScript",
+          "Python",
+          "Supabase",
+          "PostgreSQL",
+          "Redis",
+          "Flutter",
+        ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${base}/#website`,
+        url: base,
+        name: "Reyy Portfolio · AI/ML Engineer & Full-Stack Developer",
+        description: "Portfolio of Mohammad Raihan Hadriansyah showcasing Applied AI systems, machine learning models, and full-stack engineering.",
+        publisher: {
+          "@id": `${base}/#person`,
+        },
+        inLanguage: ["en", "id"],
+      },
+    ],
+  };
 
   return (
     <div className="site-frame" lang={lang}>
       <script dangerouslySetInnerHTML={{ __html: languageScript }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PortfolioProvider locale={lang}>
         <RouteProgressBar />
         <SiteHeader locale={lang} />

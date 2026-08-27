@@ -20,9 +20,23 @@ const uiCopy = {
     modes: { recruiter: "Recruiter", technical: "Technical", explore: "Explore" },
     modeLabel: "Conversation mode",
     prompts: {
-      recruiter: ["Why should we interview Reyy?", "Which project best proves end-to-end ownership?"],
-      technical: ["Explain the SCOVIS architecture.", "What are the limitations of the ML projects?"],
-      explore: ["Which project should I open first?", "Show Reyy's strongest certificates."],
+      recruiter: [
+        "Why should we interview Reyy for AI/ML?",
+        "What is Reyy's availability and work model?",
+        "Which project best proves end-to-end full-stack?",
+        "Summarize Dicoding certificates and learning hours",
+      ],
+      technical: [
+        "Explain the SCOVIS architecture.",
+        "How is TFLite used in DermaScan?",
+        "What is the sequence modeling setup in Bitcoin?",
+        "Why linear SVM over RBF in Gojek sentiment?",
+      ],
+      explore: [
+        "Which project should I open first?",
+        "Show Reyy's strongest certificates.",
+        "How to download Reyy's ATS resume?",
+      ],
     },
     placeholder: "Ask about Reyy's work…",
     send: "Send",
@@ -51,9 +65,23 @@ const uiCopy = {
     modes: { recruiter: "Recruiter", technical: "Teknis", explore: "Jelajahi" },
     modeLabel: "Mode percakapan",
     prompts: {
-      recruiter: ["Mengapa Reyy layak diundang interview?", "Proyek mana yang paling membuktikan kemampuan end-to-end?"],
-      technical: ["Jelaskan arsitektur SCOVIS.", "Apa keterbatasan proyek ML Reyy?"],
-      explore: ["Proyek mana yang sebaiknya saya buka dulu?", "Tampilkan sertifikat terkuat Reyy."],
+      recruiter: [
+        "Mengapa Reyy cocok untuk posisi AI/ML Engineer?",
+        "Bagaimana ketersediaan kerja & preferensi lokasi Reyy?",
+        "Proyek mana yang paling membuktikan full-stack end-to-end?",
+        "Ringkas sertifikat dan jam belajar Dicoding",
+      ],
+      technical: [
+        "Jelaskan arsitektur sistem SCOVIS.",
+        "Bagaimana TFLite digunakan di DermaScan?",
+        "Bagaimana setup sequence modeling di Bitcoin?",
+        "Mengapa Linear SVM dipilih untuk sentimen Gojek?",
+      ],
+      explore: [
+        "Proyek mana yang sebaiknya saya buka dulu?",
+        "Tampilkan sertifikat terkuat Reyy.",
+        "Bagaimana cara mengunduh CV ATS Reyy?",
+      ],
     },
     placeholder: "Tanya tentang karya Reyy…",
     send: "Kirim",

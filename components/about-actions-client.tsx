@@ -5,6 +5,7 @@ import type { Locale } from "@/lib/portfolio";
 import { copy, profile } from "@/lib/portfolio";
 import { CopyEmailButton } from "./copy-email-button";
 import { RecruiterSummaryButton } from "./recruiter-summary-button";
+import { ShareProfileButton } from "./share-profile-button";
 import { usePortfolio } from "./portfolio-provider";
 
 export function AboutActionsClient({ locale }: { locale: Locale }) {
@@ -31,6 +32,7 @@ export function AboutActionsClient({ locale }: { locale: Locale }) {
         <span>{isIndo ? "Salin Email" : "Copy Email"}</span>
       </CopyEmailButton>
       <RecruiterSummaryButton locale={locale} />
+      <ShareProfileButton locale={locale} />
       <a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">
         Instagram ↗
       </a>

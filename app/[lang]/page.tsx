@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HeroActionsClient } from "@/components/hero-actions-client";
+import { AvailabilityBadge } from "@/components/availability-badge";
+import { SkillMatrix } from "@/components/skill-matrix";
 import { ContactForm } from "@/components/contact-form";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
@@ -18,7 +20,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     <main id="main-content">
       <section className="hero section-shell">
         <div className="hero-copy">
-          <div className="availability-pill"><span />{content.hero.availability}</div>
+          <AvailabilityBadge locale={lang} />
           <p className="eyebrow">{content.hero.eyebrow}</p>
           <h1><span>Reyy.</span>{content.hero.title}</h1>
           <p className="hero-intro">{content.hero.intro}</p>
@@ -85,6 +87,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             <article key={group.title}><span>0{index + 1}</span><h3>{group.title}</h3><p>{group.body}</p></article>
           ))}
         </div>
+        <SkillMatrix locale={lang} />
       </section>
 
       <section className="section-shell section-block credentials-preview">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/portfolio";
 import { copy } from "@/lib/portfolio";
 import { usePortfolio } from "./portfolio-provider";
+import { ShareProfileButton } from "./share-profile-button";
 
 export function HeroActionsClient({ locale }: { locale: Locale }) {
   const { openCV } = usePortfolio();
@@ -25,6 +26,7 @@ export function HeroActionsClient({ locale }: { locale: Locale }) {
       <Link className="button button-secondary" href={`/${locale}/about`}>
         {content.hero.secondary}
       </Link>
+      <ShareProfileButton locale={locale} />
     </div>
   );
 }

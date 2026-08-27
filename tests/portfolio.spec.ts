@@ -34,6 +34,24 @@ test.describe("Portfolio E2E Verification", () => {
     }
   });
 
+  test("Gojek sentiment loads interactive NLP sandbox", async ({ page }) => {
+    await page.goto("/en/projects/gojek-sentiment");
+    await expect(page.locator("text=INTERACTIVE NLP SANDBOX")).toBeVisible();
+    await expect(page.locator("text=Overall Classification")).toBeVisible();
+  });
+
+  test("Bitcoin forecasting loads interactive Seq2Seq scrubber", async ({ page }) => {
+    await page.goto("/en/projects/bitcoin-forecasting");
+    await expect(page.locator("text=INTERACTIVE SEQ2SEQ SCRUBBER")).toBeVisible();
+    await expect(page.locator("text=Seq2Seq (Encoder-Decoder)")).toBeVisible();
+  });
+
+  test("Homepage renders interactive availability badge and skill matrix", async ({ page }) => {
+    await page.goto("/en");
+    await expect(page.locator(".availability-pill.is-interactive")).toBeVisible();
+    await expect(page.locator("text=Cross-Project Tech Radar")).toBeVisible();
+  });
+
   test("Credentials page renders 44 certificate proofs and search filter", async ({ page }) => {
     await page.goto("/en/credentials");
     await expect(page.locator("h1")).toContainText("Continuous Learning");

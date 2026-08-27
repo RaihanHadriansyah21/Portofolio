@@ -7,6 +7,8 @@ import { MLPlayground } from "@/components/ml-playground";
 import { VehicleModelInspector } from "@/components/vehicle-model-inspector";
 import { QuizIntMobilePreview } from "@/components/quizint-mobile-preview";
 import { CloudTopologyInspector } from "@/components/cloud-topology-inspector";
+import { SentimentAnalysisTester } from "@/components/sentiment-analysis-tester";
+import { BitcoinForecastVisualizer } from "@/components/bitcoin-forecast-visualizer";
 import { copy, isLocale, locales, projectBySlug, projects, siteUrl } from "@/lib/portfolio";
 
 export function generateStaticParams() {
@@ -133,6 +135,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
         {project.slug === "vehicle-classification" && <VehicleModelInspector locale={lang} />}
         {project.slug === "quizint" && <QuizIntMobilePreview locale={lang} />}
         {project.slug === "cloud-inventory-api" && <CloudTopologyInspector locale={lang} />}
+        {project.slug === "gojek-sentiment" && <SentimentAnalysisTester locale={lang} />}
+        {project.slug === "bitcoin-forecasting" && <BitcoinForecastVisualizer locale={lang} />}
         <div className="case-list">
           {project.architecture.map((item, index) => <div key={item.en}><span>{String(index + 1).padStart(2, "0")}</span><p>{item[lang]}</p></div>)}
         </div>
