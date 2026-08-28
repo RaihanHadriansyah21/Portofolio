@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const base = siteUrl();
   return {
     title: lang === "en" ? "Projects" : "Proyek",
-    description: lang === "en" ? "Seven evidence-led projects across applied AI, machine learning, full-stack, mobile, and backend engineering." : "Tujuh proyek berbasis bukti dalam applied AI, machine learning, full-stack, mobile, dan backend engineering.",
+    description: lang === "en" ? "Evidence-led projects across applied AI, machine learning, full-stack, mobile, and backend engineering." : "Proyek berbasis bukti dalam applied AI, machine learning, full-stack, mobile, dan backend engineering.",
     alternates: {
       canonical: `${base}/${lang}/projects`,
       languages: { en: `${base}/en/projects`, id: `${base}/id/projects` },
@@ -21,11 +21,12 @@ export default async function ProjectsPage({ params }: { params: Promise<{ lang:
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const content = copy[lang];
+  const totalProjects = String(projects.length).padStart(2, "0");
 
   return (
     <main id="main-content" className="page-shell section-shell">
       <header className="page-hero">
-        <p className="eyebrow">{content.selected.eyebrow} / 01 / 07</p>
+        <p className="eyebrow">{content.selected.eyebrow} / 01 / {totalProjects}</p>
         <h1>{lang === "en" ? "Engineering stories, not a technology list." : "Cerita engineering, bukan sekadar daftar teknologi."}</h1>
         <p>{content.selected.intro}</p>
       </header>

@@ -83,9 +83,6 @@ export function SentimentAnalysisTester({ locale }: SentimentAnalysisTesterProps
     const filteredTokens = rawTokens.filter((t) => !STOPWORDS.has(t) && t.length > 1);
 
     // 3. Stemming & Lexicon Polarity Matching
-    let posScore = 0;
-    let negScore = 0;
-
     const tokenDetails = rawTokens.map((token) => {
       const isStopword = STOPWORDS.has(token);
       const stemmed = STEM_MAP[token] || token;
@@ -93,10 +90,8 @@ export function SentimentAnalysisTester({ locale }: SentimentAnalysisTesterProps
 
       if (POSITIVE_WORDS.has(token) || POSITIVE_WORDS.has(stemmed)) {
         polarity = "positive";
-        posScore += 1.8;
       } else if (NEGATIVE_WORDS.has(token) || NEGATIVE_WORDS.has(stemmed)) {
         polarity = "negative";
-        negScore += 2.2;
       }
 
       return {
@@ -106,6 +101,16 @@ export function SentimentAnalysisTester({ locale }: SentimentAnalysisTesterProps
         polarity,
       };
     });
+
+    const scores = tokenDetails.reduce(
+      (current, token) => ({
+        positive: current.positive + (token.polarity === "positive" ? 1.8 : 0),
+        negative: current.negative + (token.polarity === "negative" ? 2.2 : 0),
+      }),
+      { positive: 0, negative: 0 },
+    );
+    const posScore = scores.positive;
+    const negScore = scores.negative;
 
     // 4. Multi-Model Predictions Simulation
     // Baseline calculations aligned with notebook evaluation behavior

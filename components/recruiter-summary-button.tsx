@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Locale } from "@/lib/portfolio";
 import { profile } from "@/lib/portfolio";
+import { certificates } from "@/lib/certificates";
 import { showToast } from "./toast-notification";
 
 export function RecruiterSummaryButton({
@@ -14,11 +15,13 @@ export function RecruiterSummaryButton({
 }) {
   const [copied, setCopied] = useState(false);
   const isIndo = locale === "id";
+  const certificateCount = certificates.length;
+  const verifiedCertificateCount = certificates.filter((certificate) => certificate.verificationUrl).length;
 
   const summaryMarkdown = `**Mohammad Raihan Hadriansyah Prasetya** — AI/ML Engineer & Full-Stack Developer
 • Core Stack: Python, TensorFlow, Next.js, FastAPI, Supabase, PostgreSQL, Docker
 • Key Projects: SCOVIS (Flagship Applied AI / Thesis), DermaScan (Medical ML), Vehicle Classification (MobileNetV2), QuizInt (Mobile Flutter)
-• Credentials: 44 verified certifications (Dicoding, DBS Foundation Coding Camp 2026 AI Cohort, Microsoft)
+• Credentials: ${certificateCount} privacy-reviewed certificates, ${verifiedCertificateCount} with official issuer verification links (Dicoding, DBS Foundation Coding Camp 2026 AI Cohort, Microsoft)
 • Education: B.Eng Telecommunication Engineering (Telkom University)
 • Contact: ${profile.email} | Bandung, Indonesia | Portfolio: https://portoreyy.vercel.app`;
 

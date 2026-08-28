@@ -494,7 +494,15 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
   const [mode, setMode] = useState<ChatMode>("recruiter");
   const [input, setInput] = useState("");
   const [sessionReady, setSessionReady] = useState(false);
-  const [leadDismissed, setLeadDismissed] = useState(false);
+  const leadDismissedKey = `reyy-portfolio-chat-lead-dismissed-${locale}`;
+  const [leadDismissed, setLeadDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.sessionStorage.getItem(leadDismissedKey) === "true";
+    } catch {
+      return false;
+    }
+  });
   const [chatSessionId, setChatSessionId] = useState<string>(() => getInitialSessionId(locale));
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -604,9 +612,18 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
     try {
       window.sessionStorage.removeItem(storageKey);
       window.sessionStorage.setItem(chatSessionKey, freshSession);
+      window.sessionStorage.removeItem(leadDismissedKey);
     } catch {}
+    setLeadDismissed(false);
     setInput("");
     window.setTimeout(() => inputRef.current?.focus(), 0);
+  }
+
+  function dismissLead() {
+    setLeadDismissed(true);
+    try {
+      window.sessionStorage.setItem(leadDismissedKey, "true");
+    } catch {}
   }
 
   return (
@@ -620,7 +637,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
       )}
 
       {open && (
-        <section className="portfolio-chat-panel glass-panel" role="dialog" aria-modal="false" aria-labelledby="portfolio-chat-title">
+        <section className="portfolio-chat-panel glass-panel" role="dialog" aria-labelledby="portfolio-chat-title">
           <header className="portfolio-chat-header">
             <div className="portfolio-chat-identity">
               <span><AssistantMark /></span>
@@ -707,7 +724,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
           </div>
 
           {showLeadPrompt && (
-            <RecruiterLeadCapture locale={locale} sessionId={chatSessionId} onDismiss={() => setLeadDismissed(true)} />
+            <RecruiterLeadCapture locale={locale} sessionId={chatSessionId} onDismiss={dismissLead} />
           )}
 
           {showPrompts && (

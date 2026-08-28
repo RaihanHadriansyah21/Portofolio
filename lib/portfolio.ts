@@ -457,7 +457,7 @@ export const copy = {
     },
     proof: ["Applied AI systems", "Model-to-product integration", "Web, backend & mobile", "Evidence-led engineering"],
     flagship: { eyebrow: "Flagship case study", title: "AI that stays accountable to people.", intro: "SCOVIS is the clearest expression of how I work: machine learning surrounded by intentional product, data, review, and deployment systems." },
-    selected: { eyebrow: "Selected work", title: "Built across the stack, grounded in evidence.", intro: "Seven public projects, ordered by the strength of their engineering story rather than presented as an undifferentiated list." },
+    selected: { eyebrow: "Selected work", title: "Built across the stack, grounded in evidence.", intro: "Public projects, ordered by the strength of their engineering story rather than presented as an undifferentiated list." },
     capabilities: { eyebrow: "Capabilities", title: "From experiment to usable system.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, and NLP." },
       { title: "Backend & Data Services", body: "Python, FastAPI, Redis/RQ, Supabase, PostgreSQL, Flask, MongoDB, API contracts, and asynchronous jobs." },
@@ -482,7 +482,7 @@ export const copy = {
     },
     proof: ["Sistem applied AI", "Integrasi model-ke-produk", "Web, backend & mobile", "Engineering berbasis bukti"],
     flagship: { eyebrow: "Case study utama", title: "AI yang tetap bertanggung jawab kepada manusia.", intro: "SCOVIS adalah representasi terjelas dari cara saya bekerja: machine learning yang dikelilingi sistem produk, data, peninjauan, dan deployment yang dirancang dengan sengaja." },
-    selected: { eyebrow: "Karya terpilih", title: "Dibangun lintas stack, berpijak pada bukti.", intro: "Tujuh proyek publik yang diurutkan berdasarkan kekuatan cerita engineering, bukan ditampilkan sebagai daftar tanpa hierarki." },
+    selected: { eyebrow: "Karya terpilih", title: "Dibangun lintas stack, berpijak pada bukti.", intro: "Proyek publik yang diurutkan berdasarkan kekuatan cerita engineering, bukan ditampilkan sebagai daftar tanpa hierarki." },
     capabilities: { eyebrow: "Kapabilitas", title: "Dari eksperimen menjadi sistem yang dapat digunakan.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, dan NLP." },
       { title: "Backend & Data Services", body: "Python, FastAPI, Redis/RQ, Supabase, PostgreSQL, Flask, MongoDB, kontrak API, dan pekerjaan asinkron." },

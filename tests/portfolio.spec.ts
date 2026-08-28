@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { projects } from "../lib/portfolio";
 
 test.describe("Portfolio E2E Verification", () => {
   test("Homepage loads correctly in English", async ({ page }) => {
@@ -15,18 +16,8 @@ test.describe("Portfolio E2E Verification", () => {
     await expect(page.locator("text=Kirim Pesan Langsung")).toBeVisible();
   });
 
-  test("All 7 project case study routes load with verified architecture", async ({ page }) => {
-    const slugs = [
-      "scovis",
-      "dermascan",
-      "vehicle-classification",
-      "quizint",
-      "bitcoin-forecasting",
-      "gojek-sentiment",
-      "cloud-inventory-api",
-    ];
-
-    for (const slug of slugs) {
+  test("All project case study routes load with verified architecture", async ({ page }) => {
+    for (const { slug } of projects) {
       await page.goto(`/en/projects/${slug}`);
       await expect(page.locator("h1")).toBeVisible();
       await expect(page.locator("text=01 / Context")).toBeVisible();
@@ -52,10 +43,13 @@ test.describe("Portfolio E2E Verification", () => {
     await expect(page.locator("text=Cross-Project Tech Radar")).toBeVisible();
   });
 
-  test("Credentials page renders 44 certificate proofs and search filter", async ({ page }) => {
+  test("Credentials page renders certificate proofs and searches certificate skills", async ({ page }) => {
     await page.goto("/en/credentials");
-    await expect(page.locator("h1")).toContainText("Continuous Learning");
-    await expect(page.locator("input[placeholder*='Search']")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Continuous learning with depth behind it.");
+    const search = page.locator("input[placeholder*='Search']");
+    await expect(search).toBeVisible();
+    await search.fill("TensorFlow");
+    await expect(page.locator(".certificate-gallery-card")).toHaveCount(1);
   });
 
   test("About page loads identity showcase and quote", async ({ page }) => {

@@ -252,7 +252,7 @@ export function retrievePortfolioKnowledge(query: string, locale: Locale, mode: 
     .map((section) => ({ section, score: scoreSection(section, terms, mode) }))
     .sort((a, b) => b.score - a.score);
 
-  const hasCertificateIntent = terms.some((term) => ["certificate", "credential", "sertifikat", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission"].includes(term));
+  const hasCertificateIntent = terms.some((term) => ["certificate", "certificates", "credential", "credentials", "sertifikat", "sertifikasi", "certification", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission"].includes(term));
   const candidates = hasCertificateIntent ? ranked : ranked.filter((item) => item.section.id.startsWith("project-"));
   const minimumScore = terms.length === 0 ? Number.POSITIVE_INFINITY : 2;
   const normalizedQuery = normalize(query);

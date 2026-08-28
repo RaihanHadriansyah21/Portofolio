@@ -15,6 +15,31 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const content = copy[lang];
   const flagship = projectBySlug("scovis");
   if (!flagship) notFound();
+  const architectureLabels = lang === "id"
+    ? {
+        title: "PETA SISTEM",
+        workflow: "DENGAN PENINJAUAN MANUSIA",
+        product: "Produk",
+        services: "Layanan",
+        inference: "Inferensi",
+        review: "Tinjauan",
+        lecturerOverride: "Override dosen",
+        documentedRoutes: "rute API terdokumentasi",
+        backbonesSections: "backbone × bagian",
+        roleWorkflows: "alur kerja berdasarkan peran",
+      }
+    : {
+        title: "SYSTEM MAP",
+        workflow: "HUMAN-IN-THE-LOOP",
+        product: "Product",
+        services: "Services",
+        inference: "Inference",
+        review: "Review",
+        lecturerOverride: "Lecturer override",
+        documentedRoutes: "documented API routes",
+        backbonesSections: "backbones × sections",
+        roleWorkflows: "role-based workflows",
+      };
 
   return (
     <main id="main-content">
@@ -50,18 +75,18 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <div className="flagship-grid">
           <ProjectCard project={flagship} locale={lang} featured />
           <div className="architecture-board glass-panel">
-            <div className="architecture-head"><span>SCOVIS / SYSTEM MAP</span><span>HUMAN-IN-THE-LOOP</span></div>
+            <div className="architecture-head"><span>SCOVIS / {architectureLabels.title}</span><span>{architectureLabels.workflow}</span></div>
             <div className="architecture-flow">
-              <div><span>01</span><strong>Product</strong><small>Next.js · 3 roles</small></div><i aria-hidden="true">→</i>
-              <div><span>02</span><strong>Services</strong><small>FastAPI · Supabase</small></div><i aria-hidden="true">→</i>
-              <div><span>03</span><strong>Inference</strong><small>Redis/RQ · TensorFlow</small></div><i aria-hidden="true">→</i>
-              <div><span>04</span><strong>Review</strong><small>Lecturer override</small></div>
+              <div><span>01</span><strong>{architectureLabels.product}</strong><small>Next.js · 3 {lang === "id" ? "peran" : "roles"}</small></div><i aria-hidden="true">→</i>
+              <div><span>02</span><strong>{architectureLabels.services}</strong><small>FastAPI · Supabase</small></div><i aria-hidden="true">→</i>
+              <div><span>03</span><strong>{architectureLabels.inference}</strong><small>Redis/RQ · TensorFlow</small></div><i aria-hidden="true">→</i>
+              <div><span>04</span><strong>{architectureLabels.review}</strong><small>{architectureLabels.lecturerOverride}</small></div>
             </div>
             <p>{flagship.context[lang]}</p>
             <div className="architecture-stats">
-              <div><strong>31</strong><span>documented API routes</span></div>
-              <div><strong>3 × 24</strong><span>backbones × sections</span></div>
-              <div><strong>3</strong><span>role-based workflows</span></div>
+              <div><strong>31</strong><span>{architectureLabels.documentedRoutes}</span></div>
+              <div><strong>3 × 24</strong><span>{architectureLabels.backbonesSections}</span></div>
+              <div><strong>3</strong><span>{architectureLabels.roleWorkflows}</span></div>
             </div>
           </div>
         </div>

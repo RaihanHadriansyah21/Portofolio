@@ -197,6 +197,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
 
   const executeFetch = useCallback(
     async (authToken: string) => {
+      const messages = copy[locale];
       setError(null);
       startTransition(async () => {
         try {
@@ -208,14 +209,14 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           });
 
           if (res.status === 401) {
-            setError(t.invalidKey);
+            setError(messages.invalidKey);
             window.sessionStorage.removeItem(STORAGE_KEY);
             setToken("");
             return;
           }
 
           if (!res.ok) {
-            setError(t.fetchErr);
+            setError(messages.fetchErr);
             return;
           }
 
@@ -225,15 +226,16 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           window.sessionStorage.setItem(STORAGE_KEY, authToken);
         } catch (err) {
           console.error(err);
-          setError(t.networkErr);
+          setError(messages.networkErr);
         }
       });
     },
-    [t],
+    [locale],
   );
 
   useEffect(() => {
     if (!token) return;
+    const messages = copy[locale];
 
     let ignore = false;
     async function load() {
@@ -244,13 +246,13 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
         });
         if (ignore) return;
         if (res.status === 401) {
-          setError(t.invalidKey);
+          setError(messages.invalidKey);
           window.sessionStorage.removeItem(STORAGE_KEY);
           setToken("");
           return;
         }
         if (!res.ok) {
-          setError(t.fetchErr);
+          setError(messages.fetchErr);
           return;
         }
         const json = await res.json();
@@ -261,7 +263,7 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
         }
       } catch {
         if (!ignore) {
-          setError(t.networkErr);
+          setError(messages.networkErr);
         }
       }
     }
@@ -270,13 +272,12 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
     return () => {
       ignore = true;
     };
-  }, [token, t]);
+  }, [token, locale]);
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     if (!inputToken.trim()) return;
     setToken(inputToken.trim());
-    void executeFetch(inputToken.trim());
   }
 
   function handleLogout() {

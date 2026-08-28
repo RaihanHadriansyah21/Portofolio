@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/portfolio";
 import { projects, profile } from "@/lib/portfolio";
+import { certificates } from "@/lib/certificates";
 import { CVType } from "./cv-modal";
 
 type CommandItem = {
@@ -34,6 +35,7 @@ function CommandMenuModal({
   const router = useRouter();
 
   const isIndo = locale === "id";
+  const certificateCount = certificates.length;
 
   const items: CommandItem[] = [
     // Actions
@@ -134,7 +136,7 @@ function CommandMenuModal({
     {
       id: "nav-credentials",
       category: "navigation",
-      label: { en: "Go to Credentials (44 Certificates)", id: "Buka Sertifikat (44 Bukti)" },
+      label: { en: `Go to Credentials (${certificateCount} Certificates)`, id: `Buka Sertifikat (${certificateCount} Bukti)` },
       icon: "📜",
       perform: () => {
         onClose();

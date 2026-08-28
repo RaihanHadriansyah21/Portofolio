@@ -156,7 +156,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
         <p className="case-evidence-note">{labels.evidenceNote}</p>
       </section>
       <nav className="next-project glass-panel" aria-label="Project navigation">
-        <span>{project.number} / 07</span>
+        <span>{project.number} / {String(projects.length).padStart(2, "0")}</span>
         <div>
           {project.repositories.map((repository) => <a href={repository.href} target="_blank" rel="noreferrer" key={repository.href}>{repository.label[lang]} ↗</a>)}
           <Link href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link>

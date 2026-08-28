@@ -105,6 +105,10 @@ const copy = {
     disclaimerText: "This model is designed as an assistant decision-support tool, not an automated clinical diagnostic device. Final decisions must always be verified by medical professionals.",
     topMatch: "Top Classification",
     confidence: "Model Confidence",
+    awaiting: "Awaiting inference",
+    awaitingDetail: "Run the neural inference to reveal this sample's recorded demo output.",
+    notAvailable: "Not available",
+    testSample: "Selected test sample",
   },
   id: {
     eyebrow: "Sandbox AI Interaktif",
@@ -121,6 +125,10 @@ const copy = {
     disclaimerText: "Model ini dirancang sebagai alat bantu pendukung keputusan, bukan pengganti diagnosis medis otomatis. Keputusan akhir selalu memerlukan verifikasi tenaga medis profesional.",
     topMatch: "Klasifikasi Teratas",
     confidence: "Tingkat Keyakinan Model",
+    awaiting: "Menunggu inferensi",
+    awaitingDetail: "Jalankan inferensi neural untuk menampilkan keluaran demo yang direkam untuk sampel ini.",
+    notAvailable: "Belum tersedia",
+    testSample: "Sampel uji terpilih",
   },
 };
 
@@ -128,8 +136,8 @@ export function MLPlayground({ locale }: { locale: Locale }) {
   const [selectedSample, setSelectedSample] = useState<SampleImage>(samples[0]);
   const [isRunning, setIsRunning] = useState(false);
   const [showGradCam, setShowGradCam] = useState(false);
-  const [hasInferred, setHasInferred] = useState(true);
-  const [activeLatency, setActiveLatency] = useState(38);
+  const [hasInferred, setHasInferred] = useState(false);
+  const [activeLatency, setActiveLatency] = useState<number | null>(null);
 
   const t = copy[locale];
 
@@ -192,6 +200,8 @@ export function MLPlayground({ locale }: { locale: Locale }) {
                 onClick={() => {
                   setSelectedSample(s);
                   setShowGradCam(false);
+                  setHasInferred(false);
+                  setActiveLatency(null);
                 }}
                 style={{
                   padding: "0.6rem 0.75rem",
@@ -246,8 +256,8 @@ export function MLPlayground({ locale }: { locale: Locale }) {
 
             {/* Canvas Badges */}
             <div style={{ position: "relative", zIndex: 2, background: "rgba(0,0,0,0.7)", padding: "0.4rem 0.75rem", borderRadius: "6px", fontSize: "0.75rem" }}>
-              <span style={{ color: selectedSample.riskLevel === "High" ? "#f87171" : "#4ade80", fontWeight: 700 }}>
-                ● {selectedSample.riskLevel} Risk Pattern
+              <span style={{ color: "#4ade80", fontWeight: 700 }}>
+                ● {t.testSample}
               </span>
               <p style={{ margin: "0.15rem 0 0", opacity: 0.8, fontSize: "0.7rem" }}>
                 {selectedSample.description[locale]}
@@ -267,11 +277,12 @@ export function MLPlayground({ locale }: { locale: Locale }) {
               {isRunning ? t.running : t.runInference}
             </button>
 
-            <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", cursor: "pointer", opacity: 0.9 }}>
+            <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", cursor: hasInferred && !isRunning ? "pointer" : "not-allowed", opacity: hasInferred && !isRunning ? 0.9 : 0.5 }}>
               <input
                 type="checkbox"
                 checked={showGradCam}
                 onChange={(e) => setShowGradCam(e.target.checked)}
+                disabled={!hasInferred || isRunning}
                 style={{ accentColor: "#4ade80", width: 16, height: 16 }}
               />
               <span>{t.gradCamToggle}</span>
@@ -287,7 +298,7 @@ export function MLPlayground({ locale }: { locale: Locale }) {
                 {t.pipeline}
               </span>
               <span style={{ fontSize: "0.78rem", color: "#4ade80", background: "rgba(74, 222, 128, 0.12)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
-                {t.latency}: ~{activeLatency}ms (TFLite)
+                {hasInferred && activeLatency !== null ? `${t.latency}: ~${activeLatency}ms (TFLite)` : t.awaiting}
               </span>
             </div>
 
@@ -295,8 +306,8 @@ export function MLPlayground({ locale }: { locale: Locale }) {
             <div style={{ background: "rgba(0,0,0,0.3)", padding: "1rem", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)", marginBottom: "1rem" }}>
               <span style={{ fontSize: "0.72rem", opacity: 0.6 }}>{t.topMatch}</span>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: "0.2rem" }}>
-                <strong style={{ fontSize: "1.1rem" }}>{topProb.name}</strong>
-                <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "#4ade80" }}>{topProb.score}%</span>
+                <strong style={{ fontSize: "1.1rem" }}>{hasInferred ? topProb.name : t.awaiting}</strong>
+                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--muted)" }}>{hasInferred ? `${topProb.score}%` : t.awaitingDetail}</span>
               </div>
             </div>
 
@@ -308,7 +319,7 @@ export function MLPlayground({ locale }: { locale: Locale }) {
                     <span style={{ opacity: prob.isTop ? 1 : 0.7, fontWeight: prob.isTop ? 600 : 400 }}>
                       {prob.name}
                     </span>
-                    <span style={{ fontWeight: prob.isTop ? 700 : 400 }}>{prob.score}%</span>
+                    <span style={{ fontWeight: prob.isTop ? 700 : 400 }}>{hasInferred ? `${prob.score}%` : t.notAvailable}</span>
                   </div>
                   <div style={{ height: "6px", borderRadius: "3px", background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
                     <div

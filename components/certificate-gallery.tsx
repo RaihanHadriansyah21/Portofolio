@@ -23,7 +23,7 @@ const galleryCopy = {
     of: "of",
     results: "credentials",
     dialogLabel: "Certificate preview",
-    searchPlaceholder: "Search 44 certificates (e.g. TensorFlow, Python, Google, Deep Learning)…",
+    searchPlaceholder: (count: number) => `Search ${count} certificates (e.g. TensorFlow, Python, Google, Deep Learning)…`,
     noResults: "No certificates match your search query.",
     clearSearch: "Clear search",
   },
@@ -39,7 +39,7 @@ const galleryCopy = {
     of: "dari",
     results: "sertifikat",
     dialogLabel: "Preview sertifikat",
-    searchPlaceholder: "Cari 44 sertifikat (contoh: TensorFlow, Python, Google, Deep Learning)…",
+    searchPlaceholder: (count: number) => `Cari ${count} sertifikat (contoh: TensorFlow, Python, Google, Deep Learning)…`,
     noResults: "Tidak ada sertifikat yang cocok dengan pencarian Anda.",
     clearSearch: "Hapus pencarian",
   },
@@ -75,7 +75,7 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
       }
       // Keyword search
       if (q) {
-        const text = `${certificate.title} ${certificate.issuer} ${certificate.kind} ${certificate.slug}`.toLowerCase();
+        const text = `${certificate.title} ${certificate.issuer} ${certificate.kind} ${certificate.slug} ${(certificate.skills || []).join(" ")}`.toLowerCase();
         return text.includes(q);
       }
       return true;
@@ -122,7 +122,7 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={copy.searchPlaceholder}
+            placeholder={copy.searchPlaceholder(items.length)}
             style={{
               width: "100%",
               padding: "0.75rem 2.5rem 0.75rem 1rem",

@@ -649,7 +649,9 @@ button { color: inherit; font: inherit; }
 .contact-logo-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.7rem;
+  min-width: clamp(12rem, 18vw, 17rem);
   min-height: 3.2rem;
   padding: 0.72rem 1.05rem;
   border: 1px solid color-mix(in srgb, var(--invert-foreground) 32%, transparent);
