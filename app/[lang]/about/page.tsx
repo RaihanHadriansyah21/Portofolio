@@ -43,7 +43,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       ["2026", "English proficiency · EPrT 490 (CEFR B1)"],
       ["2025", "Information Technology Intern · CV. Bima Technologies"],
       ["2025–26", "Head of Commission 3 · HMTT Telkom University"],
-      ["2022–26", "Undergraduate Telecommunication Engineering · Telkom University"],
+      ["2022–26", "B.Eng in Telecommunication Engineering (S.T.) · Telkom University"],
       ["2021", "Telecommunication Installation Intern · PT Telkom Indonesia (IndiHome)"],
     ],
   } : {
@@ -56,7 +56,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
       ["2026", "Kemampuan bahasa Inggris · EPrT 490 (CEFR B1)"],
       ["2025", "Information Technology Intern · CV. Bima Technologies"],
       ["2025–26", "Kepala Komisi 3 · HMTT Telkom University"],
-      ["2022–26", "Mahasiswa S1 Teknik Telekomunikasi · Telkom University"],
+      ["2022–26", "S1 Teknik Telekomunikasi (S.T.) · Telkom University"],
       ["2021", "Telecommunication Installation Intern · PT Telkom Indonesia (IndiHome)"],
     ],
   };

@@ -132,7 +132,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
                   <span className="spec-item-icon">🎓</span>
                   <div>
                     <strong>{isEn ? "Education & Graduation" : "Status Pendidikan"}</strong>
-                    <p>{isEn ? "Thesis defense completed at Telkom University (S.T. Candidate) · 100% focused on career" : "Sidang skripsi selesai di Telkom University (Calon S.T.) · 100% siap fokus bekerja"}</p>
+                    <p>{isEn ? "Graduated from Telkom University (S.T. · Yudisium Completed) · 100% ready for full-time work" : "Lulusan Telkom University (S.T. · Lulus Yudisium) · 100% siap bekerja full-time"}</p>
                   </div>
                 </div>
 

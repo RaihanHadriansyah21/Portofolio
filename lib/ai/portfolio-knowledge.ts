@@ -131,10 +131,10 @@ function profileSection(locale: Locale): KnowledgeSection {
     body: [
       `PROFILE: ${profile.legalName}, usually called ${profile.displayName}.`,
       `POSITIONING: AI/ML Engineer and Full-Stack Developer focused on moving machine-learning work beyond notebooks into APIs, data systems, interfaces, and deployment-ready workflows.`,
-      `CURRENT STATUS: Thesis defense in Telecommunication Engineering is complete. Reyy is transitioning toward full-time work while awaiting formal yudisium before graduation. Do not describe him as formally graduated or use an engineering degree title yet.`,
+      `CURRENT STATUS: Officially graduated in Telecommunication Engineering (S.T.) from Telkom University via Yudisium, with formal commencement ceremony scheduled for November 2026. Reyy is immediately available for full-time engineering roles.`,
       `LOCATION: ${profile.location}.`,
       `EXPERIENCE: Information Technology Intern at CV. Bima Technologies in 2025; Telecommunication Installation Intern at PT Telkom Indonesia (IndiHome) in 2021; Head of Commission 3 at HMTT Telkom University for 2025-2026.`,
-      `EDUCATION: Undergraduate Telecommunication Engineering at Telkom University, 2022-2026.`,
+      `EDUCATION: Bachelor of Engineering (S.T.) in Telecommunication Engineering from Telkom University, 2022-2026 (Yudisium completed, Nov 2026 commencement).`,
       `ENGLISH: EPrT score 490, equivalent to CEFR B1, taken at Telkom University Language Center on April 30, 2026 and valid through April 30, 2028.`,
       `OPPORTUNITIES: Open to full-time AI/ML, backend, frontend, and full-stack roles at startups or larger technology companies in Indonesia and beyond.`,
       `ABOUT: ${content.about.body}`,
