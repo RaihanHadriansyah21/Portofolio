@@ -16,21 +16,25 @@ localStoreHost.__reyyPortfolioChatRateStore = localRateStore;
 
 let distributedRateLimiter: Ratelimit | null | undefined;
 
+function getRedisCredentials() {
+  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+
+  if (!url || !token || !process.env.CHAT_RATE_LIMIT_SALT) return null;
+  return { url, token };
+}
+
 function getDistributedRateLimiter() {
   if (distributedRateLimiter !== undefined) return distributedRateLimiter;
 
-  const hasConfiguration = Boolean(
-    process.env.UPSTASH_REDIS_REST_URL
-    && process.env.UPSTASH_REDIS_REST_TOKEN
-    && process.env.CHAT_RATE_LIMIT_SALT,
-  );
-  if (!hasConfiguration) {
+  const credentials = getRedisCredentials();
+  if (!credentials) {
     distributedRateLimiter = null;
     return distributedRateLimiter;
   }
 
   distributedRateLimiter = new Ratelimit({
-    redis: Redis.fromEnv(),
+    redis: new Redis(credentials),
     limiter: Ratelimit.slidingWindow(REQUEST_LIMIT, `${WINDOW_SECONDS} s`),
     prefix: "reyy-portfolio-chat",
     analytics: false,

@@ -127,13 +127,14 @@ GEMINI_MODEL=gemini-3.5-flash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 # Optional: distributed chat rate limiting for Vercel/serverless deployments.
-# Create a different random value for CHAT_RATE_LIMIT_SALT and keep all three private.
-UPSTASH_REDIS_REST_URL=your_upstash_rest_url
-UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
+# Vercel's Upstash integration supplies KV_REST_API_URL and KV_REST_API_TOKEN automatically.
+# The legacy UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN names are also supported.
+KV_REST_API_URL=your_upstash_rest_url
+KV_REST_API_TOKEN=your_upstash_rest_token
 CHAT_RATE_LIMIT_SALT=your_long_random_secret
 ```
 
-`GEMINI_MODEL` and `NEXT_PUBLIC_SITE_URL` are optional. The three Upstash values are optional as a group: when all are present, the chat API uses a distributed 12-request / 5-minute limiter; otherwise it uses a best-effort local fallback. The distributed identifier is an HMAC of the visitor IP, not the chat content, and Upstash analytics is disabled. Never expose any secret through a `NEXT_PUBLIC_` variable.
+`GEMINI_MODEL` and `NEXT_PUBLIC_SITE_URL` are optional. The two Redis values plus `CHAT_RATE_LIMIT_SALT` are optional as a group: when all are present, the chat API uses a distributed 12-request / 5-minute limiter; otherwise it uses a best-effort local fallback. The distributed identifier is an HMAC of the visitor IP, not the chat content, and Upstash analytics is disabled. Never expose any secret through a `NEXT_PUBLIC_` variable.
 
 ## Validation
 
