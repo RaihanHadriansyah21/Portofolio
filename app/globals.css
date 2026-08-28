@@ -308,6 +308,17 @@ button { color: inherit; font: inherit; }
 
 .hero-copy { position: relative; z-index: 2; }
 
+.live-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--foreground);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--foreground) 10%, transparent);
+  animation: pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
 .availability-pill {
   display: inline-flex;
   gap: 0.65rem;
@@ -322,15 +333,18 @@ button { color: inherit; font: inherit; }
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
+  max-width: fit-content;
 }
 
-.availability-pill span {
+.availability-pill .live-dot {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
   background: var(--foreground);
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--foreground) 9%, transparent);
   animation: pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
 }
 
 .hero h1 {
