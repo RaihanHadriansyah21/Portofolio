@@ -7,6 +7,9 @@ import { RouteProgressBar } from "@/components/route-progress-bar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { copy, isLocale, locales, siteUrl } from "@/lib/portfolio";
+import "../globals.css";
+
+const themeScript = `(function(){try{var t=localStorage.getItem('reyy-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}})()`;
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -20,8 +23,16 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const ogImageUrl = `${base}/api/og?title=Reyy%20%C2%B7%20AI%2FML%20Engineer%20%26%20Full-Stack&subtitle=Portfolio%202026`;
 
   return {
-    title: "AI/ML Engineer & Full-Stack Developer",
+    metadataBase: new URL(base),
+    title: {
+      default: "Reyy | AI/ML Engineer & Full-Stack Developer",
+      template: "%s | Reyy",
+    },
     description: content.hero.intro,
+    applicationName: "Reyy Portfolio",
+    authors: [{ name: "Mohammad Raihan Hadriansyah Prasetya" }],
+    creator: "Mohammad Raihan Hadriansyah Prasetya",
+    keywords: ["AI Engineer", "Machine Learning Engineer", "Full-Stack Developer", "Next.js", "FastAPI", "TensorFlow", "Indonesia"],
     alternates: {
       canonical: `${base}/${lang}`,
       languages: { en: `${base}/en`, id: `${base}/id` },
@@ -31,6 +42,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       title: "Reyy | AI/ML Engineer & Full-Stack Developer",
       description: content.hero.intro,
       locale: lang === "en" ? "en_US" : "id_ID",
+      siteName: "Reyy Portfolio",
       images: [{ url: ogImageUrl, width: 1200, height: 630, alt: "Reyy | AI/ML Engineer & Full-Stack Developer" }],
     },
     twitter: {
@@ -45,7 +57,6 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 export default async function LocaleLayout({ children, params }: { children: React.ReactNode; params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
-  const languageScript = `document.documentElement.lang=${JSON.stringify(lang)}`;
   const base = siteUrl();
 
   const jsonLd = {
@@ -101,19 +112,24 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   };
 
   return (
-    <div className="site-frame" lang={lang}>
-      <script dangerouslySetInnerHTML={{ __html: languageScript }} />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <PortfolioProvider locale={lang}>
-        <RouteProgressBar />
-        <SiteHeader locale={lang} />
-        <PageTransition>{children}</PageTransition>
-        <SiteFooter locale={lang} />
-        <PortfolioChat locale={lang} />
-      </PortfolioProvider>
-    </div>
+    <html lang={lang} data-theme="dark" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeScript }} /></head>
+      <body>
+        <a className="skip-link" href="#main-content">Skip to content</a>
+        <div className="site-frame" lang={lang}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <PortfolioProvider locale={lang}>
+            <RouteProgressBar />
+            <SiteHeader locale={lang} />
+            <PageTransition>{children}</PageTransition>
+            <SiteFooter locale={lang} />
+            <PortfolioChat locale={lang} />
+          </PortfolioProvider>
+        </div>
+      </body>
+    </html>
   );
 }

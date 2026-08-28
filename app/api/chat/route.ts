@@ -7,6 +7,7 @@ import {
   toUIMessageStream,
 } from "ai";
 import { retrievePortfolioKnowledge } from "@/lib/ai/portfolio-knowledge";
+import { checkChatRateLimit } from "@/lib/chat-rate-limit";
 import type { ChatMode, PortfolioChatMessage } from "@/lib/ai/types";
 import type { Locale } from "@/lib/portfolio";
 import { supabase } from "@/lib/supabase";
@@ -19,19 +20,6 @@ const MAX_MESSAGES = 17;
 const MAX_USER_CHARS = 500;
 const MAX_ASSISTANT_CHARS = 4_000;
 const MAX_CONTEXT_CHARS = 18_000;
-const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
-const RATE_LIMIT_REQUESTS = 12;
-
-type RateEntry = { count: number; resetAt: number };
-type RateStore = Map<string, RateEntry>;
-
-const globalRateStore = globalThis as typeof globalThis & {
-  __reyyPortfolioChatRateStore?: RateStore;
-};
-
-const rateStore = globalRateStore.__reyyPortfolioChatRateStore ?? new Map<string, RateEntry>();
-globalRateStore.__reyyPortfolioChatRateStore = rateStore;
-
 function jsonError(message: string, status: number, headers?: HeadersInit) {
   return Response.json(
     { error: message },
@@ -63,6 +51,21 @@ async function hashIp(ip: string): Promise<string> {
     .join("");
 }
 
+async function createRateLimitIdentifier(ip: string): Promise<string | null> {
+  const salt = process.env.CHAT_RATE_LIMIT_SALT;
+  if (!salt) return null;
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(salt),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(ip));
+  return Array.from(new Uint8Array(signature)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
@@ -71,29 +74,6 @@ function logToDb(action: () => Promise<unknown>) {
   action().catch((error) => {
     console.error("[chat-db]", error instanceof Error ? error.message : error);
   });
-}
-
-function checkRateLimit(identifier: string) {
-  const now = Date.now();
-
-  if (rateStore.size > 500) {
-    for (const [key, entry] of rateStore) {
-      if (entry.resetAt <= now) rateStore.delete(key);
-    }
-  }
-
-  const existing = rateStore.get(identifier);
-  if (!existing || existing.resetAt <= now) {
-    rateStore.set(identifier, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return { allowed: true, retryAfter: 0 };
-  }
-
-  if (existing.count >= RATE_LIMIT_REQUESTS) {
-    return { allowed: false, retryAfter: Math.max(1, Math.ceil((existing.resetAt - now) / 1000)) };
-  }
-
-  existing.count += 1;
-  return { allowed: true, retryAfter: 0 };
 }
 
 function hasValidOrigin(request: Request) {
@@ -201,7 +181,10 @@ ${context}`;
 export async function POST(request: Request) {
   if (!hasValidOrigin(request)) return jsonError("Forbidden request origin.", 403);
 
-  const rate = checkRateLimit(requestIp(request));
+  const visitorIp = requestIp(request);
+  const visitorHashPromise = hashIp(visitorIp);
+  const distributedIdentifier = await createRateLimitIdentifier(visitorIp);
+  const rate = await checkChatRateLimit(distributedIdentifier ?? await visitorHashPromise);
   if (!rate.allowed) {
     return jsonError("Too many chat requests. Please try again shortly.", 429, {
       "Retry-After": String(rate.retryAfter),
@@ -244,7 +227,6 @@ export async function POST(request: Request) {
   // --- Database logging (fire-and-forget, never blocks the response) ---
   const db = supabase;
   if (db) {
-    const visitorHashPromise = hashIp(requestIp(request));
     logToDb(async () => {
       const visitorHash = await visitorHashPromise;
       await db.from("chat_sessions").upsert(

@@ -125,9 +125,15 @@ For local AI Guide support, create `.env.local` without committing it:
 GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
 GEMINI_MODEL=gemini-3.5-flash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Optional: distributed chat rate limiting for Vercel/serverless deployments.
+# Create a different random value for CHAT_RATE_LIMIT_SALT and keep all three private.
+UPSTASH_REDIS_REST_URL=your_upstash_rest_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_rest_token
+CHAT_RATE_LIMIT_SALT=your_long_random_secret
 ```
 
-`GEMINI_MODEL` and `NEXT_PUBLIC_SITE_URL` are optional. Never expose the API key through a `NEXT_PUBLIC_` variable.
+`GEMINI_MODEL` and `NEXT_PUBLIC_SITE_URL` are optional. The three Upstash values are optional as a group: when all are present, the chat API uses a distributed 12-request / 5-minute limiter; otherwise it uses a best-effort local fallback. The distributed identifier is an HMAC of the visitor IP, not the chat content, and Upstash analytics is disabled. Never expose any secret through a `NEXT_PUBLIC_` variable.
 
 ## Validation
 
@@ -144,9 +150,9 @@ Run end-to-end tests against a local production build:
 # Install Playwright browsers once
 npx playwright install chromium
 
-# Build and start production server, then run tests
-npm run build && npm run start &
-npx playwright test
+# Playwright starts the local production server from its configuration
+npm run build
+npm run test
 ```
 
 Test coverage: all 7 project detail routes, homepage contact form, English/Indonesian localization, credentials gallery, and About page identity.
