@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { copy, type Locale, type Project } from "@/lib/portfolio";
 
-function fireProjectClick(slug: string, title: string, source: "image" | "cta") {
+function fireProjectClick(slug: string, title: string, source: "image" | "cta" | "title") {
   fetch("/api/telemetry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -12,6 +12,7 @@ function fireProjectClick(slug: string, title: string, source: "image" | "cta") 
       eventType: "project_click",
       metadata: { slug, title, source },
     }),
+    keepalive: true,
   }).catch(() => {
     // fire-and-forget — never block navigation
   });
@@ -56,7 +57,15 @@ export function ProjectCard({
       </Link>
       <div className="project-card-copy">
         <p className="eyebrow">{project.categories.join(" · ")}</p>
-        <Heading>{project.title}</Heading>
+        <Heading>
+          <Link
+            href={`/${locale}/projects/${project.slug}`}
+            onClick={() => fireProjectClick(project.slug, project.title, "title")}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            {project.title}
+          </Link>
+        </Heading>
         <p>{project.summary[locale]}</p>
       </div>
       <div className="tag-list" role="list" aria-label="Technology stack">

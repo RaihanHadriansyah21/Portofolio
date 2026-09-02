@@ -536,9 +536,16 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
 
       {/* Project Click Heatmap */}
       <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12, marginBottom: "2rem" }}>
-        <div style={{ marginBottom: "1.25rem" }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{t.projectClicksTitle}</h3>
-          <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{t.projectClicksDesc}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
+          <div>
+            <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{t.projectClicksTitle}</h3>
+            <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{t.projectClicksDesc}</p>
+          </div>
+          {data.project_clicks && data.project_clicks.length > 0 && (
+            <span style={{ background: "rgba(255,255,255,0.1)", padding: "0.2rem 0.6rem", borderRadius: 12, fontSize: "0.8rem", fontWeight: 600 }}>
+              {data.project_clicks.reduce((acc, p) => acc + p.count, 0)} {t.clicksUnit}
+            </span>
+          )}
         </div>
 
         {!data.project_clicks || data.project_clicks.length === 0 ? (
