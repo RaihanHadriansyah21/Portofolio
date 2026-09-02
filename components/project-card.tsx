@@ -1,6 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { copy, type Locale, type Project } from "@/lib/portfolio";
+
+function fireProjectClick(slug: string, title: string, source: "image" | "cta") {
+  fetch("/api/telemetry", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      eventType: "project_click",
+      metadata: { slug, title, source },
+    }),
+  }).catch(() => {
+    // fire-and-forget — never block navigation
+  });
+}
 
 export function ProjectCard({
   project,
@@ -26,6 +41,7 @@ export function ProjectCard({
         aria-label={`${content.common.viewCase}: ${project.title}`}
         className="project-preview-link"
         href={`/${locale}/projects/${project.slug}`}
+        onClick={() => fireProjectClick(project.slug, project.title, "image")}
       >
         <Image
           alt={project.preview.alt[locale]}
@@ -54,7 +70,11 @@ export function ProjectCard({
             </a>
           ))}
         </div>
-        <Link className="text-link" href={`/${locale}/projects/${project.slug}`}>
+        <Link
+          className="text-link"
+          href={`/${locale}/projects/${project.slug}`}
+          onClick={() => fireProjectClick(project.slug, project.title, "cta")}
+        >
           {content.common.viewCase} <span aria-hidden="true">↗</span>
         </Link>
       </div>

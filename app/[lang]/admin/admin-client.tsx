@@ -59,6 +59,7 @@ type AnalyticsData = {
     role_matcher?: number;
     voice_briefing?: number;
   };
+  project_clicks?: { slug: string; title: string; count: number }[];
 };
 
 const STORAGE_KEY = "reyy_admin_auth_token";
@@ -102,6 +103,10 @@ const copy = {
     emailCopies: "1-Click Email Copies",
     cmdPalette: "Command Palette (Ctrl+K)",
     voiceBriefing: "AI Voice Briefings Played",
+    projectClicksTitle: "🚀 Project Click Heatmap",
+    projectClicksDesc: "Tracks which project cards visitors click most — use this to know which projects recruiters find most interesting.",
+    noProjectClicks: "No project clicks recorded yet.",
+    clicksUnit: "clicks",
     leadsTitle: "💼 Recruiter Contacts & Leads",
     leadsDesc: "Contacts left by visitors after chatting with the AI.",
     noLeads: "No recruiter leads submitted yet.",
@@ -161,6 +166,10 @@ const copy = {
     emailCopies: "Salin Email (1-Klik)",
     cmdPalette: "Command Menu (Ctrl+K)",
     voiceBriefing: "Pemutaran AI Voice Briefing",
+    projectClicksTitle: "🚀 Heatmap Klik Proyek",
+    projectClicksDesc: "Melacak kartu proyek mana yang paling sering diklik pengunjung — gunakan ini untuk tahu proyek mana yang paling menarik perhatian rekruter.",
+    noProjectClicks: "Belum ada klik proyek yang tercatat.",
+    clicksUnit: "klik",
     leadsTitle: "💼 Kontak Rekruter & Pesan Masuk",
     leadsDesc: "Kontak yang ditinggalkan pengunjung setelah berdiskusi dengan AI.",
     noLeads: "Belum ada rekruter yang meninggalkan kontak.",
@@ -523,6 +532,63 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
             <h4 style={{ fontSize: "1.6rem", fontWeight: 700, margin: "0.3rem 0 0" }}>{events.voice_briefing ?? 0}</h4>
           </div>
         </div>
+      </section>
+
+      {/* Project Click Heatmap */}
+      <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12, marginBottom: "2rem" }}>
+        <div style={{ marginBottom: "1.25rem" }}>
+          <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{t.projectClicksTitle}</h3>
+          <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{t.projectClicksDesc}</p>
+        </div>
+
+        {!data.project_clicks || data.project_clicks.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "2rem 0", opacity: 0.5, fontSize: "0.85rem" }}>{t.noProjectClicks}</div>
+        ) : (() => {
+          const maxClicks = Math.max(...data.project_clicks!.map((p) => p.count), 1);
+          return (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+              {data.project_clicks!.map((project, idx) => {
+                const pct = Math.round((project.count / maxClicks) * 100);
+                return (
+                  <div key={project.slug}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.85rem", marginBottom: "0.3rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                        <span style={{ opacity: 0.4, fontWeight: 700, fontSize: "0.78rem", minWidth: "1.5rem" }}>
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <span style={{ fontWeight: 500 }}>{project.title}</span>
+                        <span style={{ fontSize: "0.72rem", opacity: 0.5, fontFamily: "monospace" }}>/{project.slug}</span>
+                      </div>
+                      <span
+                        style={{
+                          background: "rgba(255,255,255,0.1)",
+                          padding: "0.15rem 0.55rem",
+                          borderRadius: 12,
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {project.count} {t.clicksUnit}
+                      </span>
+                    </div>
+                    <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                      <div
+                        style={{
+                          height: "100%",
+                          width: `${pct}%`,
+                          background: idx === 0 ? "#4ade80" : idx === 1 ? "#60a5fa" : idx === 2 ? "#f472b6" : "rgba(255,255,255,0.4)",
+                          borderRadius: 3,
+                          transition: "width 0.4s ease",
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
       </section>
 
       {/* Two Column Grid */}

@@ -9,6 +9,7 @@ const VALID_EVENTS = [
   "copy_email",
   "role_matcher",
   "voice_briefing",
+  "project_click",
 ] as const;
 type ValidEventType = (typeof VALID_EVENTS)[number];
 
