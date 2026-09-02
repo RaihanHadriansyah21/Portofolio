@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { PageTransition } from "@/components/page-transition";
 import { PortfolioProvider } from "@/components/portfolio-provider";
@@ -6,6 +7,7 @@ import { PortfolioChat } from "@/components/portfolio-chat";
 import { RouteProgressBar } from "@/components/route-progress-bar";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { TelemetryTracker } from "@/components/telemetry-tracker";
 import { copy, isLocale, locales, siteUrl } from "@/lib/portfolio";
 import "../globals.css";
 
@@ -122,6 +124,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
           <PortfolioProvider locale={lang}>
+            <Suspense fallback={null}>
+              <TelemetryTracker />
+            </Suspense>
             <RouteProgressBar />
             <SiteHeader locale={lang} />
             <PageTransition>{children}</PageTransition>

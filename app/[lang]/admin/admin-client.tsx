@@ -60,6 +60,15 @@ type AnalyticsData = {
     voice_briefing?: number;
   };
   project_clicks?: { slug: string; title: string; count: number }[];
+  pageview_metrics?: {
+    total_pageviews: number;
+    unique_visitors: number;
+    today: number;
+    week: number;
+    month: number;
+  };
+  top_referrers?: { source: string; count: number }[];
+  external_link_clicks?: { platform: string; count: number }[];
 };
 
 const STORAGE_KEY = "reyy_admin_auth_token";
@@ -107,6 +116,21 @@ const copy = {
     projectClicksDesc: "Tracks which project cards visitors click most — use this to know which projects recruiters find most interesting.",
     noProjectClicks: "No project clicks recorded yet.",
     clicksUnit: "clicks",
+    pageviewTitle: "🌐 Web Traffic & Pageview Analytics",
+    pageviewDesc: "Total visits to your portfolio — counts all visitors, not just those who use the AI Guide.",
+    totalPageviews: "Total Pageviews",
+    uniqueRealVisitors: "Unique Real Visitors",
+    refTitle: "🧭 Traffic Sources & External Link Outbound",
+    refDesc: "Where visitors come from (referrers) and how many times your LinkedIn, GitHub & Instagram links are clicked.",
+    fromLabel: "Visitor Source",
+    outboundTitle: "Outbound Link Clicks",
+    noRefData: "No referrer data yet.",
+    noExtLinks: "No external link clicks yet.",
+    platformNames: {
+      linkedin: "LinkedIn Profile",
+      github: "GitHub Profile",
+      instagram: "Instagram",
+    } as Record<string, string>,
     leadsTitle: "💼 Recruiter Contacts & Leads",
     leadsDesc: "Contacts left by visitors after chatting with the AI.",
     noLeads: "No recruiter leads submitted yet.",
@@ -170,6 +194,21 @@ const copy = {
     projectClicksDesc: "Melacak kartu proyek mana yang paling sering diklik pengunjung — gunakan ini untuk tahu proyek mana yang paling menarik perhatian rekruter.",
     noProjectClicks: "Belum ada klik proyek yang tercatat.",
     clicksUnit: "klik",
+    pageviewTitle: "🌐 Traffic Web & Analitik Halaman",
+    pageviewDesc: "Total kunjungan ke portofolio — mencakup semua pengunjung, bukan hanya yang menggunakan AI Guide.",
+    totalPageviews: "Total Kunjungan Halaman",
+    uniqueRealVisitors: "Pengunjung Unik Riil",
+    refTitle: "🧭 Sumber Traffic & Klik Link Keluar",
+    refDesc: "Dari mana pengunjung datang dan berapa kali link LinkedIn, GitHub & Instagram Anda diklik.",
+    fromLabel: "Sumber Pengunjung",
+    outboundTitle: "Klik Link Keluar",
+    noRefData: "Belum ada data sumber pengunjung.",
+    noExtLinks: "Belum ada klik link keluar yang tercatat.",
+    platformNames: {
+      linkedin: "Profil LinkedIn",
+      github: "Profil GitHub",
+      instagram: "Instagram",
+    } as Record<string, string>,
     leadsTitle: "💼 Kontak Rekruter & Pesan Masuk",
     leadsDesc: "Kontak yang ditinggalkan pengunjung setelah berdiskusi dengan AI.",
     noLeads: "Belum ada rekruter yang meninggalkan kontak.",
@@ -597,6 +636,134 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
           );
         })()}
       </section>
+
+      {/* Web Traffic & Pageview Analytics */}
+      {data.pageview_metrics && (
+        <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12, marginBottom: "2rem" }}>
+          <h3 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.25rem" }}>{t.pageviewTitle}</h3>
+          <p style={{ fontSize: "0.8rem", opacity: 0.6, marginBottom: "1.25rem" }}>{t.pageviewDesc}</p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+              gap: "0.85rem",
+            }}
+          >
+            {(
+              [
+                { label: t.totalPageviews, value: data.pageview_metrics.total_pageviews },
+                { label: t.uniqueRealVisitors, value: data.pageview_metrics.unique_visitors },
+                { label: t.today, value: data.pageview_metrics.today },
+                { label: t.last7Days, value: data.pageview_metrics.week },
+                { label: t.last30Days, value: data.pageview_metrics.month },
+              ] as { label: string; value: number }[]
+            ).map(({ label, value }) => (
+              <div key={label} style={{ background: "rgba(0,0,0,0.25)", padding: "1rem", borderRadius: 8 }}>
+                <span style={{ fontSize: "0.78rem", opacity: 0.6, display: "block", marginBottom: "0.35rem" }}>{label}</span>
+                <strong style={{ fontSize: "1.55rem", fontWeight: 700 }}>{value.toLocaleString()}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Traffic Sources & External Link Outbound */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "1.5rem",
+          marginBottom: "2rem",
+        }}
+      >
+        {/* Referrer Sources */}
+        <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12 }}>
+          <h3 style={{ fontSize: "1.05rem", fontWeight: 600, marginBottom: "0.25rem" }}>{t.refTitle}</h3>
+          <p style={{ fontSize: "0.78rem", opacity: 0.6, marginBottom: "1.1rem" }}>{t.refDesc}</p>
+          <h4 style={{ fontSize: "0.85rem", opacity: 0.75, fontWeight: 600, marginBottom: "0.65rem" }}>{t.fromLabel}</h4>
+          {!data.top_referrers || data.top_referrers.length === 0 ? (
+            <p style={{ opacity: 0.45, fontSize: "0.83rem" }}>{t.noRefData}</p>
+          ) : (() => {
+            const maxRef = Math.max(...data.top_referrers!.map((r) => r.count), 1);
+            return (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                {data.top_referrers!.map((ref, idx) => {
+                  const pct = Math.round((ref.count / maxRef) * 100);
+                  return (
+                    <div key={ref.source}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.83rem", marginBottom: "0.22rem" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+                          <span style={{ opacity: 0.4, fontWeight: 700, fontSize: "0.76rem", minWidth: "1.3rem" }}>
+                            {String(idx + 1).padStart(2, "0")}
+                          </span>
+                          {ref.source}
+                        </span>
+                        <span
+                          style={{
+                            background: "rgba(255,255,255,0.1)",
+                            padding: "0.12rem 0.45rem",
+                            borderRadius: 12,
+                            fontSize: "0.73rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {ref.count}×
+                        </span>
+                      </div>
+                      <div style={{ height: 5, borderRadius: 3, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                        <div
+                          style={{
+                            height: "100%",
+                            width: `${pct}%`,
+                            background: idx === 0 ? "#a78bfa" : idx === 1 ? "#60a5fa" : "rgba(255,255,255,0.35)",
+                            borderRadius: 3,
+                            transition: "width 0.4s ease",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+        </section>
+
+        {/* External Link Clicks */}
+        <section className="glass-panel" style={{ padding: "1.5rem", borderRadius: 12 }}>
+          <h4 style={{ fontSize: "0.88rem", fontWeight: 600, opacity: 0.75, marginBottom: "0.85rem" }}>{t.outboundTitle}</h4>
+          {!data.external_link_clicks || data.external_link_clicks.length === 0 ? (
+            <p style={{ opacity: 0.45, fontSize: "0.83rem" }}>{t.noExtLinks}</p>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {data.external_link_clicks.map((link) => {
+                const label = t.platformNames[link.platform] || link.platform;
+                const icon = link.platform === "linkedin" ? "💼" : link.platform === "github" ? "🐙" : link.platform === "instagram" ? "📸" : "🔗";
+                return (
+                  <div
+                    key={link.platform}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      background: "rgba(0,0,0,0.25)",
+                      padding: "0.85rem 1rem",
+                      borderRadius: 8,
+                    }}
+                  >
+                    <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.88rem" }}>
+                      <span style={{ fontSize: "1.1rem" }}>{icon}</span>
+                      {label}
+                    </span>
+                    <strong style={{ fontSize: "1.2rem" }}>{link.count}</strong>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
 
       {/* Two Column Grid */}
       <div

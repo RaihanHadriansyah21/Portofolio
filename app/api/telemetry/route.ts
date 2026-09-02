@@ -10,6 +10,8 @@ const VALID_EVENTS = [
   "role_matcher",
   "voice_briefing",
   "project_click",
+  "page_view",
+  "external_link",
 ] as const;
 type ValidEventType = (typeof VALID_EVENTS)[number];
 
