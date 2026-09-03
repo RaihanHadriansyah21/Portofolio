@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AboutActionsClient } from "@/components/about-actions-client";
 import { LanyardShowcase } from "@/components/lanyard-showcase";
@@ -8,12 +9,31 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const base = siteUrl();
+  const titleText = lang === "id" ? "Tentang Reyy" : "About Reyy";
+  const descText =
+    lang === "id"
+      ? "Kisah perjalanan teknis, fokus engineering, dan arah karier di balik karya applied AI dan full-stack Reyy."
+      : "The story, engineering focus, and career direction behind Reyy's applied AI and full-stack work.";
+  const ogImageUrl = `${base}/api/og?title=${encodeURIComponent(titleText)}&subtitle=${encodeURIComponent("AI/ML Engineer & Full-Stack Developer")}&tags=${encodeURIComponent("Applied AI · Full-Stack · Principles · Telkom University")}&badge=ABOUT`;
+
   return {
-    title: lang === "id" ? "Tentang Reyy" : "About Reyy",
-    description: "The story, engineering focus, and career direction behind Reyy's applied AI and full-stack work.",
+    title: titleText,
+    description: descText,
     alternates: {
       canonical: `${base}/${lang}/about`,
       languages: { en: `${base}/en/about`, id: `${base}/id/about` },
+    },
+    openGraph: {
+      type: "profile",
+      title: `${titleText} | Reyy`,
+      description: descText,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: titleText }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${titleText} | Reyy`,
+      description: descText,
+      images: [ogImageUrl],
     },
   };
 }
@@ -64,9 +84,27 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
   return (
     <main id="main-content" className="page-shell section-shell about-page">
       <header className="page-hero about-hero">
-        <p className="eyebrow">{content.about.eyebrow} / {profile.displayName}</p>
-        <h1>{content.about.title}</h1>
-        <p>{content.about.body}</p>
+        <div className="about-hero-copy">
+          <p className="eyebrow">{content.about.eyebrow} / {profile.displayName}</p>
+          <h1>{content.about.title}</h1>
+          <p>{content.about.body}</p>
+        </div>
+        <div className="about-hero-portrait">
+          <div className="about-portrait-frame glass-panel">
+            <Image
+              src="/images/reyy-professional.webp"
+              alt="Mohammad Raihan Hadriansyah Prasetya"
+              width={260}
+              height={325}
+              priority
+              className="about-portrait-image"
+            />
+            <div className="about-portrait-status">
+              <span className="about-status-dot" />
+              <span>{lang === "id" ? "Siap Bekerja Segera" : "Immediate Full-Time Availability"}</span>
+            </div>
+          </div>
+        </div>
       </header>
       <section className="identity-showcase">
         <div className="identity-copy">

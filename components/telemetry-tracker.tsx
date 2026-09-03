@@ -108,6 +108,16 @@ export function TelemetryTracker() {
       if (!target || !target.href) return;
 
       try {
+        if (target.href.startsWith("mailto:")) {
+          fireTelemetry("external_link", {
+            platform: "email",
+            label: "Direct Email (mailto)",
+            url: target.href,
+            visitorId: getVisitorId(),
+          });
+          return;
+        }
+
         const url = new URL(target.href);
         // Only track external links — skip same-origin anchors
         if (url.origin === window.location.origin) return;

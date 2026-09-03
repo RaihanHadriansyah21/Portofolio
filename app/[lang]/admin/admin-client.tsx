@@ -130,6 +130,7 @@ const copy = {
       linkedin: "LinkedIn Profile",
       github: "GitHub Profile",
       instagram: "Instagram",
+      email: "Direct Email (mailto)",
     } as Record<string, string>,
     leadsTitle: "💼 Recruiter Contacts & Leads",
     leadsDesc: "Contacts left by visitors after chatting with the AI.",
@@ -208,6 +209,7 @@ const copy = {
       linkedin: "Profil LinkedIn",
       github: "Profil GitHub",
       instagram: "Instagram",
+      email: "Email Langsung (mailto)",
     } as Record<string, string>,
     leadsTitle: "💼 Kontak Rekruter & Pesan Masuk",
     leadsDesc: "Kontak yang ditinggalkan pengunjung setelah berdiskusi dengan AI.",
@@ -739,7 +741,16 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {data.external_link_clicks.map((link) => {
                 const label = t.platformNames[link.platform] || link.platform;
-                const icon = link.platform === "linkedin" ? "💼" : link.platform === "github" ? "🐙" : link.platform === "instagram" ? "📸" : "🔗";
+                const icon =
+                  link.platform === "linkedin"
+                    ? "💼"
+                    : link.platform === "github"
+                    ? "🐙"
+                    : link.platform === "instagram"
+                    ? "📸"
+                    : link.platform === "email"
+                    ? "✉️"
+                    : "🔗";
                 return (
                   <div
                     key={link.platform}

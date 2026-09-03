@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const title = searchParams.get("title") || "Reyy · Portfolio";
     const subtitle = searchParams.get("subtitle") || "AI/ML Engineer & Full-Stack Developer";
     const tags = searchParams.get("tags") || "Applied AI · Next.js · FastAPI · TensorFlow · Supabase";
+    const badge = searchParams.get("badge") || "PORTFOLIO 2026";
 
     return new ImageResponse(
       (
@@ -19,10 +20,10 @@ export async function GET(request: Request) {
             flexDirection: "column",
             alignItems: "flex-start",
             justifyContent: "space-between",
-            backgroundColor: "#0b0c0e",
-            backgroundImage: "radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.03) 2%, transparent 0%)",
-            backgroundSize: "100px 100px",
-            padding: "60px 80px",
+            backgroundColor: "#08080a",
+            backgroundImage: "radial-gradient(circle at 30px 30px, rgba(255, 255, 255, 0.06) 2%, transparent 0%), radial-gradient(circle at 90px 90px, rgba(255, 255, 255, 0.03) 2%, transparent 0%)",
+            backgroundSize: "120px 120px",
+            padding: "64px 80px",
             fontFamily: "sans-serif",
             color: "#ffffff",
           }}
@@ -32,37 +33,42 @@ export async function GET(request: Request) {
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               <div
                 style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "50%",
-                  background: "#ffffff",
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "14px",
+                  background: "linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%)",
                   color: "#000000",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: "24px",
+                  fontSize: "26px",
                   fontWeight: 900,
+                  boxShadow: "0 8px 24px rgba(255,255,255,0.15)",
                 }}
               >
                 R
               </div>
-              <span style={{ fontSize: "28px", fontWeight: 700, letterSpacing: "-0.03em" }}>Reyy.</span>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: "30px", fontWeight: 800, letterSpacing: "-0.03em" }}>Reyy.</span>
+                <span style={{ fontSize: "14px", color: "#9ca3af", letterSpacing: "0.04em" }}>Mohammad Raihan Hadriansyah</span>
+              </div>
             </div>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                padding: "8px 16px",
+                padding: "8px 18px",
                 borderRadius: "999px",
-                background: "rgba(255, 255, 255, 0.08)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-                fontSize: "16px",
+                background: "rgba(255, 255, 255, 0.07)",
+                border: "1px solid rgba(255, 255, 255, 0.16)",
+                fontSize: "15px",
                 color: "#4ade80",
-                fontWeight: 600,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
               }}
             >
-              ● PORTFOLIO 2026
+              ● {badge.toUpperCase()}
             </div>
           </div>
 

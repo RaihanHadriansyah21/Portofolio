@@ -8,14 +8,31 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const base = siteUrl();
+  const titleText = lang === "id" ? "Sertifikat & Kredensial" : "Certificates & Credentials";
+  const descText =
+    lang === "id"
+      ? "Galeri lengkap 46 sertifikat teknis terverifikasi, asesmen bahasa, jam belajar, dan submission proyek Reyy."
+      : "Reyy's complete verified gallery of 46 technical certificates, coursework hours, and project submissions.";
+  const ogImageUrl = `${base}/api/og?title=${encodeURIComponent(titleText)}&subtitle=${encodeURIComponent("46 Verified Technical Credentials")}&tags=${encodeURIComponent("Deep Learning · Azure GenAI · Microsoft Fabric · Dicoding")}&badge=CREDENTIALS`;
+
   return {
     title: lang === "id" ? "Sertifikat" : "Certificates",
-    description: lang === "id"
-      ? "Galeri lengkap sertifikat teknis, asesmen bahasa, program, workshop, dan aktivitas profesional Reyy yang telah ditinjau untuk privasi."
-      : "Reyy's complete privacy-reviewed gallery of technical certificates, language assessments, programs, workshops, and professional activities.",
+    description: descText,
     alternates: {
       canonical: `${base}/${lang}/credentials`,
       languages: { en: `${base}/en/credentials`, id: `${base}/id/credentials` },
+    },
+    openGraph: {
+      type: "website",
+      title: `${titleText} | Reyy`,
+      description: descText,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: titleText }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${titleText} | Reyy`,
+      description: descText,
+      images: [ogImageUrl],
     },
   };
 }

@@ -7,7 +7,7 @@ import { ContactForm } from "@/components/contact-form";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
-import { copy, credentials, isLocale, projectBySlug, projects } from "@/lib/portfolio";
+import { copy, credentials, isLocale, profile, projectBySlug, projects } from "@/lib/portfolio";
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -52,7 +52,12 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           <HeroActionsClient locale={lang} />
           <div className="hero-status">
             <span>{content.hero.status}</span>
-            <span>GitHub · LinkedIn · Instagram · Vercel</span>
+            <span className="hero-social-links">
+              <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a> ·{" "}
+              <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a> ·{" "}
+              <a href={profile.instagram} target="_blank" rel="noreferrer">Instagram</a> ·{" "}
+              <a href="https://portoreyy.vercel.app" target="_blank" rel="noreferrer">Vercel</a>
+            </span>
           </div>
         </div>
 

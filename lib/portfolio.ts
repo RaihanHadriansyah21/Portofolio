@@ -7,6 +7,8 @@ export type Project = {
   slug: string;
   number: string;
   title: string;
+  year: string;
+  status: LocalizedText;
   tier: "Flagship" | "Featured" | "ML Laboratory" | "Foundation";
   categories: string[];
   stack: string[];
@@ -33,6 +35,8 @@ export const projects: Project[] = [
     slug: "scovis",
     number: "01",
     title: "SCOVIS",
+    year: "2026",
+    status: { en: "Production / Active", id: "Produksi / Aktif" },
     tier: "Flagship",
     categories: ["Applied AI", "Full Stack", "Backend"],
     stack: ["Next.js", "TypeScript", "FastAPI", "TensorFlow", "Supabase", "Redis/RQ"],
@@ -93,6 +97,8 @@ export const projects: Project[] = [
     slug: "dermascan",
     number: "02",
     title: "DermaScan",
+    year: "2026",
+    status: { en: "Research Prototype", id: "Prototipe Riset" },
     tier: "Featured",
     categories: ["Applied AI", "Full Stack"],
     stack: ["TensorFlow Lite", "FastAPI", "React", "Railway", "Vercel"],
@@ -149,6 +155,8 @@ export const projects: Project[] = [
     slug: "vehicle-classification",
     number: "03",
     title: "Vehicle Classification",
+    year: "2026",
+    status: { en: "Benchmark Completed", id: "Benchmark Selesai" },
     tier: "Featured",
     categories: ["Machine Learning", "Computer Vision"],
     stack: ["TensorFlow", "MobileNetV2", "TFLite", "TensorFlow.js"],
@@ -203,6 +211,8 @@ export const projects: Project[] = [
     slug: "quizint",
     number: "04",
     title: "QuizInt",
+    year: "2025",
+    status: { en: "System Completed", id: "Sistem Selesai" },
     tier: "Featured",
     categories: ["Mobile", "Full Stack"],
     stack: ["Flutter", "Dart", "Supabase", "Provider", "Biometrics"],
@@ -258,6 +268,8 @@ export const projects: Project[] = [
     slug: "bitcoin-forecasting",
     number: "05",
     title: "Bitcoin Forecasting",
+    year: "2025",
+    status: { en: "Experimental Study", id: "Studi Eksperimental" },
     tier: "ML Laboratory",
     categories: ["Machine Learning", "Time Series"],
     stack: ["TensorFlow", "LSTM", "Attention", "Seq2Seq", "Python"],
@@ -310,6 +322,8 @@ export const projects: Project[] = [
     slug: "gojek-sentiment",
     number: "06",
     title: "Gojek Sentiment Analysis",
+    year: "2025",
+    status: { en: "Model Evaluation", id: "Evaluasi Model" },
     tier: "ML Laboratory",
     categories: ["Machine Learning", "NLP"],
     stack: ["scikit-learn", "TensorFlow", "Sastrawi", "TF-IDF", "Python"],
@@ -366,6 +380,8 @@ export const projects: Project[] = [
     slug: "cloud-inventory-api",
     number: "07",
     title: "Cloud Inventory API",
+    year: "2024",
+    status: { en: "Backend Foundation", id: "Fondasi Backend" },
     tier: "Foundation",
     categories: ["Backend", "Cloud"],
     stack: ["Flask", "MongoDB", "Python", "REST API"],
@@ -417,6 +433,7 @@ export const projects: Project[] = [
 ];
 
 export const credentials = [
+  { title: "Coding Camp 2026 - AI Engineer Cohort", issuer: "DBS Foundation × Dicoding", date: "Jul 2026", duration: "Program Cohort", focus: { en: "AI acceleration track: Python, ML, Deep Learning & Generative AI", id: "Akselerasi AI: Python, ML, Deep Learning & Generative AI" } },
   { title: "Membangun Proyek Deep Learning Tingkat Mahir", issuer: "Dicoding", date: "May 2026", duration: "90 hours", focus: { en: "Custom TensorFlow architecture, multivariate time series, and project submission", id: "Arsitektur TensorFlow kustom, multivariate time series, dan submission proyek" } },
   { title: "Belajar Fundamental Deep Learning", issuer: "Dicoding", date: "May 2026", duration: "110 hours", focus: { en: "Computer vision, NLP, time series, recommendations, and model deployment", id: "Computer vision, NLP, time series, recommendation, dan deployment model" } },
   { title: "Belajar Machine Learning untuk Pemula", issuer: "Dicoding", date: "Apr 2026", duration: "90 hours", focus: { en: "Supervised and unsupervised workflows with project submission", id: "Alur supervised dan unsupervised dengan submission proyek" } },

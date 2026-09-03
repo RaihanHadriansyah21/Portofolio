@@ -56,7 +56,14 @@ export function ProjectCard({
         <span className="project-preview-cue">{content.common.viewCase} ↗</span>
       </Link>
       <div className="project-card-copy">
-        <p className="eyebrow">{project.categories.join(" · ")}</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.25rem" }}>
+          <p className="eyebrow" style={{ margin: 0 }}>{project.categories.join(" · ")}</p>
+          <span style={{ fontSize: "0.72rem", fontFamily: "var(--font-geist-mono), monospace", opacity: 0.7, letterSpacing: "0.04em", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}>
+            <span>{project.year}</span>
+            <span>·</span>
+            <span>{project.status[locale]}</span>
+          </span>
+        </div>
         <Heading>
           <Link
             href={`/${locale}/projects/${project.slug}`}
