@@ -1017,9 +1017,6 @@ button { color: inherit; font: inherit; }
 .identity-lanyard {
   position: relative;
   min-height: 40rem;
-  border-radius: 2rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
   overflow: hidden;
   isolation: isolate;
 }
