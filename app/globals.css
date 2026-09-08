@@ -974,7 +974,7 @@ button { color: inherit; font: inherit; }
   display: grid;
   grid-template-columns: minmax(18rem, 0.82fr) minmax(24rem, 1.18fr);
   gap: clamp(3rem, 7vw, 7rem);
-  align-items: center;
+  align-items: start;
   margin-bottom: clamp(6rem, 11vw, 10rem);
 }
 
@@ -1027,9 +1027,17 @@ button { color: inherit; font: inherit; }
   isolation: isolate;
 }
 
+@media (min-width: 821px) {
+  .identity-lanyard {
+    position: sticky;
+    top: 6.5rem;
+    align-self: start;
+  }
+}
+
 .identity-lanyard::after {
   position: absolute;
-  inset: 12% 9%;
+  inset: 10% 8%;
   z-index: -1;
   border: 1px solid var(--line);
   border-radius: 50%;
@@ -1040,10 +1048,10 @@ button { color: inherit; font: inherit; }
 .lanyard-loading,
 .lanyard-static-pass {
   display: grid;
-  width: min(70%, 19rem);
+  width: min(78%, 21rem);
   aspect-ratio: 0.68;
-  margin: 5rem auto;
-  padding: 1.5rem;
+  margin: 3.5rem auto;
+  padding: 1.8rem;
   align-content: space-between;
   border: 1px solid var(--line-strong);
   border-radius: 1.4rem;
@@ -1057,8 +1065,35 @@ button { color: inherit; font: inherit; }
 .lanyard-static-pass strong { font-size: 4rem; letter-spacing: -0.07em; }
 .lanyard-static-pass p { margin: 0; color: var(--muted); font-size: 0.7rem; }
 
-.about-hero { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); align-items: center; }
-.about-hero h1 { font-size: clamp(3rem, 7vw, 7rem); }
+.about-hero {
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  align-items: center;
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+}
+
+.about-hero-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-hero-copy .eyebrow {
+  margin: 0 0 clamp(1rem, 1.8vw, 1.5rem);
+}
+
+.about-hero h1 {
+  margin: 0 0 clamp(1.75rem, 2.5vw, 2.5rem);
+  font-size: clamp(2.8rem, 6vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.065em;
+}
+
+.about-hero-copy > p:not(.eyebrow) {
+  margin: 0;
+  max-width: 46rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  line-height: 1.78;
+}
 
 .about-hero-portrait {
   display: flex;
