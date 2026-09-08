@@ -116,7 +116,7 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
           </div>
           <p className="identity-hint">↗ {journey.hint}</p>
         </div>
-        <div className="identity-lanyard glass-panel">
+        <div className="identity-lanyard">
           <LanyardShowcase locale={lang} />
         </div>
       </section>
