@@ -33,10 +33,10 @@ export function AboutActionsClient({ locale }: { locale: Locale }) {
       </CopyEmailButton>
       <RecruiterSummaryButton locale={locale} className="button button-secondary" />
       <ShareProfileButton locale={locale} className="button button-secondary" />
-      <a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">
+      <a className="button button-secondary" href={profile.instagram} target="_blank" rel="noreferrer">
         Instagram ↗
       </a>
-      <Link className="text-link" href={`/${locale}/projects`}>
+      <Link className="button button-secondary" href={`/${locale}/projects`}>
         {content.common.viewAll} ↗
       </Link>
     </div>
