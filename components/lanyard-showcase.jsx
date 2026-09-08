@@ -60,7 +60,7 @@ export function LanyardShowcase({ locale }) {
           backImage="/react-bits/lanyard/reyy-pass-back.svg"
           lanyardImage="/react-bits/lanyard/reyy-band.svg"
           lanyardWidth={1.0}
-          cardScale={2.6}
+          cardScale={2.4}
           imageFit="cover"
         />
       ) : (
