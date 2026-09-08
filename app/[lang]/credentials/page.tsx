@@ -9,11 +9,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!isLocale(lang)) return {};
   const base = siteUrl();
   const titleText = lang === "id" ? "Sertifikat & Kredensial" : "Certificates & Credentials";
+  const totalCerts = certificates.length;
   const descText =
     lang === "id"
-      ? "Galeri lengkap 46 sertifikat teknis terverifikasi, asesmen bahasa, jam belajar, dan submission proyek Reyy."
-      : "Reyy's complete verified gallery of 46 technical certificates, coursework hours, and project submissions.";
-  const ogImageUrl = `${base}/api/og?title=${encodeURIComponent(titleText)}&subtitle=${encodeURIComponent("46 Verified Technical Credentials")}&tags=${encodeURIComponent("Deep Learning · Azure GenAI · Microsoft Fabric · Dicoding")}&badge=CREDENTIALS`;
+      ? `Galeri lengkap ${totalCerts} sertifikat teknis terverifikasi, asesmen bahasa, jam belajar, dan submission proyek Reyy.`
+      : `Reyy's complete verified gallery of ${totalCerts} technical certificates, coursework hours, and project submissions.`;
+  const ogImageUrl = `${base}/api/og?title=${encodeURIComponent(titleText)}&subtitle=${encodeURIComponent(`${totalCerts} Verified Technical Credentials`)}&tags=${encodeURIComponent("Deep Learning · Azure GenAI · Microsoft Fabric · Dicoding")}&badge=CREDENTIALS`;
 
   return {
     title: lang === "id" ? "Sertifikat" : "Certificates",

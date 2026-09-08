@@ -265,7 +265,7 @@ export async function POST(request: Request) {
       });
 
       const result = streamText({
-        model: google(process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash"),
+        model: google(process.env.GEMINI_MODEL?.trim() || "gemini-2.0-flash-exp"),
         instructions: systemInstructions(locale, mode, knowledge.context),
         messages: await convertToModelMessages(messages),
         temperature: 0.18,
