@@ -137,7 +137,6 @@ function Band({
   lanyardWidth = 1,
   cardScale = 3.2
 }) {
-  const scaleFactor = cardScale / 2.25;
   const band = useRef(),
     fixed = useRef(),
     j1 = useRef(),
