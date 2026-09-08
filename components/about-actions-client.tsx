@@ -31,8 +31,8 @@ export function AboutActionsClient({ locale }: { locale: Locale }) {
         <span>📋</span>
         <span>{isIndo ? "Salin Email" : "Copy Email"}</span>
       </CopyEmailButton>
-      <RecruiterSummaryButton locale={locale} />
-      <ShareProfileButton locale={locale} />
+      <RecruiterSummaryButton locale={locale} className="button button-secondary" />
+      <ShareProfileButton locale={locale} className="button button-secondary" />
       <a className="text-link" href={profile.instagram} target="_blank" rel="noreferrer">
         Instagram ↗
       </a>
