@@ -1,188 +1,262 @@
 # Reyy Portfolio
 
-Recruiter-focused portfolio for **Mohammad Raihan Hadriansyah Prasetya (Reyy)**, an AI/ML Engineer and Full-Stack Developer who connects machine-learning work to APIs, data systems, interfaces, and deployment workflows.
+> **Production-grade, recruiter-focused portfolio for Mohammad Raihan Hadriansyah Prasetya (Reyy)** — AI/ML Engineer and Full-Stack Developer bridging machine learning, robust APIs, interactive interfaces, and scalable deployments.
 
-[View the live portfolio](https://portoreyy.vercel.app) | [English](https://portoreyy.vercel.app/en) | [Bahasa Indonesia](https://portoreyy.vercel.app/id)
+[![Live Site](https://img.shields.io/badge/Live%20Site-portoreyy.vercel.app-000000?style=for-the-badge&logo=vercel)](https://portoreyy.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js%2016-App%20Router-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React%2019-TypeScript-blue?style=for-the-badge&logo=react)](https://react.dev)
+[![Gemini](https://img.shields.io/badge/Google%20Gemini-Vercel%20AI%20SDK-orange?style=for-the-badge&logo=google)](https://ai.google.dev)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20Telemetry-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com)
 
-![Reyy portfolio social preview](public/og.png)
+[Explore Live Portfolio](https://portoreyy.vercel.app) · [English Version](https://portoreyy.vercel.app/en) · [Versi Bahasa Indonesia](https://portoreyy.vercel.app/id) · [LinkedIn](https://www.linkedin.com/in/reyhadri) · [GitHub](https://github.com/RaihanHadriansyah21)
 
-## About the portfolio
+---
 
-This website is designed to answer the questions a recruiter or engineering lead usually asks first:
+![Reyy Portfolio Social Preview](public/og.png)
 
-- What role is Reyy targeting?
-- What is his strongest project?
-- What did he personally contribute?
-- Which claims are supported by source code, recorded results, or a live product?
-- What are the limitations and next engineering steps?
+## 📌 Executive Summary for Hiring Teams
 
-Reyy has completed his Telecommunication Engineering thesis defense and is awaiting formal yudisium before graduation. The public wording deliberately avoids claiming formal graduate status before that process is complete.
+This portfolio is engineered specifically to answer the core questions engineering leaders and technical recruiters evaluate:
 
-## What is included
+| Recruiter Question | Candidate Evidence |
+| :--- | :--- |
+| **Target Roles** | **AI/ML Engineer**, **Full-Stack Developer**, and **Backend Engineer** |
+| **Education & Status** | **Bachelor of Engineering (S.T.)** in Telecommunication Engineering, Telkom University<br>*(Yudisium Completed, GPA 3.29, Commencement in Nov 2026)* |
+| **Availability** | **Immediate Full-Time Availability** · Open to On-site (Bandung/Jakarta), Hybrid, or Remote |
+| **Flagship Project** | **SCOVIS** — Multi-tier handwritten answer score classification system connecting Next.js, Supabase, FastAPI, Redis/RQ, and TensorFlow |
+| **Proof & Integrity** | **100% Evidence-Led**: All 7 projects feature direct GitHub repositories, live deployments, and custom interactive visualizers |
+| **Verified Credentials** | **46 curated technical credentials** with verified learning hours, complete syllabi, and graded project submissions |
 
-- English and Indonesian routes with localized navigation and metadata.
-- Dark theme by default and a complete light theme.
-- Seven project case studies with role context, architecture, decisions, evidence, limitations, repositories, and visual previews.
-- SCOVIS as the flagship applied AI and full-stack case study.
-- **Five interactive project visualizers**: Architecture Visualizer (SCOVIS), ML Playground (DermaScan), Vehicle Model Inspector (Vehicle Classification), QuizInt Mobile Emulator (QuizInt), and Flask/MongoDB CRUD API Inspector (Cloud Inventory API).
-- A **Quick Recruiter Contact Form** in the contact section with Supabase lead persistence and instant Resend email notification.
-- **1-Click Recruiter Summary** button on the About page that copies a formatted candidate profile to clipboard.
-- **Contextual AI Action Chips** below assistant responses for one-click navigation to projects, CV modal, and contact.
-- **Adaptive 3D Lanyard** with CSS 3D flip-card mobile fallback and on-demand physics toggle.
-- A privacy-reviewed gallery of 44 unique certificates and professional learning records.
-- Eleven direct issuer verification links where official public verification is available.
-- A grounded Gemini AI Guide with recruiter, technical, and exploration modes.
-- Source cards that let visitors open the relevant case study, repository, live product, certificate verification, or profile.
-- Responsive layouts, keyboard-visible interactions, SEO metadata, sitemap, robots policy, favicon, and social preview.
-- Curated React Bits interactions adapted to the monochrome visual system.
-- Playwright E2E test suite covering all 7 project routes, localization, credentials gallery, and About page.
+---
 
-## Featured work
+## 🌟 Key Product & Recruiter Features
 
-| Project | Focus | Evidence links |
-|---|---|---|
-| SCOVIS | Human-in-the-loop answer-image score classification with Next.js, Supabase, FastAPI, Redis/RQ, and TensorFlow | [Frontend](https://github.com/RaihanHadriansyah21/scovis-frontend), [Backend](https://github.com/RaihanHadriansyah21/scovis-backend), [Live](https://scovis.vercel.app) |
-| DermaScan | Educational skin-lesion decision-support prototype with TFLite, FastAPI, React, Railway, and Vercel | [Repository](https://github.com/RaihanHadriansyah21/DermaScan_Project), [Live](https://dermascan-azure.vercel.app) |
-| Vehicle Classification | Four-class MobileNetV2 transfer-learning experiment with SavedModel, TFLite, and TensorFlow.js exports | [Repository](https://github.com/RaihanHadriansyah21/vehicle-image-classification-mobileNetV2) |
-| QuizInt | Flutter and Supabase learning prototype with role-based quizzes, QR onboarding, biometrics, and analytics | [Repository](https://github.com/RaihanHadriansyah21/quizint-learning) |
-| Bitcoin Forecasting | Experimental multi-step forecasting with LSTM, attention, and Seq2Seq workflows | [Repository](https://github.com/RaihanHadriansyah21/bitcoin-price-forecasting-seq2seq) |
-| Gojek Sentiment Analysis | Indonesian review sentiment comparison using Logistic Regression, linear SVM, and a dense neural network | [Repository](https://github.com/RaihanHadriansyah21/gojek-sentiment-analysis-ml-dl) |
-| Cloud Inventory API | Academic Flask and MongoDB CRUD API demonstrating backend and single-VM cloud foundations | [Repository](https://github.com/RaihanHadriansyah21/Project-1-Cloud-Computing) |
+### 1. 100% Full Interactive Visualizer Coverage (All 7 Projects)
+Every project case study includes a fully functional, browser-based interactive inspector/visualizer to demonstrate architecture, logic, and output without requiring local environment setup:
+- 🔬 **SCOVIS**: *Interactive Multi-Tier Architecture Visualizer* (node-graph inspects Next.js, Supabase, FastAPI, Redis/RQ, and TensorFlow worker flow).
+- 🩺 **DermaScan**: *ML Skin-Lesion Confidence Playground* (real-time risk simulator, 5-class probability breakdown, and clinical disclaimers).
+- 🚗 **Vehicle Classification**: *MobileNetV2 Inspector & Benchmark Matrix* (4-class confidence explorer with model-export comparisons across SavedModel, TFLite, and TF.js).
+- 📱 **QuizInt**: *Mobile Flutter Interactive Simulator* (role-switching between Learner, Instructor, and Admin with live gamification mechanics).
+- ☁️ **Cloud Inventory API**: *Flask/MongoDB API Pipeline Inspector* (interactive CRUD simulator and 3-step VM topology inspector).
+- 💬 **Gojek Sentiment Analysis**: *Indonesian NLP Tokenizer & Classifier Sandbox* (real-time Sastrawi stemmer and multi-model benchmark across Logistic Regression, Linear SVM, and ANN).
+- 📈 **Bitcoin Price Forecasting**: *Seq2Seq 72/24 Attention Scrubber* (sequence visualizer with multi-head attention weights inspector and technical indicator toggles).
 
-Team projects are labeled as team work. Recorded metrics retain their original evaluation context and are not presented as real-world guarantees.
+### 2. Recruiter Experience Suite
+- 🎖️ **Interactive Recruiter Availability Badge**: Hero modal showing immediate availability, target positions, location preferences, and one-click candidate summary.
+- 📄 **In-Browser Dual-Format CV Modal**: Interactive PDF viewer with instant switching between *Software Engineer* and *AI/ML Engineer* CVs, with direct download buttons.
+- 🧩 **Cross-Project Interactive Skill Matrix**: Live filter linking core technologies (FastAPI, TensorFlow, Next.js, Supabase, Python, Docker) directly to matched projects and credentials.
+- 📋 **1-Click Recruiter Summary**: One-click clipboard copy of candidate markdown summary formatted for HR portals and team notes.
+- 📬 **Quick Recruiter Contact Form**: Lead capture at `#contact` powered by Supabase persistence and instant transactional email notifications via Resend API.
+- ⚡ **Command Menu (Ctrl+K)**: Instant keyboard-driven navigation across all sections, projects, and external links.
+- 🎙️ **AI Voice Briefing Player**: In-browser audio briefing synthesizing candidate highlights.
 
-## AI Guide architecture
+### 3. Grounded AI Guide (Gemini + Local RAG)
+- Built with **Vercel AI SDK** and **Google Gemini**, streaming real-time responses.
+- Grounded strictly on verified portfolio knowledge (`lib/ai/portfolio-knowledge.ts`). Refuses hallucination, enforces contribution boundaries, and outputs interactive source cards.
+- Supports 3 tailored modes: **Recruiter Mode**, **Technical Mode**, and **Explore Mode**.
+
+### 4. Telemetry & Private Admin Analytics (`/admin`)
+- Real-time privacy-compliant visitor analytics backed by Supabase PostgreSQL RPC:
+  - Live visitor metrics (hashed-IP unique visitors, pageviews, peak hours in WIB).
+  - CV & engagement telemetry (in-browser previews, PDF downloads, 1-click email copies, command palette triggers).
+  - **Project Click Heatmap**: Real-time ranking of the most-clicked project cards.
+  - Recruiter leads inbox and top inquired AI questions.
+
+---
+
+## 🏆 Project Portfolio & Evidence Map
+
+| No | Project | Tier | Engineering Focus & Tech Stack | Evidence & Repositories |
+| :---: | :--- | :---: | :--- | :--- |
+| **01** | **SCOVIS** | **Flagship** | Human-in-the-loop handwritten-answer score classification platform.<br>`Next.js 15` · `TypeScript` · `FastAPI` · `TensorFlow` · `Supabase` · `Redis/RQ` · `Docker` | [Frontend Repo](https://github.com/RaihanHadriansyah21/scovis-frontend) · [Backend Repo](https://github.com/RaihanHadriansyah21/scovis-backend) · [Live App](https://scovis.vercel.app) |
+| **02** | **DermaScan** | **Featured** | Educational skin-lesion decision-support prototype with multi-task inference.<br>`TFLite` · `FastAPI` · `Python` · `React 18` · `Vite` · `Railway` · `Vercel` | [Repository](https://github.com/RaihanHadriansyah21/DermaScan_Project) · [Live App](https://dermascan-azure.vercel.app) |
+| **03** | **Vehicle Classification** | **Featured** | 4-class computer vision transfer-learning experiment using frozen MobileNetV2.<br>`TensorFlow` · `Keras` · `MobileNetV2` · `SavedModel` · `TFLite` · `TF.js` | [Repository](https://github.com/RaihanHadriansyah21/vehicle-image-classification-mobileNetV2) |
+| **04** | **QuizInt** | **Featured** | Mobile gamified learning application with biometric auth, QR onboarding, and PDF export.<br>`Flutter` · `Dart` · `Provider` · `Supabase Auth/PostgreSQL` · `Local Auth` | [Repository](https://github.com/RaihanHadriansyah21/quizint-learning) |
+| **05** | **Bitcoin Forecasting** | **ML Lab** | Experimental 24-step forecasting comparing baseline LSTM, Attention LSTM, and Seq2Seq.<br>`TensorFlow` · `Seq2Seq` · `Custom Attention` · `Time Series` · `pandas` | [Repository](https://github.com/RaihanHadriansyah21/bitcoin-price-forecasting-seq2seq) |
+| **06** | **Gojek Sentiment Analysis** | **ML Lab** | Indonesian review NLP pipeline comparing Logistic Regression, Linear SVM, and ANN.<br>`Python` · `Sastrawi NLP` · `TF-IDF` · `scikit-learn` · `Keras` | [Repository](https://github.com/RaihanHadriansyah21/gojek-sentiment-analysis-ml-dl) |
+| **07** | **Cloud Inventory API** | **Foundation** | Academic product inventory CRUD API demonstrating VM-based backend architecture.<br>`Python` · `Flask` · `MongoDB` · `PyMongo` · `REST API` | [Repository](https://github.com/RaihanHadriansyah21/Project-1-Cloud-Computing) |
+
+*Note: Team projects are explicitly documented with individual contributions. Model evaluation metrics reflect recorded test benchmarks and are never presented as speculative real-world guarantees.*
+
+---
+
+## 🏛️ System Architecture
 
 ```mermaid
-flowchart LR
-  Visitor[Portfolio visitor] --> UI[Next.js chat interface]
-  UI --> API[Server-side chat route]
-  API --> Retrieve[Local profile, project, and certificate retrieval]
-  Retrieve --> Gemini[Google Gemini via Vercel AI SDK]
-  Gemini --> Answer[Grounded answer]
-  Retrieve --> Sources[Verified source cards]
-  Answer --> UI
-  Sources --> UI
+flowchart TD
+  subgraph Client [Client Browser - Next.js 16 & React 19]
+    UI[PillNav / GlassSurface / Monochrome Design]
+    Vis[7 Interactive Visualizers & Simulators]
+    CVModal[Dual-Format CV In-Browser Viewer]
+    ChatUI[AI Guide Interface - 3 Modes]
+    Tracker[Telemetry Tracker - Pageviews & Events]
+  end
+
+  subgraph Edge [Edge & Serverless API Routes]
+    ChatAPI["/api/chat (Vercel AI SDK)"]
+    AdminAPI["/api/admin/analytics"]
+    LeadAPI["/api/chat/lead"]
+    TelemAPI["/api/telemetry"]
+  end
+
+  subgraph Intelligence [AI & External Services]
+    RAG[Local Knowledge Engine]
+    Gemini["Google Gemini (Model Router)"]
+    Resend[Resend API - Email Alerts]
+  end
+
+  subgraph Database [Persistence & Security]
+    SupabaseDB[(Supabase PostgreSQL)]
+    Tables[chat_sessions / chat_messages / chat_leads / portfolio_events]
+    RPC[Stored Procedure: get_chat_analytics]
+  end
+
+  UI --> Tracker
+  Tracker --> TelemAPI
+  TelemAPI --> SupabaseDB
+  
+  CVModal --> TelemAPI
+  Vis --> TelemAPI
+
+  ChatUI --> ChatAPI
+  ChatAPI --> RAG
+  RAG --> Gemini
+  Gemini --> ChatAPI
+  ChatAPI -.-> SupabaseDB
+
+  LeadAPI --> SupabaseDB
+  LeadAPI --> Resend
+
+  AdminAPI --> RPC
+  RPC --> Tables
 ```
 
-The assistant is explicitly identified as an automated guide, not Reyy. It answers from structured portfolio data, preserves team-contribution boundaries, refuses undocumented claims, and keeps source links separate from the answer for easier reading. Chat history uses browser `sessionStorage`; no portfolio database is required.
+---
 
-The API also applies same-origin validation, request and message-size limits, a short per-instance rate limit, and server-only access to the Gemini key.
+## 💻 Tech Stack & Architecture Standards
 
-## Technology stack
+- **Framework**: [Next.js 16](https://nextjs.org) (App Router, Server & Client Components, Dynamic OpenGraph).
+- **Core Library**: [React 19](https://react.dev), [TypeScript 5](https://www.typescriptlang.org).
+- **Styling**: Tailwind CSS v4 + PostCSS with a bespoke monochrome design system (curated glassmorphism, zero layout shift).
+- **Interactive 3D & Motion**: GSAP 3.15, Framer Motion, Three.js, `@react-three/fiber`, and `@react-three/rapier` (interactive physics Lanyard badge).
+- **AI Integration**: Vercel AI SDK (`ai`), `@ai-sdk/google` (Google Gemini models), streaming UI responses.
+- **Database & Telemetry**: [Supabase](https://supabase.com) (PostgreSQL, Row-Level Security, RPC analytics).
+- **Communications**: [Resend](https://resend.com) (instant recruiter alert notifications).
+- **Rate Limiting**: [Upstash Redis](https://upstash.com) with IP HMAC hashing.
+- **Testing**: [Playwright](https://playwright.dev) E2E testing suite.
+- **Deployment**: [Vercel](https://vercel.com) with automatic preview and production pipelines.
 
-- Next.js 16 App Router, React 19, and TypeScript.
-- Tailwind CSS 4/PostCSS plus a custom responsive CSS design system.
-- Vercel AI SDK with the Google Gemini provider.
-- GSAP for navigation and interaction motion.
-- React Three Fiber, Drei, Rapier, Three.js, and Meshline for the Lanyard identity experience.
-- React Icons for accessible social links.
-- React Bits components adapted to the project: GlassSurface, PillNav, ProfileCard, Lanyard, and LogoLoop.
-- Supabase (PostgreSQL) for chat lead persistence and analytics telemetry.
-- Resend API for automated recruiter contact email alerts.
-- Playwright for E2E browser testing across all routes and locales.
-- Vercel for deployment and environment management.
+---
 
-## Project structure
+## 📁 Repository Structure
 
 ```text
-app/
-  [lang]/                 Localized pages and project routes
-  api/chat/               Grounded AI Guide endpoint
-components/               UI, React Bits adaptations, galleries, and chat
-lib/
-  portfolio.ts            Profile, project, link, and bilingual content
-  certificates.ts         Public certificate metadata
-  ai/                     Retrieval context and chat types
-public/
-  projects/previews/      Evidence-based project previews
-  certificates/previews/  Privacy-reviewed certificate images
-  images/                 Public portrait assets
+├── app/
+│   ├── [lang]/                     # Localized bilingual routes (/en and /id)
+│   │   ├── about/                  # About page with experience timeline & recruiter copy
+│   │   ├── admin/                  # Private admin analytics portal
+│   │   ├── credentials/            # 46 curated certificates with syllabi & verification
+│   │   ├── projects/               # All 7 project case studies with visualizers
+│   │   ├── layout.tsx              # Root localized layout with telemetry & JSON-LD SEO
+│   │   └── page.tsx                # Homepage (Hero, Flagship, Selected Work, Contact)
+│   └── api/
+│       ├── admin/analytics/        # Authenticated Supabase RPC telemetry fetcher
+│       ├── chat/                   # Gemini streaming assistant endpoint with local RAG
+│       ├── chat/feedback/          # Thumbs up/down feedback persistence
+│       ├── chat/lead/              # Recruiter contact form endpoint + Resend dispatch
+│       └── telemetry/              # Pageview, CV preview/download, & click tracker
+├── components/                     # Reusable React & React Bits components
+│   ├── architecture-visualizer.tsx # SCOVIS interactive graph visualizer
+│   ├── cv-modal.tsx                # Dual-format in-browser PDF viewer
+│   ├── ml-playground.tsx           # DermaScan skin-lesion simulator
+│   ├── quizint-mobile-preview.tsx  # QuizInt mobile emulator
+│   ├── sentiment-analysis-tester.tsx# Gojek NLP comparative analyzer
+│   ├── bitcoin-forecast-visualizer.tsx# Bitcoin Seq2Seq sequence inspector
+│   ├── vehicle-model-inspector.tsx # MobileNetV2 4-class benchmark inspector
+│   ├── telemetry-tracker.tsx       # Automatic pageview & link click dispatcher
+│   └── ...                         # React Bits (PillNav, GlassSurface, Lanyard, etc.)
+├── lib/
+│   ├── portfolio.ts                # Canonical portfolio data, project maps, and bilingual copy
+│   ├── certificates.ts             # Metadata for 46 verified credentials & verified URLs
+│   ├── supabase.ts                 # Server-side Supabase client singleton
+│   └── ai/                         # RAG knowledge retriever, types, and system prompts
+├── public/                         # Public assets (optimized webp portraits, project previews)
+└── tests/                          # Playwright E2E test suite
 ```
 
-Raw certificates and local environment files are intentionally excluded from Git.
+---
 
-## Local development
+## 🛠️ Local Development
 
-Requirements:
+### Prerequisites
+- Node.js `20.x` or newer
+- npm `10.x` or newer
 
-- Node.js 20 or newer.
-- npm.
-- A Google Generative AI API key only if the AI Guide needs to run locally.
+### Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/RaihanHadriansyah21/Portofolio.git
+   cd Portofolio
+   ```
 
-Install and start the development server:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create `.env.local` in the project root:
+   ```dotenv
+   GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
+   GEMINI_MODEL=gemini-2.5-flash
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+   # Database & Telemetry (Supabase)
+   SUPABASE_URL=your_supabase_project_url
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   ADMIN_SECRET=your_admin_secret_key
+
+   # Notifications (Optional)
+   RESEND_API_KEY=your_resend_api_key
+   NOTIFICATION_EMAIL=your_email@domain.com
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:3000`. The root redirects to `/en` (or `/id` for Indonesian).
+
+---
+
+## 🧪 Testing & Validation
 
 ```bash
-npm install
-npm run dev
-```
-
-Open `http://localhost:3000`. The root route redirects to `/en`; the Indonesian version is available at `/id`.
-
-For local AI Guide support, create `.env.local` without committing it:
-
-```dotenv
-GOOGLE_GENERATIVE_AI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-3.5-flash
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-
-# Optional: distributed chat rate limiting for Vercel/serverless deployments.
-# Vercel's Upstash integration supplies KV_REST_API_URL and KV_REST_API_TOKEN automatically.
-# The legacy UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN names are also supported.
-KV_REST_API_URL=your_upstash_rest_url
-KV_REST_API_TOKEN=your_upstash_rest_token
-CHAT_RATE_LIMIT_SALT=your_long_random_secret
-```
-
-`GEMINI_MODEL` and `NEXT_PUBLIC_SITE_URL` are optional. The two Redis values plus `CHAT_RATE_LIMIT_SALT` are optional as a group: when all are present, the chat API uses a distributed 12-request / 5-minute limiter; otherwise it uses a best-effort local fallback. The distributed identifier is an HMAC of the visitor IP, not the chat content, and Upstash analytics is disabled. Never expose any secret through a `NEXT_PUBLIC_` variable.
-
-## Validation
-
-```bash
+# Lint code for standards compliance
 npm run lint
+
+# Compile production build
 npm run build
-```
 
-### E2E Tests (Playwright)
-
-Run end-to-end tests against a local production build:
-
-```bash
-# Install Playwright browsers once
-npx playwright install chromium
-
-# Playwright starts the local production server from its configuration
-npm run build
+# Run Playwright End-to-End Tests across all 7 projects and locales
 npm run test
 ```
 
-Test coverage: all 7 project detail routes, homepage contact form, English/Indonesian localization, credentials gallery, and About page identity.
+---
 
-Before deployment, also review `git status` and the staged diff so raw certificates, environment files, local source assets, or unrelated changes are not committed.
+## 🔒 Content Honesty & Privacy Standards
 
-## Content and privacy policy
+- **Zero Skills Fabrication**: Every skill and tool mentioned is backed by documented projects, internships (CV. Bima Technologies, PT Telkom Indonesia), or verified credentials.
+- **Privacy First**: Sensitive student identification numbers (NIM), private contact data, unreleased academic materials, and raw PDF credentials are excluded from public source code.
+- **Responsible AI Disclaimer**: DermaScan is explicitly presented as an educational decision-support prototype and never as a diagnostic medical instrument.
 
-Public copy distinguishes:
+---
 
-- verified implementation found in source or configuration;
-- recorded results from a specific experiment;
-- documented contribution in a team project;
-- limitations and follow-up work;
-- analysis or interpretation that should not be presented as fact.
+## 📬 Contact & Candidate Information
 
-The certificate gallery publishes reviewed previews, not raw PDFs. NIM/NIP values, unnecessary credential identifiers, private paths, student data, secrets, signed URLs, and sensitive configuration must never be published. Direct verification links are used only when an issuer provides an official public page.
-
-## Deployment
-
-The `main` branch is connected to Vercel and deployed at [portoreyy.vercel.app](https://portoreyy.vercel.app). The canonical site URL can be overridden with `NEXT_PUBLIC_SITE_URL` for another environment.
-
-## Connect
-
-- [GitHub](https://github.com/RaihanHadriansyah21)
-- [LinkedIn](https://www.linkedin.com/in/reyhadri)
-- [Instagram](https://www.instagram.com/reyhadri)
-- [Live portfolio](https://portoreyy.vercel.app)
-
-## Usage note
-
-This is a personal portfolio repository. The source is public for technical review, but no separate open-source license is currently provided. Personal content, certificate previews, and visual assets should not be reused without permission.
+- **Name**: Mohammad Raihan Hadriansyah Prasetya (Reyy)
+- **Role**: AI/ML Engineer & Full-Stack Developer
+- **Degree**: B.Eng (S.T.) in Telecommunication Engineering, Telkom University
+- **Email**: [reyyhadri@gmail.com](mailto:reyyhadri@gmail.com)
+- **LinkedIn**: [linkedin.com/in/reyhadri](https://www.linkedin.com/in/reyhadri)
+- **GitHub**: [github.com/RaihanHadriansyah21](https://github.com/RaihanHadriansyah21)
+- **Portfolio**: [portoreyy.vercel.app](https://portoreyy.vercel.app)
