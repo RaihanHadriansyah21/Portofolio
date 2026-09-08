@@ -1,8 +1,9 @@
 'use client';
 
-import { useSyncExternalStore, useState } from 'react';
+import { useEffect, useRef, useSyncExternalStore, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import type { Locale } from '@/lib/portfolio';
 
 const Lanyard = dynamic(() => import('./Lanyard'), {
   ssr: false,
@@ -13,27 +14,27 @@ const Lanyard = dynamic(() => import('./Lanyard'), {
   ),
 });
 
-function subscribeResize(callback) {
+function subscribeResize(callback: () => void): () => void {
   window.addEventListener('resize', callback);
   return () => window.removeEventListener('resize', callback);
 }
 
-function getMobileSnapshot() {
+function getMobileSnapshot(): boolean {
   return Boolean(
     window.innerWidth <= 768 ||
     (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
   );
 }
 
-function getServerMobileSnapshot() {
+function getServerMobileSnapshot(): boolean {
   return false;
 }
 
-function useIsMobile() {
+function useIsMobile(): boolean {
   return useSyncExternalStore(subscribeResize, getMobileSnapshot, getServerMobileSnapshot);
 }
 
-function useMounted() {
+function useMounted(): boolean {
   return useSyncExternalStore(
     () => () => {},
     () => true,
@@ -41,17 +42,80 @@ function useMounted() {
   );
 }
 
-export function LanyardShowcase({ locale }) {
+/**
+ * Returns true once the observed element is within `rootMargin` of the
+ * viewport. Uses IntersectionObserver with a 400 px pre-load margin so the
+ * Three.js / Rapier WASM chunk is fetched and initialized slightly before the
+ * user scrolls the section fully into view, avoiding a visible delay.
+ *
+ * Falls back to `true` immediately in environments where IntersectionObserver
+ * is unavailable (e.g. very old browsers), preserving existing behaviour.
+ */
+function useNearViewport(ref: React.RefObject<HTMLElement | null>): boolean {
+  // If IntersectionObserver is unavailable (very old browsers, some test envs),
+  // initialise to true so the 3D component mounts immediately — same as before.
+  // The lazy initializer runs once on mount, not inside an effect, so it does not
+  // trigger the react-hooks/set-state-in-effect lint rule.
+  const [isNear, setIsNear] = useState<boolean>(
+    () => typeof IntersectionObserver === 'undefined'
+  );
+
+  useEffect(() => {
+    // Already near (either pre-initialised above, or IO already fired).
+    if (isNear) return;
+
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setIsNear(true);
+          observer.disconnect();
+        }
+      },
+      // 400 px pre-load margin: start initialising while still off-screen.
+      { rootMargin: '400px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref]);
+
+  return isNear;
+}
+
+export interface LanyardShowcaseProps {
+  locale: Locale;
+}
+
+export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const isMobile = useIsMobile();
+  // `mounted` is kept for SSR/client boundary safety on mobile path only.
+  // For the desktop 3D path, `isNearViewport` is the authoritative gate.
   const mounted = useMounted();
-  const [enable3DOnMobile, setEnable3DOnMobile] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [enable3DOnMobile, setEnable3DOnMobile] = useState<boolean>(false);
+  const [isFlipped, setIsFlipped] = useState<boolean>(false);
+
+  // Ref attached to the outermost container so IntersectionObserver can watch
+  // the section boundary without depending on any inner DOM structure.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isNearViewport = useNearViewport(containerRef);
 
   const shouldRender3D = !isMobile || enable3DOnMobile;
 
   return (
-    <div className="lanyard-canvas" aria-hidden="true">
-      {mounted && shouldRender3D ? (
+    <div ref={containerRef} className="lanyard-canvas" aria-hidden="true">
+      {/*
+       * Render order:
+       * 1. SSR / before hydration   → nothing (aria-hidden wrapper present for layout)
+       * 2. Client, out of viewport  → lanyard-loading skeleton (existing CSS, no JS weight)
+       * 3. Client, near viewport    → Lanyard dynamic import fires; loading fallback shown
+       *                               briefly while chunk arrives, then full 3D experience
+       * Mobile path is unchanged and bypasses the IntersectionObserver gate entirely.
+       */}
+      {mounted && isNearViewport && shouldRender3D ? (
         <Lanyard
           position={[0, 1.2, 10]}
           gravity={[0, -40, 0]}
@@ -63,6 +127,12 @@ export function LanyardShowcase({ locale }) {
           cardScale={2.4}
           imageFit="cover"
         />
+      ) : mounted && !isNearViewport && !isMobile ? (
+        /* Pre-viewport skeleton: same visual as the dynamic loading fallback,
+           same fixed height as the canvas — zero layout shift on mount. */
+        <div className="lanyard-loading" aria-hidden="true">
+          <span>REYY</span>
+        </div>
       ) : (
         /* Lightweight High-Fidelity CSS 3D Fallback Card for Mobile */
         <div

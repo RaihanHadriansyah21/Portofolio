@@ -24,7 +24,9 @@ const copy = {
     sendAnother: "Send another message",
     errorRequired: "Please fill in both your name and email address.",
     errorEmail: "Please provide a valid email address.",
-    errorFailed: "Failed to send message. Please try again or copy the email directly.",
+    errorRateLimit: "Too many messages sent from this network. Please wait a while before sending another, or reach out directly via LinkedIn/email.",
+    errorPayload: "Message format or size is invalid. Please shorten and try again.",
+    errorGeneric: "Failed to send message. Please try again or reach out directly via email.",
     toastSuccess: "Message sent directly to Reyy!",
   },
   id: {
@@ -46,7 +48,9 @@ const copy = {
     sendAnother: "Kirim pesan lainnya",
     errorRequired: "Mohon lengkapi nama dan alamat email Anda.",
     errorEmail: "Mohon masukkan alamat email yang valid.",
-    errorFailed: "Gagal mengirim pesan. Silakan coba lagi atau salin email secara langsung.",
+    errorRateLimit: "Terlalu banyak pesan terkirim dari jaringan ini. Mohon tunggu beberapa saat sebelum mengirim lagi, atau hubungi via LinkedIn/email.",
+    errorPayload: "Format atau ukuran pesan tidak valid. Mohon perpendek dan coba lagi.",
+    errorGeneric: "Gagal mengirim pesan. Silakan coba lagi atau hubungi secara langsung via email.",
     toastSuccess: "Pesan berhasil terkirim langsung ke Reyy!",
   },
 } as const;
@@ -66,7 +70,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
     e.preventDefault();
     setErrorMessage(null);
 
-    // Spam honeypot detection
+    // Spam honeypot detection: client-side silent drop if bot fills hidden input
     if (honeypot.trim().length > 0) {
       setIsSuccess(true);
       return;
@@ -77,7 +81,8 @@ export function ContactForm({ locale }: { locale: Locale }) {
       return;
     }
 
-    if (!email.includes("@") || !email.includes(".")) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
       setErrorMessage(t.errorEmail);
       return;
     }
@@ -96,17 +101,29 @@ export function ContactForm({ locale }: { locale: Locale }) {
           name: name.trim(),
           email: email.trim(),
           message: fullMessage || null,
+          company_site_hp: honeypot.trim(),
         }),
       });
 
+      if (res.status === 429) {
+        setErrorMessage(t.errorRateLimit);
+        return;
+      }
+
+      if (res.status === 400 || res.status === 413 || res.status === 415) {
+        setErrorMessage(t.errorPayload);
+        return;
+      }
+
       if (!res.ok) {
-        throw new Error("Failed to submit lead");
+        setErrorMessage(t.errorGeneric);
+        return;
       }
 
       setIsSuccess(true);
       showToast(t.toastSuccess, "✉️");
     } catch {
-      setErrorMessage(t.errorFailed);
+      setErrorMessage(t.errorGeneric);
     } finally {
       setIsSubmitting(false);
     }
@@ -209,11 +226,27 @@ export function ContactForm({ locale }: { locale: Locale }) {
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        {/* Anti-spam honeypot - hidden from real visitors */}
-        <div style={{ display: "none" }} aria-hidden="true">
-          <label htmlFor="website-trap">Website</label>
+        {/* Anti-spam honeypot: hidden from real visitors, keyboard-inaccessible, zero tabindex */}
+        <div
+          style={{
+            position: "absolute",
+            width: "1px",
+            height: "1px",
+            padding: 0,
+            margin: "-1px",
+            overflow: "hidden",
+            clip: "rect(0, 0, 0, 0)",
+            whiteSpace: "nowrap",
+            border: 0,
+            opacity: 0,
+            pointerEvents: "none",
+          }}
+          aria-hidden="true"
+        >
+          <label htmlFor="company-site-hp">Company Website</label>
           <input
-            id="website-trap"
+            id="company-site-hp"
+            name="company_site_hp"
             type="text"
             tabIndex={-1}
             value={honeypot}
@@ -380,9 +413,21 @@ export function ContactForm({ locale }: { locale: Locale }) {
         </div>
 
         {errorMessage && (
-          <p style={{ color: "#ef4444", fontSize: "0.84rem", margin: "0.2rem 0 0", fontWeight: 500 }}>
+          <div
+            role="alert"
+            style={{
+              padding: "0.75rem 1rem",
+              borderRadius: "8px",
+              background: "rgba(239, 68, 68, 0.12)",
+              border: "1px solid rgba(239, 68, 68, 0.35)",
+              color: "#fca5a5",
+              fontSize: "0.84rem",
+              fontWeight: 500,
+              lineHeight: 1.45,
+            }}
+          >
             {errorMessage}
-          </p>
+          </div>
         )}
 
         <button

@@ -1,10 +1,14 @@
 import { Resend } from "resend";
 import { supabase } from "@/lib/supabase";
+import { checkLeadRateLimit, getClientRateLimitIdentifier } from "@/lib/chat-rate-limit";
 
 export const runtime = "nodejs";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const NOTIFY_EMAIL = process.env.NOTIFICATION_EMAIL || "reyyhadri@gmail.com";
+const MAX_LEAD_BYTES = 16 * 1024; // 16 KB maximum payload size
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function hasValidOrigin(request: Request) {
   const origin = request.headers.get("origin");
@@ -100,33 +104,98 @@ async function sendLeadEmail(name: string, email: string, message: string | null
 }
 
 export async function POST(request: Request) {
+  // 1. Origin verification
   if (!hasValidOrigin(request)) {
     return Response.json({ error: "Forbidden request origin." }, { status: 403 });
   }
 
-  if (!supabase) {
-    return Response.json({ error: "Database not configured" }, { status: 503 });
+  // 2. Rate-limiting check (executed before parsing/DB/email to protect resources)
+  const identifier = await getClientRateLimitIdentifier(request);
+  const rate = await checkLeadRateLimit(identifier);
+  if (!rate.allowed) {
+    return Response.json(
+      { error: "Too many contact submissions. Please try again later." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rate.retryAfter),
+        },
+      }
+    );
   }
 
+  // 3. Content-Type and payload size validation
+  const contentType = request.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    return Response.json({ error: "Expected application/json request." }, { status: 415 });
+  }
+
+  const declaredLength = Number(request.headers.get("content-length") || 0);
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_LEAD_BYTES) {
+    return Response.json({ error: "Payload exceeds size limit." }, { status: 413 });
+  }
+
+  let body: Record<string, unknown>;
   try {
-    const body = await request.json();
-    const { name, email, message, sessionId } = body;
-
-    if (!name || typeof name !== "string" || !name.trim()) {
-      return Response.json({ error: "Name is required" }, { status: 400 });
+    const rawBody = await request.text();
+    if (rawBody.length > MAX_LEAD_BYTES) {
+      return Response.json({ error: "Payload exceeds size limit." }, { status: 413 });
     }
+    body = JSON.parse(rawBody);
+  } catch {
+    return Response.json({ error: "Invalid JSON format." }, { status: 400 });
+  }
 
-    if (!email || typeof email !== "string" || !email.includes("@")) {
-      return Response.json({ error: "Valid email is required" }, { status: 400 });
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return Response.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  // 4. Server-side Honeypot validation (Authoritative silent drop)
+  // If the honeypot field is populated by an automated bot, return fake success without Supabase write or Resend email
+  const honeypot = body.company_site_hp ?? body.honeypot ?? body.website;
+  if (typeof honeypot === "string" && honeypot.trim().length > 0) {
+    return Response.json({ success: true });
+  }
+
+  // 5. Field validation & sanitization
+  const { name, email, message, sessionId } = body;
+
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return Response.json({ error: "Name is required." }, { status: 400 });
+  }
+
+  if (name.trim().length > 100) {
+    return Response.json({ error: "Name must be 100 characters or fewer." }, { status: 400 });
+  }
+
+  if (!email || typeof email !== "string" || !EMAIL_REGEX.test(email.trim())) {
+    return Response.json({ error: "Valid email address is required." }, { status: 400 });
+  }
+
+  if (email.trim().length > 120) {
+    return Response.json({ error: "Email must be 120 characters or fewer." }, { status: 400 });
+  }
+
+  if (message !== undefined && message !== null) {
+    if (typeof message !== "string") {
+      return Response.json({ error: "Message must be a string." }, { status: 400 });
     }
+    if (message.length > 2000) {
+      return Response.json({ error: "Message exceeds maximum length of 2000 characters." }, { status: 400 });
+    }
+  }
 
-    const cleanName = name.trim().slice(0, 100);
-    const cleanEmail = email.trim().toLowerCase().slice(0, 120);
-    const cleanMessage = typeof message === "string" ? message.trim().slice(0, 500) : null;
-    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    const validSessionId = typeof sessionId === "string" && UUID_REGEX.test(sessionId.trim()) ? sessionId.trim() : null;
+  if (!supabase) {
+    return Response.json({ error: "Service temporarily unavailable." }, { status: 503 });
+  }
 
-    // 1. Save to Supabase for persistence and Admin Dashboard display
+  const cleanName = name.trim();
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanMessage = typeof message === "string" && message.trim() ? message.trim() : null;
+  const validSessionId = typeof sessionId === "string" && UUID_REGEX.test(sessionId.trim()) ? sessionId.trim() : null;
+
+  try {
+    // 6. Save to Supabase for persistence and Admin Dashboard display
     const { error } = await supabase.from("chat_leads").insert({
       name: cleanName,
       email: cleanEmail,
@@ -136,10 +205,10 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("[lead-db-error]", error);
-      return Response.json({ error: "Failed to record contact" }, { status: 500 });
+      return Response.json({ error: "Failed to record contact." }, { status: 500 });
     }
 
-    // 2. Fire instant email alert via Resend in the background
+    // 7. Fire instant email alert via Resend in the background
     sendLeadEmail(cleanName, cleanEmail, cleanMessage).catch((e) => {
       console.error("[sendLeadEmail-async-error]", e);
     });
@@ -147,6 +216,6 @@ export async function POST(request: Request) {
     return Response.json({ success: true });
   } catch (err) {
     console.error("[lead-route-error]", err);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return Response.json({ error: "An unexpected error occurred." }, { status: 500 });
   }
 }

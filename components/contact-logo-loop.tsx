@@ -2,9 +2,11 @@
 
 import { FaEnvelope, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
 import LogoLoop from '@/components/LogoLoop';
+import type { LogoNodeItem } from '@/components/LogoLoop';
+import type { Locale } from '@/lib/portfolio';
 import { profile } from '@/lib/portfolio';
 
-const contactLogos = [
+const contactLogos: readonly LogoNodeItem[] = [
   {
     node: (
       <span className="contact-logo-chip">
@@ -51,7 +53,11 @@ const contactLogos = [
   }
 ];
 
-export function ContactLogoLoop({ locale }) {
+export interface ContactLogoLoopProps {
+  locale: Locale;
+}
+
+export function ContactLogoLoop({ locale }: ContactLogoLoopProps) {
   return (
     <div className="contact-loop-shell">
       <LogoLoop

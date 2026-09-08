@@ -192,6 +192,12 @@ export function BitcoinForecastVisualizer({ locale }: BitcoinForecastVisualizerP
                     className={`bar-column ${isSelected ? "is-focused" : ""}`}
                     onClick={() => setSelectedStep(pt.step)}
                     title={`Step +${pt.step}h | Actual: ${pt.actual.toFixed(3)} | Pred: ${predVal.toFixed(3)}`}
+                    aria-label={
+                      isEn
+                        ? `Step +${pt.step} hours: Actual ${pt.actual.toFixed(3)}, Predicted ${predVal.toFixed(3)}`
+                        : `Langkah +${pt.step} jam: Target ${pt.actual.toFixed(3)}, Prediksi ${predVal.toFixed(3)}`
+                    }
+                    aria-pressed={isSelected}
                   >
                     <div className="bar-pair">
                       {/* Actual Price Bar */}
@@ -253,6 +259,15 @@ export function BitcoinForecastVisualizer({ locale }: BitcoinForecastVisualizerP
             value={selectedStep}
             onChange={(e) => setSelectedStep(Number(e.target.value))}
             className="horizon-slider"
+            aria-label={isEn ? "Forecast Horizon Scrubber (1 to 24 hours ahead)" : "Scrubber Horizon Prediksi (1 hingga 24 jam ke depan)"}
+            aria-valuemin={1}
+            aria-valuemax={24}
+            aria-valuenow={selectedStep}
+            aria-valuetext={
+              isEn
+                ? `+${selectedStep} hours: Target ${stats.actual.toFixed(4)}, Prediction ${stats.predicted.toFixed(4)} by ${stats.modelName}`
+                : `+${selectedStep} jam: Target ${stats.actual.toFixed(4)}, Prediksi ${stats.predicted.toFixed(4)} oleh ${stats.modelName}`
+            }
           />
 
           {/* Instant Point Stats */}
@@ -278,6 +293,58 @@ export function BitcoinForecastVisualizer({ locale }: BitcoinForecastVisualizerP
               <small>{isEn ? "Recorded Evaluation" : "Hasil Evaluasi Catatan"}</small>
             </div>
           </div>
+
+          {/* Screen reader polite status for step updates (no excessive mouse move noise) */}
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {isEn
+              ? `Selected Step +${selectedStep} hours. Model ${stats.modelName}. Target: ${stats.actual.toFixed(4)}, Prediction: ${stats.predicted.toFixed(4)}, Absolute Error: ${stats.error.toFixed(5)}.`
+              : `Langkah terpilih +${selectedStep} jam. Model ${stats.modelName}. Target: ${stats.actual.toFixed(4)}, Prediksi: ${stats.predicted.toFixed(4)}, Selisih Error: ${stats.error.toFixed(5)}.`}
+          </div>
+
+          {/* Accessible Fallback Tabular Summary */}
+          <details className="accessible-data-summary">
+            <summary className="accessible-summary-toggle">
+              {isEn
+                ? "📊 View Accessible 24-Step Horizon Data Table"
+                : "📊 Lihat Tabel Data Horizon 24-Langkah (Aksesibel)"}
+            </summary>
+            <div className="accessible-table-wrapper">
+              <table className="accessible-forecast-table">
+                <caption className="sr-only">
+                  {isEn
+                    ? "24-Step Bitcoin Forecasting Evaluation Data across Seq2Seq, Attention-LSTM, and Baseline LSTM architectures"
+                    : "Data Evaluasi Forecasting Bitcoin 24 Langkah pada arsitektur Seq2Seq, Attention-LSTM, dan Baseline LSTM"}
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Step</th>
+                    <th scope="col">Actual</th>
+                    <th scope="col">Seq2Seq</th>
+                    <th scope="col">Attn-LSTM</th>
+                    <th scope="col">Base-LSTM</th>
+                    <th scope="col">RSI</th>
+                    <th scope="col">MACD</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {FORECAST_SERIES.map((pt) => {
+                    const isRowActive = pt.step === selectedStep;
+                    return (
+                      <tr key={pt.step} className={isRowActive ? "is-selected-row" : ""}>
+                        <td>+{pt.step}h</td>
+                        <td>{pt.actual.toFixed(3)}</td>
+                        <td>{pt.seq2seq.toFixed(3)}</td>
+                        <td>{pt.attentionLstm.toFixed(3)}</td>
+                        <td>{pt.baselineLstm.toFixed(3)}</td>
+                        <td>{pt.rsi.toFixed(2)}</td>
+                        <td>{pt.macd.toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </details>
         </div>
 
         {/* Safe Claims Note */}

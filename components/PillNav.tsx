@@ -4,8 +4,30 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { gsap } from 'gsap';
 import './PillNav.css';
+
+export interface PillNavItem {
+  label: string;
+  href: string;
+  ariaLabel?: string;
+}
+
+export interface PillNavProps {
+  logo: string;
+  logoAlt?: string;
+  items: readonly PillNavItem[] | PillNavItem[];
+  activeHref?: string;
+  className?: string;
+  ease?: string;
+  baseColor?: string;
+  pillColor?: string;
+  hoveredPillTextColor?: string;
+  pillTextColor?: string;
+  onMobileMenuClick?: () => void;
+  initialLoadAnimation?: boolean;
+}
 
 const PillNav = ({
   logo,
@@ -20,20 +42,20 @@ const PillNav = ({
   pillTextColor,
   onMobileMenuClick = undefined,
   initialLoadAnimation = true
-}) => {
+}: PillNavProps) => {
   const pathname = usePathname();
   const resolvedPillTextColor = pillTextColor ?? baseColor;
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeHash, setActiveHash] = useState('');
-  const circleRefs = useRef([]);
-  const tlRefs = useRef([]);
-  const activeTweenRefs = useRef([]);
-  const logoImgRef = useRef(null);
-  const logoTweenRef = useRef(null);
-  const hamburgerRef = useRef(null);
-  const mobileMenuRef = useRef(null);
-  const navItemsRef = useRef(null);
-  const logoRef = useRef(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [activeHash, setActiveHash] = useState<string>('');
+  const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
+  const activeTweenRefs = useRef<(gsap.core.Tween | null)[]>([]);
+  const logoImgRef = useRef<HTMLImageElement | null>(null);
+  const logoTweenRef = useRef<gsap.core.Tween | null>(null);
+  const hamburgerRef = useRef<HTMLButtonElement | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const navItemsRef = useRef<HTMLDivElement | null>(null);
+  const logoRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const syncHash = () => setActiveHash(window.location.hash.replace(/^#/, ''));
@@ -50,7 +72,7 @@ const PillNav = ({
 
   useEffect(() => {
     const layout = () => {
-      circleRefs.current.forEach(circle => {
+      circleRefs.current.forEach((circle) => {
         if (!circle?.parentElement) return;
 
         const pill = circle.parentElement;
@@ -71,8 +93,8 @@ const PillNav = ({
           transformOrigin: `50% ${originY}px`
         });
 
-        const label = pill.querySelector('.pill-label');
-        const white = pill.querySelector('.pill-label-hover');
+        const label = pill.querySelector<HTMLElement>('.pill-label');
+        const white = pill.querySelector<HTMLElement>('.pill-label-hover');
 
         if (label) gsap.set(label, { y: 0 });
         if (white) gsap.set(white, { y: h + 12, opacity: 0 });
@@ -140,13 +162,13 @@ const PillNav = ({
 
     return () => {
       window.removeEventListener('resize', onResize);
-      timelines.forEach(timeline => timeline?.kill());
-      activeTweens.forEach(tween => tween?.kill());
+      timelines.forEach((timeline) => timeline?.kill());
+      activeTweens.forEach((tween) => tween?.kill());
       logoTweenRef.current?.kill();
     };
   }, [items, ease, initialLoadAnimation]);
 
-  const handleEnter = i => {
+  const handleEnter = (i: number) => {
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -157,7 +179,7 @@ const PillNav = ({
     });
   };
 
-  const handleLeave = i => {
+  const handleLeave = (i: number) => {
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -189,13 +211,15 @@ const PillNav = ({
     const menu = mobileMenuRef.current;
 
     if (hamburger) {
-      const lines = hamburger.querySelectorAll('.hamburger-line');
-      if (newState) {
-        gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease });
-      } else {
-        gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
+      const lines = hamburger.querySelectorAll<HTMLElement>('.hamburger-line');
+      if (lines.length >= 2) {
+        if (newState) {
+          gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease });
+          gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease });
+        } else {
+          gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
+          gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
+        }
       }
     }
 
@@ -232,7 +256,7 @@ const PillNav = ({
     onMobileMenuClick?.();
   };
 
-  const isExternalLink = href =>
+  const isExternalLink = (href: string): boolean =>
     href.startsWith('http://') ||
     href.startsWith('https://') ||
     href.startsWith('//') ||
@@ -240,9 +264,9 @@ const PillNav = ({
     href.startsWith('tel:') ||
     href.startsWith('#');
 
-  const isRouterLink = href => href && !isExternalLink(href);
+  const isRouterLink = (href: string | undefined): boolean => Boolean(href && !isExternalLink(href));
 
-  const handleItemClick = (href) => {
+  const handleItemClick = (href: string) => {
     const [path, hash] = href.split('#');
     setActiveHash(hash || '');
 
@@ -258,7 +282,7 @@ const PillNav = ({
     }
   };
 
-  const isActiveLink = (href, index) => {
+  const isActiveLink = (href: string, index: number): boolean => {
     if (activeHref) return activeHref === href;
     const [path, hash] = href.split('#');
     if (!path) return false;
@@ -268,11 +292,11 @@ const PillNav = ({
   };
 
   useEffect(() => {
-    activeTweenRefs.current.forEach(tween => tween?.kill());
-    tlRefs.current.forEach(timeline => timeline?.pause(0));
+    activeTweenRefs.current.forEach((tween) => tween?.kill());
+    tlRefs.current.forEach((timeline) => timeline?.pause(0));
   }, [pathname, activeHash]);
 
-  const cssVars = {
+  const cssVars: CSSProperties & Record<string, string | number | undefined> = {
     ['--base']: baseColor,
     ['--pill-bg']: pillColor,
     ['--hover-text']: hoveredPillTextColor,
@@ -288,7 +312,7 @@ const PillNav = ({
             href={items[0].href}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
-            ref={el => {
+            ref={(el) => {
               logoRef.current = el;
             }}
           >
@@ -300,7 +324,7 @@ const PillNav = ({
             href={items?.[0]?.href || '#'}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
-            ref={el => {
+            ref={(el) => {
               logoRef.current = el;
             }}
           >
@@ -327,7 +351,7 @@ const PillNav = ({
                     <span
                       className="hover-circle"
                       aria-hidden="true"
-                      ref={el => {
+                      ref={(el) => {
                         circleRefs.current[i] = el;
                       }}
                     />
@@ -353,7 +377,7 @@ const PillNav = ({
                     <span
                       className="hover-circle"
                       aria-hidden="true"
-                      ref={el => {
+                      ref={(el) => {
                         circleRefs.current[i] = el;
                       }}
                     />

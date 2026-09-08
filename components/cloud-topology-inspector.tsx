@@ -96,26 +96,26 @@ const routes: RouteItem[] = [
 
 const copy = {
   en: {
-    eyebrow: "Interactive API & Pipeline Simulator",
-    title: "Flask-PyMongo CRUD Request Inspector",
-    subtitle: "Test HTTP endpoints, ObjectId serialization, and MongoDB query execution in an interactive single-VM topology inspector.",
+    eyebrow: "Interactive API Contract & Schema Reference",
+    title: "Flask & PyMongo CRUD Contract Inspector",
+    subtitle: "Inspect HTTP method semantics, BSON ObjectId serialization, and PyMongo operations implemented in the academic inventory coursework.",
     selectEndpoint: "Select REST Endpoint",
-    requestFlow: "HTTP Request ➔ Flask Handler ➔ MongoDB Query",
+    requestFlow: "HTTP Request ➔ Flask Handler ➔ PyMongo Query",
     requestPayload: "Request Payload (JSON)",
     responsePayload: "Response Output (JSON)",
     mongoQuery: "MongoDB PyMongo Query",
-    runtimeNote: "Single-VM Cloud Computing Lab · Binds to 0.0.0.0:5000",
+    runtimeNote: "Academic Coursework Lab · Local Flask Dev Server (0.0.0.0:5000)",
   },
   id: {
-    eyebrow: "Simulator API & Pipeline Interaktif",
-    title: "Inspektor Request CRUD Flask-PyMongo",
-    subtitle: "Uji endpoint HTTP, serialisasi ObjectId, dan eksekusi query MongoDB dalam inspektor topologi cloud single-VM interaktif.",
+    eyebrow: "Referensi Kontrak API & Skema Interaktif",
+    title: "Inspektor Kontrak CRUD Flask & PyMongo",
+    subtitle: "Periksa semantik metode HTTP, serialisasi BSON ObjectId, dan operasi PyMongo yang diimplementasikan pada tugas akademik inventaris.",
     selectEndpoint: "Pilih Endpoint REST",
-    requestFlow: "HTTP Request ➔ Handler Flask ➔ Query MongoDB",
+    requestFlow: "HTTP Request ➔ Handler Flask ➔ Query PyMongo",
     requestPayload: "Payload Request (JSON)",
     responsePayload: "Output Respons (JSON)",
-    mongoQuery: "Eksekusi Query MongoDB PyMongo",
-    runtimeNote: "Lab Cloud Computing Single-VM · Bind ke 0.0.0.0:5000",
+    mongoQuery: "Operasi Query MongoDB PyMongo",
+    runtimeNote: "Lab Coursework Akademik · Server Dev Flask Lokal (0.0.0.0:5000)",
   },
 } as const;
 
@@ -136,9 +136,10 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
       className="glass-panel"
       style={{
         borderRadius: "16px",
-        padding: "2rem",
+        padding: "clamp(1rem, 2.5vw, 1.75rem)",
         margin: "2rem 0",
         border: "1px solid rgba(255, 255, 255, 0.14)",
+        overflow: "hidden",
       }}
     >
       {/* Header */}
@@ -169,7 +170,7 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
         <span style={{ fontSize: "0.78rem", opacity: 0.6, fontWeight: 600, display: "block", marginBottom: "0.6rem" }}>
           {t.selectEndpoint}
         </span>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.5rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.5rem" }}>
           {routes.map((r, idx) => {
             const isSelected = activeIdx === idx;
             const color = methodColors[r.method];
@@ -225,7 +226,7 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
           marginBottom: "1.5rem",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem", flexWrap: "wrap", gap: "0.5rem" }}>
           <strong style={{ fontSize: "0.85rem" }}>{activeRoute.label[locale]}</strong>
           <span
             style={{
@@ -244,27 +245,27 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
           {activeRoute.description[locale]}
         </p>
 
-        {/* 3-Step Node Map */}
+        {/* 3-Step Flow Map */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
             gap: "0.75rem",
           }}
         >
-          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px" }}>
+          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px", minWidth: 0 }}>
             <span style={{ fontSize: "0.68rem", opacity: 0.6, display: "block" }}>STEP 01</span>
-            <strong style={{ fontSize: "0.8rem" }}>Client REST Call</strong>
-            <p style={{ fontSize: "0.72rem", opacity: 0.6, margin: "0.2rem 0 0" }}>{activeRoute.method} {activeRoute.path}</p>
+            <strong style={{ fontSize: "0.8rem" }}>Client HTTP Call</strong>
+            <p style={{ fontSize: "0.72rem", opacity: 0.6, margin: "0.2rem 0 0", wordBreak: "break-all" }}>{activeRoute.method} {activeRoute.path}</p>
           </div>
-          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px" }}>
+          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px", minWidth: 0 }}>
             <span style={{ fontSize: "0.68rem", opacity: 0.6, display: "block" }}>STEP 02</span>
-            <strong style={{ fontSize: "0.8rem" }}>Flask-PyMongo</strong>
-            <p style={{ fontSize: "0.72rem", opacity: 0.6, margin: "0.2rem 0 0" }}>BSON / JSON Bridge</p>
+            <strong style={{ fontSize: "0.8rem" }}>Flask Route Handler</strong>
+            <p style={{ fontSize: "0.72rem", opacity: 0.6, margin: "0.2rem 0 0" }}>Flask-PyMongo & ObjectId</p>
           </div>
-          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px" }}>
+          <div style={{ background: "rgba(255, 255, 255, 0.04)", padding: "0.75rem", borderRadius: "8px", minWidth: 0 }}>
             <span style={{ fontSize: "0.68rem", opacity: 0.6, display: "block" }}>STEP 03</span>
-            <strong style={{ fontSize: "0.8rem" }}>MongoDB Instance</strong>
+            <strong style={{ fontSize: "0.8rem" }}>MongoDB Collection</strong>
             <p style={{ fontSize: "0.72rem", opacity: 0.6, margin: "0.2rem 0 0" }}>swalayanDB.produk</p>
           </div>
         </div>
@@ -274,12 +275,12 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
           gap: "1rem",
         }}
       >
         {/* Mongo Operation */}
-        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
           <span style={{ fontSize: "0.72rem", opacity: 0.6, display: "block", marginBottom: "0.4rem" }}>
             {t.mongoQuery}
           </span>
@@ -288,8 +289,10 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
               fontSize: "0.75rem",
               margin: 0,
               color: "#60a5fa",
-              fontFamily: "monospace",
+              fontFamily: "var(--font-geist-mono), monospace",
               whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              overflowX: "auto",
             }}
           >
             {activeRoute.mongoOperation}
@@ -297,7 +300,7 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
         </div>
 
         {/* JSON Response */}
-        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)" }}>
+        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
           <span style={{ fontSize: "0.72rem", opacity: 0.6, display: "block", marginBottom: "0.4rem" }}>
             {t.responsePayload}
           </span>
@@ -306,14 +309,23 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
               fontSize: "0.75rem",
               margin: 0,
               color: "#4ade80",
-              fontFamily: "monospace",
+              fontFamily: "var(--font-geist-mono), monospace",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
               maxHeight: "140px",
               overflowY: "auto",
+              overflowX: "auto",
             }}
           >
             {activeRoute.responseJson}
           </pre>
         </div>
+      </div>
+
+      {/* Footer Runtime Note */}
+      <div style={{ marginTop: "1.25rem", display: "flex", alignItems: "center", gap: "0.5rem", opacity: 0.6, fontSize: "0.72rem" }}>
+        <span>ℹ</span>
+        <span>{t.runtimeNote}</span>
       </div>
     </div>
   );

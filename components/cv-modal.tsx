@@ -61,24 +61,88 @@ function CVModalContent({
   initialType?: CVType;
 }) {
   const [activeType, setActiveType] = useState<CVType>(initialType);
+  const modalPanelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const t = copy[locale];
 
   useEffect(() => {
+    // 1. Capture previously focused element for focus restoration on close
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    // 2. Telemetry tracking for preview
     fetch("/api/telemetry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ eventType: "cv_preview", metadata: { type: initialType, locale } }),
     }).catch(() => {});
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
+    // 3. Scroll lock with scrollbar width compensation to avoid layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+
     document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    // 4. Initial focus placement into modal
+    const focusTimer = requestAnimationFrame(() => {
+      if (closeButtonRef.current) {
+        closeButtonRef.current.focus();
+      }
+    });
+
+    // 5. Global Escape key handling and Focus Trap
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+
+      if (e.key === "Tab") {
+        if (!modalPanelRef.current) return;
+        const focusableElements = modalPanelRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+        );
+
+        if (focusableElements.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement || document.activeElement === modalPanelRef.current) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      cancelAnimationFrame(focusTimer);
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
+
+      // 6. Restore focus to the element that triggered the modal
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === "function") {
+        previousFocusRef.current.focus();
+      }
     };
   }, [initialType, locale, onClose]);
 
@@ -98,52 +162,18 @@ function CVModalContent({
       role="dialog"
       aria-modal="true"
       aria-labelledby="cv-modal-title"
+      aria-describedby="cv-modal-desc"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        background: "rgba(0, 0, 0, 0.75)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "1rem",
-        animation: "fadeIn 200ms ease-out",
-      }}
     >
       <div
-        className="glass-panel"
-        style={{
-          width: "100%",
-          maxWidth: "880px",
-          height: "90vh",
-          maxHeight: "920px",
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: "16px",
-          overflow: "hidden",
-          border: "1px solid rgba(255, 255, 255, 0.12)",
-          background: "var(--surface, #121316)",
-          boxShadow: "0 24px 60px rgba(0, 0, 0, 0.6)",
-        }}
+        ref={modalPanelRef}
+        className="glass-panel cv-modal-panel"
+        tabIndex={-1}
       >
         {/* Header Bar */}
-        <header
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-            padding: "1rem 1.25rem",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-            background: "rgba(0, 0, 0, 0.3)",
-          }}
-        >
+        <header className="cv-modal-header">
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <h2 id="cv-modal-title" style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0 }}>
@@ -162,13 +192,15 @@ function CVModalContent({
                 {t.updated}
               </span>
             </div>
-            <p style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.15rem 0 0" }}>
+            <p id="cv-modal-desc" style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.15rem 0 0" }}>
               {t.candidate} · {currentCV.subtitle[locale]}
             </p>
           </div>
 
           {/* Type Selector Tabs */}
           <div
+            role="tablist"
+            aria-label={t.title}
             style={{
               display: "flex",
               background: "rgba(255, 255, 255, 0.06)",
@@ -177,58 +209,49 @@ function CVModalContent({
               gap: "4px",
             }}
           >
-            {(Object.keys(cvFiles) as CVType[]).map((type) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => setActiveType(type)}
-                style={{
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: "6px",
-                  border: "none",
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  background: activeType === type ? "var(--foreground, #fff)" : "transparent",
-                  color: activeType === type ? "var(--background, #000)" : "inherit",
-                  opacity: activeType === type ? 1 : 0.7,
-                  transition: "all 160ms ease",
-                }}
-              >
-                {cvFiles[type].label[locale]}
-              </button>
-            ))}
+            {(Object.keys(cvFiles) as CVType[]).map((type) => {
+              const isSelected = activeType === type;
+              return (
+                <button
+                  key={type}
+                  id={`cv-tab-${type}`}
+                  role="tab"
+                  type="button"
+                  aria-selected={isSelected}
+                  aria-controls="cv-preview-panel"
+                  onClick={() => setActiveType(type)}
+                  className="cv-modal-tab"
+                >
+                  {cvFiles[type].label[locale]}
+                </button>
+              );
+            })}
           </div>
 
+          {/* Close Button with Clear Focus Indicators */}
           <button
             type="button"
             ref={closeButtonRef}
             onClick={onClose}
             aria-label={t.close}
-            style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              border: "none",
-              color: "inherit",
-              width: "32px",
-              height: "32px",
-              borderRadius: "50%",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.1rem",
-            }}
+            className="cv-modal-close-btn"
           >
-            ×
+            <span aria-hidden="true">×</span>
           </button>
         </header>
 
         {/* PDF Document Previewer Frame */}
-        <div style={{ flex: 1, position: "relative", background: "#0a0a0c" }}>
+        <div
+          id="cv-preview-panel"
+          role="tabpanel"
+          aria-labelledby={`cv-tab-${activeType}`}
+          style={{ flex: 1, position: "relative", background: "#0a0a0c" }}
+        >
           <iframe
             key={currentCV.file}
             src={`${currentCV.file}#toolbar=0&view=FitH`}
-            title={`Preview ${currentCV.label[locale]}`}
+            title={`${t.candidate} - ${currentCV.label[locale]} (${t.title})`}
+            tabIndex={-1}
             style={{
               width: "100%",
               height: "100%",
@@ -239,18 +262,7 @@ function CVModalContent({
         </div>
 
         {/* Footer Actions */}
-        <footer
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-            padding: "0.85rem 1.25rem",
-            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
-            background: "rgba(0, 0, 0, 0.3)",
-          }}
-        >
+        <footer className="cv-modal-footer">
           <span style={{ fontSize: "0.78rem", opacity: 0.5 }}>
             {activeType === "ai-ml"
               ? "Mohammad_Raihan_CV_AI_ML_Engineer.pdf"

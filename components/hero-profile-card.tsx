@@ -1,13 +1,18 @@
 'use client';
 
 import ProfileCard from './ProfileCard';
+import type { Locale } from '@/lib/portfolio';
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/reyhadri';
 
-export function HeroProfileCard({ locale }) {
+export interface HeroProfileCardProps {
+  locale: Locale;
+}
+
+export function HeroProfileCard({ locale }: HeroProfileCardProps) {
   const isIndonesian = locale === 'id';
 
-  const openLinkedIn = () => {
+  const openLinkedIn = (): void => {
     const profileWindow = window.open(LINKEDIN_URL, '_blank', 'noopener,noreferrer');
     if (profileWindow) profileWindow.opener = null;
   };

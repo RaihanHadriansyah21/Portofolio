@@ -183,33 +183,9 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
         }}
       >
         {/* Left: Mobile Phone Device Frame */}
-        <div
-          style={{
-            maxWidth: "340px",
-            margin: "0 auto",
-            width: "100%",
-            borderRadius: "28px",
-            background: "#0a0b0d",
-            border: "3px solid rgba(255, 255, 255, 0.18)",
-            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.7)",
-            overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <div className="quizint-device-frame">
           {/* Status Bar */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "0.5rem 1.2rem",
-              background: "rgba(255, 255, 255, 0.04)",
-              fontSize: "0.7rem",
-              opacity: 0.6,
-              borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-            }}
-          >
+          <div className="quizint-status-bar">
             <span>09:41</span>
             <div style={{ display: "flex", gap: "0.3rem", alignItems: "center" }}>
               <span>5G</span>
@@ -266,7 +242,8 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
                         onClick={() => handleSelectAnswer(idx)}
                         disabled={selectedAnswer !== null}
                         style={{
-                          padding: "0.55rem 0.75rem",
+                          padding: "0.65rem 0.75rem",
+                          minHeight: "44px",
                           borderRadius: "8px",
                           background: bg,
                           border: border,
@@ -276,6 +253,7 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
                           cursor: selectedAnswer === null ? "pointer" : "default",
                           transition: "all 120ms ease",
                           display: "flex",
+                          alignItems: "center",
                           justifyContent: "space-between",
                         }}
                       >
@@ -296,7 +274,8 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
                       type="button"
                       onClick={() => handlePowerUp("double")}
                       style={{
-                        padding: "0.35rem 0.5rem",
+                        padding: "0.5rem 0.5rem",
+                        minHeight: "40px",
                         borderRadius: "6px",
                         fontSize: "0.7rem",
                         border: activePowerUp === "double" ? "1px solid #facc15" : "1px solid rgba(255,255,255,0.08)",
@@ -311,7 +290,8 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
                       type="button"
                       onClick={() => handlePowerUp("fifty")}
                       style={{
-                        padding: "0.35rem 0.5rem",
+                        padding: "0.5rem 0.5rem",
+                        minHeight: "40px",
                         borderRadius: "6px",
                         fontSize: "0.7rem",
                         border: activePowerUp === "fifty" ? "1px solid #60a5fa" : "1px solid rgba(255,255,255,0.08)",
@@ -332,7 +312,8 @@ export function QuizIntMobilePreview({ locale }: { locale: Locale }) {
                     style={{
                       width: "100%",
                       marginTop: "1rem",
-                      padding: "0.45rem",
+                      padding: "0.6rem 0.75rem",
+                      minHeight: "40px",
                       borderRadius: "6px",
                       background: "rgba(255,255,255,0.1)",
                       border: "none",

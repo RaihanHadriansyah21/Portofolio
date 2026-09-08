@@ -3,9 +3,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState, useRef, useId } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import type { Property } from 'csstype';
 import './GlassSurface.css';
 
-const supportsSVGFilters = filterId => {
+const supportsSVGFilters = (filterId: string): boolean => {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     return false;
   }
@@ -23,30 +25,29 @@ const supportsSVGFilters = filterId => {
   return div.style.backdropFilter !== '';
 };
 
-/**
- * @param {{
- *   children?: import('react').ReactNode,
- *   width?: number | string,
- *   height?: number | string,
- *   borderRadius?: number,
- *   borderWidth?: number,
- *   brightness?: number,
- *   opacity?: number,
- *   blur?: number,
- *   displace?: number,
- *   backgroundOpacity?: number,
- *   saturation?: number,
- *   distortionScale?: number,
- *   redOffset?: number,
- *   greenOffset?: number,
- *   blueOffset?: number,
- *   xChannel?: string,
- *   yChannel?: string,
- *   mixBlendMode?: string,
- *   className?: string,
- *   style?: import('react').CSSProperties
- * }} props
- */
+export interface GlassSurfaceProps {
+  children?: ReactNode;
+  width?: number | string;
+  height?: number | string;
+  borderRadius?: number;
+  borderWidth?: number;
+  brightness?: number;
+  opacity?: number;
+  blur?: number;
+  displace?: number;
+  backgroundOpacity?: number;
+  saturation?: number;
+  distortionScale?: number;
+  redOffset?: number;
+  greenOffset?: number;
+  blueOffset?: number;
+  xChannel?: 'R' | 'G' | 'B' | 'A' | string;
+  yChannel?: 'R' | 'G' | 'B' | 'A' | string;
+  mixBlendMode?: Property.MixBlendMode | string;
+  className?: string;
+  style?: CSSProperties;
+}
+
 const GlassSurface = ({
   children,
   width = 200,
@@ -68,22 +69,22 @@ const GlassSurface = ({
   mixBlendMode = 'difference',
   className = '',
   style = {}
-}) => {
+}: GlassSurfaceProps) => {
   const uniqueId = useId().replace(/:/g, '-');
   const filterId = `glass-filter-${uniqueId}`;
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const [svgSupported, setSvgSupported] = useState(false);
+  const [svgSupported, setSvgSupported] = useState<boolean>(false);
 
-  const containerRef = useRef(null);
-  const feImageRef = useRef(null);
-  const redChannelRef = useRef(null);
-  const greenChannelRef = useRef(null);
-  const blueChannelRef = useRef(null);
-  const gaussianBlurRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const feImageRef = useRef<SVGFEImageElement>(null);
+  const redChannelRef = useRef<SVGFEDisplacementMapElement>(null);
+  const greenChannelRef = useRef<SVGFEDisplacementMapElement>(null);
+  const blueChannelRef = useRef<SVGFEDisplacementMapElement>(null);
+  const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
 
-  const generateDisplacementMap = () => {
+  const generateDisplacementMap = (): string => {
     const rect = containerRef.current?.getBoundingClientRect();
     const actualWidth = rect?.width || 400;
     const actualHeight = rect?.height || 200;
@@ -111,7 +112,7 @@ const GlassSurface = ({
     return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
   };
 
-  const updateDisplacementMap = () => {
+  const updateDisplacementMap = (): void => {
     feImageRef.current?.setAttribute('href', generateDisplacementMap());
   };
 
@@ -171,7 +172,7 @@ const GlassSurface = ({
     return () => cancelAnimationFrame(frame);
   }, [filterId]);
 
-  const containerStyle = {
+  const containerStyle: CSSProperties & Record<`--${string}`, string | number | undefined> = {
     ...style,
     width: typeof width === 'number' ? `${width}px` : width,
     height: typeof height === 'number' ? `${height}px` : height,
