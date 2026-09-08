@@ -42,16 +42,6 @@ export function CopyEmailButton({
       onClick={handleCopy}
       className={className || "text-link"}
       title={locale === "id" ? "Salin email ke clipboard" : "Copy email to clipboard"}
-      style={{
-        cursor: "pointer",
-        background: "none",
-        border: "none",
-        padding: 0,
-        font: "inherit",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.25rem",
-      }}
     >
       {children || (
         <>
