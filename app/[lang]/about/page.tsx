@@ -128,7 +128,8 @@ export default async function AboutPage({ params }: { params: Promise<{ lang: st
         {principles.map(([title, body], index) => <article key={title}><span>0{index + 1}</span><h2>{title}</h2><p>{body}</p></article>)}
       </section>
       <section className="about-next">
-        <div><p className="eyebrow">Next chapter</p><h2>{content.contact.title}</h2></div>
+        <p className="eyebrow">Next chapter</p>
+        <h2>{content.contact.title}</h2>
         <div>
           <p>{content.contact.body}</p>
           <AboutActionsClient locale={lang} />

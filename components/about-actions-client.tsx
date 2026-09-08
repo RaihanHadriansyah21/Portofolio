@@ -14,7 +14,7 @@ export function AboutActionsClient({ locale }: { locale: Locale }) {
   const isIndo = locale === "id";
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center", marginTop: "1rem" }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "center", justifyContent: "center" }}>
       <a className="button button-primary" href={profile.linkedin} target="_blank" rel="noreferrer">
         {content.contact.cta} ↗
       </a>
