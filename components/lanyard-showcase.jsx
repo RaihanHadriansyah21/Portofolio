@@ -50,7 +50,7 @@ export function LanyardShowcase({ locale }) {
   const shouldRender3D = !isMobile || enable3DOnMobile;
 
   return (
-    <div className="lanyard-canvas" aria-hidden="true" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '460px' }}>
+    <div className="lanyard-canvas" aria-hidden="true">
       {mounted && shouldRender3D ? (
         <Lanyard
           position={[0, 1.2, 10]}
@@ -60,7 +60,7 @@ export function LanyardShowcase({ locale }) {
           backImage="/react-bits/lanyard/reyy-pass-back.svg"
           lanyardImage="/react-bits/lanyard/reyy-band.svg"
           lanyardWidth={1.0}
-          cardScale={3.5}
+          cardScale={3.2}
           imageFit="cover"
         />
       ) : (
