@@ -53,7 +53,7 @@ export function LanyardShowcase({ locale }) {
     <div className="lanyard-canvas" aria-hidden="true" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '460px' }}>
       {mounted && shouldRender3D ? (
         <Lanyard
-          position={[0, -0.8, 5.5]}
+          position={[0, 1.2, 5.5]}
           gravity={[0, -40, 0]}
           fov={26}
           frontImage="/react-bits/lanyard/reyy-pass-front.svg"
