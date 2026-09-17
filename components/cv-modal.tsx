@@ -1,39 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { Locale } from "@/lib/portfolio";
 
-export type CVType = "ai-ml" | "software";
+export type CVType = "hybrid" | "ai-ml" | "software";
 
-const cvFiles: Record<CVType, { file: string; label: Record<Locale, string>; subtitle: Record<Locale, string> }> = {
-  "ai-ml": {
-    file: "/cv/Mohammad_Raihan_CV_AI_ML_Engineer.pdf",
-    label: {
-      en: "AI / ML Engineer",
-      id: "AI / ML Engineer",
-    },
-    subtitle: {
-      en: "Specialized in Applied AI, Model Serving, & Data Systems",
-      id: "Fokus pada AI Terapan, Model Serving, & Sistem Data",
-    },
+const MASTER_CV = {
+  file: "/cv/Mohammad_Raihan_CV_AI_Fullstack_Engineer.pdf",
+  filename: "Mohammad_Raihan_CV_AI_Fullstack_Engineer.pdf",
+  role: {
+    en: "AI/ML Engineer & Full-Stack Developer",
+    id: "AI/ML Engineer & Full-Stack Developer",
   },
-  software: {
-    file: "/cv/Mohammad_Raihan_CV_Software_Engineer.pdf",
-    label: {
-      en: "Full-Stack / Software",
-      id: "Full-Stack / Software",
-    },
-    subtitle: {
-      en: "Specialized in Next.js, FastAPI, Cloud, & Backend APIs",
-      id: "Fokus pada Next.js, FastAPI, Cloud, & Backend API",
-    },
+  badge: {
+    en: "Master Hybrid · 3 Pages ATS",
+    id: "Master Hybrid · 3 Halaman ATS",
+  },
+  subtitle: {
+    en: "AI/ML Engineer & Full-Stack Developer · Production Systems & Architecture",
+    id: "AI/ML Engineer & Full-Stack Developer · Sistem Produksi & Arsitektur",
   },
 };
 
 const copy = {
   en: {
     title: "Curriculum Vitae",
-    candidate: "Mohammad Raihan Hadriansyah",
+    candidate: "Mohammad Raihan Hadriansyah Prasetya",
     updated: "Updated 2026 · ATS Compatible",
     download: "Download PDF",
     openTab: "Open in New Tab",
@@ -42,7 +34,7 @@ const copy = {
   },
   id: {
     title: "Curriculum Vitae",
-    candidate: "Mohammad Raihan Hadriansyah",
+    candidate: "Mohammad Raihan Hadriansyah Prasetya",
     updated: "Pembaruan 2026 · Kompatibel ATS",
     download: "Unduh PDF",
     openTab: "Buka di Tab Baru",
@@ -54,13 +46,12 @@ const copy = {
 function CVModalContent({
   onClose,
   locale,
-  initialType = "ai-ml",
+  initialType = "hybrid",
 }: {
   onClose: () => void;
   locale: Locale;
   initialType?: CVType;
 }) {
-  const [activeType, setActiveType] = useState<CVType>(initialType);
   const modalPanelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -74,7 +65,7 @@ function CVModalContent({
     fetch("/api/telemetry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ eventType: "cv_preview", metadata: { type: initialType, locale } }),
+      body: JSON.stringify({ eventType: "cv_preview", metadata: { type: "master_hybrid", locale } }),
     }).catch(() => {});
 
     // 3. Scroll lock with scrollbar width compensation to avoid layout shift
@@ -146,15 +137,13 @@ function CVModalContent({
     };
   }, [initialType, locale, onClose]);
 
-  function handleDownload(type: CVType) {
+  function handleDownload(type: string = "master_hybrid") {
     fetch("/api/telemetry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ eventType: "cv_download", metadata: { type, locale } }),
     }).catch(() => {});
   }
-
-  const currentCV = cvFiles[activeType];
 
   return (
     <div
@@ -175,7 +164,7 @@ function CVModalContent({
         {/* Header Bar */}
         <header className="cv-modal-header">
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
               <h2 id="cv-modal-title" style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0 }}>
                 {t.title}
               </h2>
@@ -192,65 +181,54 @@ function CVModalContent({
                 {t.updated}
               </span>
             </div>
-            <p id="cv-modal-desc" style={{ fontSize: "0.8rem", opacity: 0.6, margin: "0.15rem 0 0" }}>
-              {t.candidate} · {currentCV.subtitle[locale]}
+            <p id="cv-modal-desc" style={{ fontSize: "0.8rem", opacity: 0.75, margin: "0.2rem 0 0" }}>
+              <strong>{t.candidate}</strong> · {MASTER_CV.subtitle[locale]}
             </p>
           </div>
 
-          {/* Type Selector Tabs */}
-          <div
-            role="tablist"
-            aria-label={t.title}
-            style={{
-              display: "flex",
-              background: "rgba(255, 255, 255, 0.06)",
-              padding: "3px",
-              borderRadius: "8px",
-              gap: "4px",
-            }}
-          >
-            {(Object.keys(cvFiles) as CVType[]).map((type) => {
-              const isSelected = activeType === type;
-              return (
-                <button
-                  key={type}
-                  id={`cv-tab-${type}`}
-                  role="tab"
-                  type="button"
-                  aria-selected={isSelected}
-                  aria-controls="cv-preview-panel"
-                  onClick={() => setActiveType(type)}
-                  className="cv-modal-tab"
-                >
-                  {cvFiles[type].label[locale]}
-                </button>
-              );
-            })}
-          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                padding: "0.25rem 0.65rem",
+                borderRadius: "999px",
+                background: "rgba(59, 130, 246, 0.12)",
+                color: "#60a5fa",
+                border: "1px solid rgba(59, 130, 246, 0.25)",
+                fontWeight: 600,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.35rem",
+              }}
+            >
+              <span>📄</span>
+              <span>{MASTER_CV.badge[locale]}</span>
+            </span>
 
-          {/* Close Button with Clear Focus Indicators */}
-          <button
-            type="button"
-            ref={closeButtonRef}
-            onClick={onClose}
-            aria-label={t.close}
-            className="cv-modal-close-btn"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
+            {/* Close Button with Clear Focus Indicators */}
+            <button
+              type="button"
+              ref={closeButtonRef}
+              onClick={onClose}
+              aria-label={t.close}
+              className="cv-modal-close-btn"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
         </header>
 
         {/* PDF Document Previewer Frame */}
         <div
           id="cv-preview-panel"
-          role="tabpanel"
-          aria-labelledby={`cv-tab-${activeType}`}
+          role="region"
+          aria-label={`${t.candidate} - ${t.title}`}
           style={{ flex: 1, position: "relative", background: "#0a0a0c" }}
         >
           <iframe
-            key={currentCV.file}
-            src={`${currentCV.file}#toolbar=0&view=FitH`}
-            title={`${t.candidate} - ${currentCV.label[locale]} (${t.title})`}
+            key={MASTER_CV.file}
+            src={`${MASTER_CV.file}#toolbar=0&view=FitH`}
+            title={`${t.candidate} - ${MASTER_CV.role[locale]} (${t.title})`}
             tabIndex={-1}
             style={{
               width: "100%",
@@ -263,15 +241,27 @@ function CVModalContent({
 
         {/* Footer Actions */}
         <footer className="cv-modal-footer">
-          <span style={{ fontSize: "0.78rem", opacity: 0.5 }}>
-            {activeType === "ai-ml"
-              ? "Mohammad_Raihan_CV_AI_ML_Engineer.pdf"
-              : "Mohammad_Raihan_CV_Software_Engineer.pdf"}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+            <span style={{ fontSize: "0.78rem", opacity: 0.65, fontFamily: "var(--font-geist-mono), monospace" }}>
+              {MASTER_CV.filename}
+            </span>
+            <span
+              style={{
+                fontSize: "0.68rem",
+                padding: "0.15rem 0.45rem",
+                borderRadius: "4px",
+                background: "rgba(255, 255, 255, 0.08)",
+                color: "inherit",
+                opacity: 0.75,
+              }}
+            >
+              Standard A4 · Vector PDF
+            </span>
+          </div>
 
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <a
-              href={currentCV.file}
+              href={MASTER_CV.file}
               target="_blank"
               rel="noopener noreferrer"
               className="button button-secondary"
@@ -280,9 +270,9 @@ function CVModalContent({
               🔗 {t.openTab}
             </a>
             <a
-              href={currentCV.file}
-              download={currentCV.file.split("/").pop()}
-              onClick={() => handleDownload(activeType)}
+              href={MASTER_CV.file}
+              download={MASTER_CV.filename}
+              onClick={() => handleDownload("master_hybrid")}
               className="button button-primary"
               style={{ fontSize: "0.8rem", padding: "0.45rem 1rem" }}
             >
@@ -299,7 +289,7 @@ export function CVModal({
   isOpen,
   onClose,
   locale,
-  initialType = "ai-ml",
+  initialType = "hybrid",
 }: {
   isOpen: boolean;
   onClose: () => void;

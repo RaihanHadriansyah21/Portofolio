@@ -28,9 +28,9 @@ export function PortfolioProvider({
   locale: Locale;
 }) {
   const [isCVOpen, setIsCVOpen] = useState(false);
-  const [cvType, setCvType] = useState<CVType>("ai-ml");
+  const [cvType, setCvType] = useState<CVType>("hybrid");
 
-  function openCV(type: CVType = "ai-ml") {
+  function openCV(type: CVType = "hybrid") {
     setCvType(type);
     setIsCVOpen(true);
   }

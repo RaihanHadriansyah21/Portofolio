@@ -687,7 +687,7 @@ export function PortfolioChat({ locale }: { locale: Locale }) {
                       <ActionChips
                         text={textParts.map((p) => p.text).join(" ")}
                         locale={locale}
-                        onOpenCV={() => openCV("ai-ml")}
+                        onOpenCV={() => openCV()}
                         onNavigate={(href) => {
                           if (href.includes("#contact")) {
                             const el = document.getElementById("contact");

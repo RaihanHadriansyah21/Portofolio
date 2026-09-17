@@ -20,7 +20,7 @@ export function HeroActionsClient({ locale }: { locale: Locale }) {
         </Link>
         <button
           type="button"
-          onClick={() => openCV("ai-ml")}
+          onClick={() => openCV()}
           className="button button-secondary"
           aria-haspopup="dialog"
           aria-label={isIndo ? "Buka Pratinjau Curriculum Vitae" : "Open Curriculum Vitae Preview"}

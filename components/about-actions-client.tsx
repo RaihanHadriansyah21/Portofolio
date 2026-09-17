@@ -20,7 +20,7 @@ export function AboutActionsClient({ locale }: { locale: Locale }) {
       </a>
       <button
         type="button"
-        onClick={() => openCV("ai-ml")}
+        onClick={() => openCV()}
         className="button button-secondary"
         style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
       >

@@ -153,7 +153,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
                   className="button button-primary"
                   onClick={() => {
                     setIsOpen(false);
-                    openCV("ai-ml");
+                    openCV();
                   }}
                 >
                   {isEn ? "Preview ATS CV" : "Buka CV ATS"} ↗

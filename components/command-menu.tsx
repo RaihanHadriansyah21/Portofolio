@@ -25,7 +25,7 @@ function CommandMenuModal({
 }: {
   locale: Locale;
   onClose: () => void;
-  onOpenCV: (type: CVType) => void;
+  onOpenCV: (type?: CVType) => void;
   onOpenChat?: () => void;
   onCopyEmail?: () => void;
 }) {
@@ -40,30 +40,17 @@ function CommandMenuModal({
   const items: CommandItem[] = [
     // Actions
     {
-      id: "cv-ai",
+      id: "cv",
       category: "actions",
       label: {
-        en: "Preview CV · AI/ML Engineer",
-        id: "Lihat CV · AI/ML Engineer",
+        en: "Preview Master CV · AI/ML & Full-Stack",
+        id: "Lihat Master CV · AI/ML & Full-Stack",
       },
       shortcut: "CV",
       icon: "📄",
       perform: () => {
         onClose();
-        onOpenCV("ai-ml");
-      },
-    },
-    {
-      id: "cv-se",
-      category: "actions",
-      label: {
-        en: "Preview CV · Software / Full-Stack",
-        id: "Lihat CV · Software / Full-Stack",
-      },
-      icon: "📄",
-      perform: () => {
-        onClose();
-        onOpenCV("software");
+        onOpenCV();
       },
     },
     {
@@ -374,7 +361,7 @@ export function CommandMenu({
   onCopyEmail,
 }: {
   locale: Locale;
-  onOpenCV: (type: CVType) => void;
+  onOpenCV: (type?: CVType) => void;
   onOpenChat?: () => void;
   onCopyEmail?: () => void;
 }) {
