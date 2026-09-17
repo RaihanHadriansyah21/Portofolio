@@ -422,7 +422,13 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await page.goto("/en/projects/bitcoin-forecasting");
 
       const slider = page.locator("#forecast-step-slider");
-      await slider.fill("16");
+      await slider.evaluate((el) => {
+        const input = el as HTMLInputElement;
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
+        setter?.call(input, "16");
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+      });
 
       // Verify visual badge and ARIA update
       await expect(page.locator(".current-step-badge")).toContainText("+16 Hours Ahead");

@@ -340,6 +340,23 @@ function ActionChips({
     });
   }
 
+  if (
+    lower.includes("komisi 3") ||
+    lower.includes("komisi iii") ||
+    lower.includes("dpa") ||
+    lower.includes("hmtt") ||
+    lower.includes("dpa_hmtt") ||
+    lower.includes("pengawasan") ||
+    lower.includes("legislatif")
+  ) {
+    chips.push({
+      id: "dpa-ig",
+      label: "Instagram @dpa_hmtt",
+      icon: "🏛️",
+      onClick: () => window.open("https://www.instagram.com/dpa_hmtt", "_blank", "noopener,noreferrer"),
+    });
+  }
+
   if (chips.length === 0) return null;
 
   return (
