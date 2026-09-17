@@ -264,8 +264,9 @@ export async function POST(request: Request) {
         data: knowledge.sources,
       });
 
+      const selectedModel = process.env.GEMINI_MODEL?.trim() || "gemini-3.6-flash";
       const result = streamText({
-        model: google(process.env.GEMINI_MODEL?.trim() || "gemini-2.0-flash-exp"),
+        model: google(selectedModel),
         instructions: systemInstructions(locale, mode, knowledge.context),
         messages: await convertToModelMessages(messages),
         temperature: 0.18,
@@ -294,11 +295,17 @@ export async function POST(request: Request) {
       writer.merge(
         toUIMessageStream({
           stream: result.stream,
-          onError: () => fallback,
+          onError: (err) => {
+            console.error("[chat-stream-error]", err);
+            return fallback;
+          },
         }),
       );
     },
-    onError: () => fallback,
+    onError: (err) => {
+      console.error("[chat-stream-outer-error]", err);
+      return fallback;
+    },
   });
 
   return createUIMessageStreamResponse({

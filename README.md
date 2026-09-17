@@ -207,7 +207,7 @@ flowchart TD
 3. Create `.env.local` in the project root:
    ```dotenv
    GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key_here
-   GEMINI_MODEL=gemini-2.5-flash
+   GEMINI_MODEL=gemini-3.6-flash
    NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
    # Database & Telemetry (Supabase)
