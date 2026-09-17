@@ -58,7 +58,36 @@ function classifyReferrer(referrer: string, refParam: string | null): string {
   }
 }
 
+/**
+ * Returns true when the current browser session is an automated/headless client
+ * (e.g. Playwright, Selenium, or a known bot/crawler).
+ * This prevents test runs from polluting real analytics data.
+ */
+function isAutomatedClient(): boolean {
+  if (typeof navigator === "undefined") return true; // SSR safety
+  // navigator.webdriver is set to true by Playwright, Selenium, and CDP-based tools
+  if (navigator.webdriver === true) return true;
+  // Catch common bot / headless user agents as a secondary signal
+  const ua = navigator.userAgent?.toLowerCase() ?? "";
+  if (
+    ua.includes("headlesschrome") ||
+    ua.includes("phantomjs") ||
+    ua.includes("bot") ||
+    ua.includes("crawler") ||
+    ua.includes("spider") ||
+    ua.includes("googlebot") ||
+    ua.includes("bingbot") ||
+    ua.includes("slurp")
+  ) {
+    return true;
+  }
+  return false;
+}
+
 function fireTelemetry(eventType: string, metadata: Record<string, unknown>) {
+  // Silently skip if running inside a headless/automated browser (e.g. Playwright)
+  if (isAutomatedClient()) return;
+
   fetch("/api/telemetry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
