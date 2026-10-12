@@ -504,7 +504,12 @@ export function retrievePortfolioKnowledge(query: string, locale: Locale, mode: 
     .sort((a, b) => b.score - a.score);
 
   const hasCertificateIntent = terms.some((term) =>
-    ["certificate", "certificates", "credential", "credentials", "sertifikat", "sertifikasi", "certification", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission", "dicoding"].includes(term)
+    [
+      "certificate", "certificates", "credential", "credentials", "sertifikat", "sertifikasi",
+      "certification", "course", "kelas", "jam", "hours", "silabus", "kurikulum",
+      "submission", "dicoding", "llm", "rag", "qlora", "generative", "genai", "agentic",
+      "semrush", "kemnaker", "bsn", "iso"
+    ].includes(term)
   );
 
   const candidates = hasCertificateIntent

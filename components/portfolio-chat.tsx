@@ -28,13 +28,13 @@ const uiCopy = {
       ],
       technical: [
         "Explain the SCOVIS architecture.",
+        "How does Reyy implement RAG and LLM fine-tuning?",
         "How is TFLite used in DermaScan?",
         "What is the sequence modeling setup in Bitcoin?",
-        "Why linear SVM over RBF in Gojek sentiment?",
       ],
       explore: [
         "Which project should I open first?",
-        "Show Reyy's strongest certificates.",
+        "Show Reyy's latest Generative AI certificate.",
         "How to download Reyy's ATS resume?",
       ],
     },
@@ -73,13 +73,13 @@ const uiCopy = {
       ],
       technical: [
         "Jelaskan arsitektur sistem SCOVIS.",
+        "Bagaimana implementasi RAG & fine-tuning LLM oleh Reyy?",
         "Bagaimana TFLite digunakan di DermaScan?",
         "Bagaimana setup sequence modeling di Bitcoin?",
-        "Mengapa Linear SVM dipilih untuk sentimen Gojek?",
       ],
       explore: [
         "Proyek mana yang sebaiknya saya buka dulu?",
-        "Tampilkan sertifikat terkuat Reyy.",
+        "Tampilkan sertifikat Generative AI terbaru Reyy.",
         "Bagaimana cara mengunduh CV ATS Reyy?",
       ],
     },
