@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Certificate, CertificateCategory } from "@/lib/certificates";
 import { certificateCategoryLabels, certificateKindLabels } from "@/lib/certificates";
 import type { Locale } from "@/lib/portfolio";
@@ -59,12 +60,17 @@ function formatIssueDate(value: string, lang: Locale) {
 }
 
 export function CertificateGallery({ items, lang }: { items: Certificate[]; lang: Locale }) {
+  const [mounted, setMounted] = useState(false);
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selected, setSelected] = useState<Certificate | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const copy = galleryCopy[lang];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const visibleItems = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
@@ -250,7 +256,7 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
       )}
 
       {/* Lightbox / Modal */}
-      {selected ? (
+      {mounted && selected ? createPortal(
         <div
           aria-label={copy.dialogLabel}
           aria-modal="true"
@@ -277,7 +283,7 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
               <Image
                 alt={`${copy.dialogLabel}: ${selected.title}`}
                 height={selected.height}
-                quality={75}
+                quality={85}
                 sizes="(max-width: 820px) 94vw, 76vw"
                 src={selected.preview}
                 width={selected.width}
@@ -298,7 +304,8 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       ) : null}
     </>
   );

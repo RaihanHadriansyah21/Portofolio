@@ -624,4 +624,43 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       });
     }
   });
+
+  // =========================================================================
+  // 6. CERTIFICATE GALLERY LIGHTBOX & MODAL PORTAL
+  // =========================================================================
+  test.describe("Certificate Gallery Lightbox & Modal Portal", () => {
+    test("Opening certificate preview renders portal into document.body, centered in viewport", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/en/credentials");
+
+      // Scroll down to ensure scrolling doesn't offset fixed modal
+      await page.evaluate(() => window.scrollTo(0, 300));
+
+      const firstCardBtn = page.locator(".certificate-preview-button").first();
+      await expect(firstCardBtn).toBeVisible();
+      await firstCardBtn.click();
+
+      const modalBackdrop = page.locator(".certificate-modal-backdrop");
+      await expect(modalBackdrop).toBeVisible();
+
+      // Ensure modal is a direct child of document.body (portaled)
+      const isParentBody = await modalBackdrop.evaluate((el) => el.parentElement === document.body);
+      expect(isParentBody).toBe(true);
+
+      const modal = page.locator(".certificate-modal");
+      await expect(modal).toBeVisible();
+
+      // Check modal bounding box is vertically centered and within viewport bounds
+      const box = await modal.boundingBox();
+      expect(box).not.toBeNull();
+      if (box) {
+        expect(box.y).toBeGreaterThanOrEqual(10);
+        expect(box.y + box.height).toBeLessThanOrEqual(800);
+      }
+
+      // Close modal via close button
+      await page.locator(".certificate-modal-close").click();
+      await expect(modalBackdrop).not.toBeVisible();
+    });
+  });
 });

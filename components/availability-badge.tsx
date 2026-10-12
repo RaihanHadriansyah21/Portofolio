@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePortfolio } from "./portfolio-provider";
 import type { Locale } from "@/lib/portfolio";
 import { copy } from "@/lib/portfolio";
@@ -10,12 +11,17 @@ interface AvailabilityBadgeProps {
 }
 
 export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
+  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { openCV } = usePortfolio();
   const modalRef = useRef<HTMLDivElement>(null);
   const isEn = locale === "en";
   const content = copy[locale];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -70,7 +76,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
         <small className="pill-detail-hint">↗</small>
       </button>
 
-      {isOpen && (
+      {mounted && isOpen ? createPortal(
         <div
           className="cv-modal-backdrop availability-modal-backdrop"
           onClick={() => setIsOpen(false)}
@@ -175,8 +181,9 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>,
+        document.body
+      ) : null}
     </>
   );
 }
