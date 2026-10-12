@@ -25,7 +25,7 @@ This portfolio is engineered specifically to answer the core questions engineeri
 | **Availability** | **Immediate Full-Time Availability** · Open to On-site (Bandung/Jakarta), Hybrid, or Remote |
 | **Flagship Project** | **SCOVIS** — Multi-tier handwritten answer score classification system connecting Next.js, Supabase, FastAPI, Redis/RQ, and TensorFlow |
 | **Proof & Integrity** | **100% Evidence-Led**: All 7 projects feature direct GitHub repositories, live deployments, and custom interactive visualizers |
-| **Verified Credentials** | **46 curated technical credentials** with verified learning hours, complete syllabi, and graded project submissions |
+| **Verified Credentials** | **49 curated technical credentials** with verified learning hours, complete syllabi, and graded project submissions |
 
 ---
 

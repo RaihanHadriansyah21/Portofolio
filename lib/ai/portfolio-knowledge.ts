@@ -22,9 +22,32 @@ type KnowledgeSection = {
 };
 
 const aliases: Record<string, string[]> = {
-  ai: ["artificial intelligence", "kecerdasan buatan", "machine learning", "ml"],
+  ai: ["artificial intelligence", "kecerdasan buatan", "machine learning", "ml", "llm", "large language model", "rag", "retrieval augmented generation", "fine tuning", "finetuning", "qlora", "agentic ai", "crewai", "transformer"],
   backend: ["api", "fastapi", "flask", "server", "database", "redis", "supabase", "mysql", "postgresql"],
-  certificate: ["credential", "credentials", "sertifikat", "certification", "course", "kelas", "jam", "hours", "silabus", "kurikulum", "submission", "dicoding"],
+  certificate: [
+    "credential",
+    "credentials",
+    "sertifikat",
+    "certification",
+    "course",
+    "kelas",
+    "jam",
+    "hours",
+    "silabus",
+    "kurikulum",
+    "submission",
+    "dicoding",
+    "semrush",
+    "kemnaker",
+    "gnik",
+    "bsn",
+    "iso",
+    "devcoach",
+    "geo",
+    "llm",
+    "rag",
+    "qlora",
+  ],
   cv: [
     "cv",
     "resume",
@@ -242,7 +265,7 @@ function profileSection(locale: Locale): KnowledgeSection {
       `- Event Planner at HIPMI PT Telkom University (2024); Event Planning Staff at Mightyducks Basketball Competition (2024).`,
       `SPECIAL COHORT: AI Engineer Cohort at Coding Camp 2026 powered by DBS Foundation & Dicoding Indonesia (Feb-July 2026) covering Python, ML, Deep Learning, and AI capstone deployment.`,
       `EDUCATION: Bachelor of Engineering (S.T.) in Telecommunication Engineering from Telkom University, 2022-2026 (GPA 3.29, yudisium completed, Nov 2026 commencement); Vocational High School at SMK Telkom Bandung, Access Network Engineering (2019-2022).`,
-      `ENGLISH & CERTIFICATIONS: EPrT score 490, equivalent to CEFR B1 (April 30, 2026 - April 30, 2028); English for Business Communication score 90% (The British Institute & DBS Foundation); certified in Advanced Deep Learning (90 hrs), Fundamental Deep Learning (110 hrs), Machine Learning (90 hrs), and Azure Generative AI (45 hrs).`,
+      `ENGLISH & CERTIFICATIONS (49 VERIFIED CREDENTIALS): EPrT score 490, equivalent to CEFR B1 (April 30, 2026 - April 30, 2028); English for Business Communication score 90% (The British Institute & DBS Foundation); Pengembangan Generative AI berbasis LLM (90 jam, RAG, Fine-Tuning QLoRA, Agentic AI ReAct & CrewAI, Verification: RVZKMRGGEXD5); Semrush Academy AI Search Operating System (Generative Engine Optimization / GEO, Certificate ID: dd3b0d1c3e); Kemnaker RI × GNIK 12+ Essential Skills Program Magang Nasional (Avg 95.3/100, Adaptability 100, Digital Literacy 100); BSN SNI ISO 37001:2016 Anti Penyuapan (Predikat Sangat Baik, BSrE verified); Dicoding DevCoach 234: Feature-Driven Architecture; certified in Advanced Deep Learning (90 hrs), Fundamental Deep Learning (110 hrs), Machine Learning (90 hrs), and Azure Generative AI (45 hrs).`,
       `INFRASTRUCTURE & RELIABILITY: Deployed this portfolio with Next.js 16, React 19, Supabase PostgreSQL, automated Vercel Cron keep-alive (/api/cron/keep-alive) running every 2 days, anti-bot telemetry filtering, and automated Playwright E2E testing.`,
       `OPPORTUNITIES: Open to full-time AI/ML, backend, frontend, and full-stack roles at startups or larger technology companies in Indonesia and beyond.`,
       `ABOUT: ${content.about.body}`,
@@ -357,14 +380,14 @@ function cvSection(locale: Locale): KnowledgeSection {
           "CARA AKSES & UNDUH: Pengunjung dapat langsung melihat pratinjau dokumen melalui tombol 'Pratinjau CV' di header/hero portofolio, atau mengunduh langsung berkas PDF di /cv/Mohammad_Raihan_CV_AI_Fullstack_Engineer.pdf.",
           "PROYEK UNGGULAN DALAM CV: Memuat 5 proyek teknik nyata siap produksi: SCOVIS (Next.js 16, React 19, FastAPI, Supabase, Redis/RQ, Docker Compose, Playwright), DermaScan (React, FastAPI, TFLite), Vehicle Classification (MobileNetV2), Interactive Portfolio Platform (Next.js 16, Streaming AI, Vercel Cron keep-alive, Playwright), dan QuizInt (Flutter, Dart, Supabase).",
           "PENGALAMAN MAGANG BERKUANTITAS: CV. Bima Technologies (IT Intern: memelihara modul web, menyelesaikan 15+ bug UI/API, optimasi puluhan kueri MySQL, Git feature-branch) dan PT Telkom Indonesia IndiHome (Instalasi FTTH & Wi-Fi: kabel optik dan konfigurasi 30+ router/ONT dengan tingkat uji konektivitas 100%).",
-          "PENDIDIKAN & KREDENSIAL: S1 Teknik Telekomunikasi Telkom University (IPK 3.29, yudisium selesai, wisuda November 2026), Coding Camp 2026 AI Engineer Specialization (DBS Foundation & Dicoding), dan Microsoft Certified.",
+          "PENDIDIKAN & KREDENSIAL: S1 Teknik Telekomunikasi Telkom University (IPK 3.29, yudisium selesai, wisuda November 2026), Coding Camp 2026 AI Engineer Specialization (DBS Foundation & Dicoding), Pengembangan Generative AI berbasis LLM (90 jam, RAG, Fine-Tuning QLoRA, Agentic AI ReAct & CrewAI), Semrush Academy AI Search GEO, Kemnaker RI × GNIK 12+ Essential Skills, BSN SNI ISO 37001 SMAP, dan Microsoft Certified (Total 49 kredensial terverifikasi).",
         ].join("\n")
       : [
           "OFFICIAL CV DOCUMENT: Mohammad Raihan Hadriansyah Prasetya maintains a single official Master Hybrid CV (3 full pages, A4 standard, ATS Scored 90+) unifying Applied AI/ML Engineering and Full-Stack Software Engineering.",
           "ACCESS & DOWNLOAD: Visitors can preview the document via the 'Preview CV' button in the portfolio hero/navigation or download the PDF at /cv/Mohammad_Raihan_CV_AI_Fullstack_Engineer.pdf.",
           "FEATURED PROJECTS: Includes 5 production-grade technical projects: SCOVIS (Next.js 16, React 19, FastAPI, Supabase, Redis/RQ, Docker Compose, Playwright), DermaScan (React, FastAPI, TFLite), Vehicle Classification (MobileNetV2), Interactive Portfolio Platform (Next.js 16, Streaming AI, Vercel Cron keep-alive, Playwright), and QuizInt (Flutter, Dart, Supabase).",
           "QUANTIFIED INTERNSHIP ACHIEVEMENTS: CV. Bima Technologies (IT Intern: internal web maintenance, resolved 15+ UI/API bugs, MySQL optimization, Git workflows) and PT Telkom Indonesia IndiHome (FTTH & Wi-Fi Installation Intern: optical cabling, configured 30+ router/ONT units with 100% connectivity test pass rate).",
-          "EDUCATION & CREDENTIALS: Bachelor of Engineering (S.T.) in Telecommunication Engineering from Telkom University (GPA 3.29, yudisium completed, commencement Nov 2026), Coding Camp 2026 AI Engineer Specialization (DBS Foundation & Dicoding), and Microsoft Certified.",
+          "EDUCATION & CREDENTIALS: Bachelor of Engineering (S.T.) in Telecommunication Engineering from Telkom University (GPA 3.29, yudisium completed, commencement Nov 2026), Coding Camp 2026 AI Engineer Specialization (DBS Foundation & Dicoding), Generative AI with LLMs (90 hrs, RAG, Fine-Tuning QLoRA, Agentic AI ReAct & CrewAI), Semrush Academy AI Search GEO, Kemnaker RI × GNIK 12+ Essential Skills, BSN SNI ISO 37001 Anti-Bribery, and Microsoft Certified (Total 49 verified credentials).",
         ].join("\n"),
   };
 }
@@ -506,7 +529,7 @@ export function retrievePortfolioKnowledge(query: string, locale: Locale, mode: 
         .map((item) => item.section);
 
   if (selected.length === 0) {
-    selected.push(projectKnowledge[0], projectKnowledge[1]);
+    selected.push(...projectKnowledge.slice(0, 2));
   }
 
   const sections = [profileKnowledge, ...selected.filter((section) => section.id !== profileKnowledge.id)];

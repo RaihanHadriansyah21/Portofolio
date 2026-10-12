@@ -47,9 +47,24 @@ export async function POST(request: Request) {
       return Response.json({ error: "Invalid event type" }, { status: 400 });
     }
 
+    // ── Server-Side Filter for Admin & Synthetic Test Events ──────────────────
+    const metaObj = typeof metadata === "object" && metadata !== null ? (metadata as Record<string, unknown>) : null;
+    const path = typeof metaObj?.path === "string" ? metaObj.path : typeof metaObj?.pathname === "string" ? metaObj.pathname : "";
+    const targetUrl = typeof metaObj?.url === "string" ? metaObj.url : "";
+    const referer = request.headers.get("referer") || "";
+
+    if (
+      path.includes("/admin") ||
+      referer.includes("/admin") ||
+      targetUrl.includes("playwright-test.internal")
+    ) {
+      // Silently accept without writing to database to keep analytics clean
+      return Response.json({ success: true, ignored: "admin_or_test_traffic" });
+    }
+
     await supabase.from("portfolio_events").insert({
       event_type: eventType,
-      metadata: typeof metadata === "object" && metadata !== null ? metadata : null,
+      metadata: metaObj,
     });
 
     return Response.json({ success: true });

@@ -37,6 +37,11 @@ function classifyReferrer(referrer: string, refParam: string | null): string {
       glints: "Glints",
       linkedin: "LinkedIn",
       google: "Google Search",
+      airnav: "AirNav Application",
+      infomedia: "Infomedia Application",
+      goodeva: "Goodeva Application",
+      apple: "Apple Academy Application",
+      talentgo: "TalentGo AI",
     };
     const lower = refParam.toLowerCase();
     return knownRefs[lower] ?? `UTM: ${refParam}`;
@@ -61,13 +66,10 @@ function classifyReferrer(referrer: string, refParam: string | null): string {
 /**
  * Returns true when the current browser session is an automated/headless client
  * (e.g. Playwright, Selenium, or a known bot/crawler).
- * This prevents test runs from polluting real analytics data.
  */
 function isAutomatedClient(): boolean {
   if (typeof navigator === "undefined") return true; // SSR safety
-  // navigator.webdriver is set to true by Playwright, Selenium, and CDP-based tools
   if (navigator.webdriver === true) return true;
-  // Catch common bot / headless user agents as a secondary signal
   const ua = navigator.userAgent?.toLowerCase() ?? "";
   if (
     ua.includes("headlesschrome") ||
@@ -84,9 +86,41 @@ function isAutomatedClient(): boolean {
   return false;
 }
 
-function fireTelemetry(eventType: string, metadata: Record<string, unknown>) {
-  // Silently skip if running inside a headless/automated browser (e.g. Playwright)
-  if (isAutomatedClient()) return;
+/**
+ * Returns true if the session is an internal testing session or admin browsing,
+ * ensuring telemetry only captures authentic external visits.
+ */
+function shouldIgnoreTelemetry(path?: string): boolean {
+  if (typeof window === "undefined") return true;
+
+  // 1. Skip admin routes
+  if (path && (path.includes("/admin") || path.endsWith("/admin"))) return true;
+
+  // 2. Skip localhost & development environments
+  const hostname = window.location.hostname.toLowerCase();
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".local")) {
+    return true;
+  }
+
+  // 3. Skip if current browser has logged in as Admin (stored admin auth token)
+  try {
+    if (localStorage.getItem("reyy_admin_auth_token")) {
+      return true;
+    }
+    if (localStorage.getItem("reyy_telemetry_opt_out") === "true") {
+      return true;
+    }
+  } catch {
+    /* localStorage disabled / private browsing */
+  }
+
+  // 4. Skip automated/headless clients (Playwright, Selenium, Puppeteer, web crawlers)
+  return isAutomatedClient();
+}
+
+function fireTelemetry(eventType: string, metadata: Record<string, unknown>, path?: string) {
+  // Silently skip if running in admin/dev/automated mode
+  if (shouldIgnoreTelemetry(path || (metadata?.path as string))) return;
 
   fetch("/api/telemetry", {
     method: "POST",
