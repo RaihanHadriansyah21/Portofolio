@@ -566,6 +566,18 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
   // 7. ERROR HANDLING & ROUTE RESILIENCE
   // =========================================================================
   test.describe("Error Handling & Route Resilience", () => {
+    test("Admin analytics never serves data without a valid admin secret", async ({ request }) => {
+      const unauthenticated = await request.post("/api/admin/analytics");
+      expect(unauthenticated.status()).toBe(401);
+      expect(unauthenticated.headers()["cache-control"]).toBe("no-store");
+
+      const invalidSecret = await request.post("/api/admin/analytics", {
+        headers: { authorization: "Bearer definitely-not-the-admin-secret" },
+      });
+      expect(invalidSecret.status()).toBe(401);
+      expect(invalidSecret.headers()["x-content-type-options"]).toBe("nosniff");
+    });
+
     test("Unknown project slug returns 404 cleanly", async ({ page }) => {
       const response = await page.goto("/en/projects/non-existent-case-study-slug");
       expect(response?.status()).toBe(404);

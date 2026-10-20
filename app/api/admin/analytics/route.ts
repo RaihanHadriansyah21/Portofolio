@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabase";
+import { createHash, timingSafeEqual } from "node:crypto";
+import { getServiceRoleSupabaseClient } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,16 +17,31 @@ function jsonError(message: string, status: number) {
   );
 }
 
+function hasValidAdminSecret(candidate: string | undefined): boolean {
+  const expected = process.env.ADMIN_SECRET;
+
+  if (!candidate || !expected || candidate.length > 1024) {
+    return false;
+  }
+
+  // Compare fixed-length digests so a request cannot learn the secret through
+  // byte-by-byte comparison timing.
+  const candidateDigest = createHash("sha256").update(candidate).digest();
+  const expectedDigest = createHash("sha256").update(expected).digest();
+  return timingSafeEqual(candidateDigest, expectedDigest);
+}
+
 export async function POST(request: Request) {
   const authHeader = request.headers.get("authorization");
   const token = authHeader?.replace(/^Bearer\s+/i, "")?.trim();
 
-  if (!token) {
+  if (!hasValidAdminSecret(token)) {
     return jsonError("Unauthorized", 401);
   }
 
+  const supabase = getServiceRoleSupabaseClient();
   if (!supabase) {
-    return jsonError("Database service is not configured", 503);
+    return jsonError("Analytics service is not configured", 503);
   }
 
   try {
