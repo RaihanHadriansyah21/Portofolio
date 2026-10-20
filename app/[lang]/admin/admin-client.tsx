@@ -255,7 +255,9 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
             method: "POST",
             headers: {
               Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
             },
+            body: "{}",
           });
 
           if (res.status === 401) {
@@ -292,7 +294,11 @@ export function AdminDashboardClient({ locale }: { locale: Locale }) {
       try {
         const res = await fetch("/api/admin/analytics", {
           method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: "{}",
         });
         if (ignore) return;
         if (res.status === 401) {

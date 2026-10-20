@@ -567,12 +567,15 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
   // =========================================================================
   test.describe("Error Handling & Route Resilience", () => {
     test("Admin analytics never serves data without a valid admin secret", async ({ request }) => {
-      const unauthenticated = await request.post("/api/admin/analytics");
+      const unauthenticated = await request.post("/api/admin/analytics", {
+        data: {},
+      });
       expect(unauthenticated.status()).toBe(401);
       expect(unauthenticated.headers()["cache-control"]).toBe("no-store");
 
       const invalidSecret = await request.post("/api/admin/analytics", {
         headers: { authorization: "Bearer definitely-not-the-admin-secret" },
+        data: {},
       });
       expect(invalidSecret.status()).toBe(401);
       expect(invalidSecret.headers()["x-content-type-options"]).toBe("nosniff");
