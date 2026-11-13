@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { after } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { checkLeadRateLimit, getClientRateLimitIdentifier } from "@/lib/chat-rate-limit";
 
@@ -35,7 +36,7 @@ async function sendLeadEmail(name: string, email: string, message: string | null
   });
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Reyy Portfolio <onboarding@resend.dev>",
       to: NOTIFY_EMAIL,
       subject: `🎉 Pesan Baru Rekruter: ${name} (${email})`,
@@ -98,8 +99,9 @@ async function sendLeadEmail(name: string, email: string, message: string | null
         </html>
       `,
     });
-  } catch (err) {
-    console.error("[resend-email-error]", err);
+    if (error) console.error("[resend-email-error] Provider rejected notification:", error.name);
+  } catch {
+    console.error("[resend-email-error] Notification could not be sent.");
   }
 }
 
@@ -208,10 +210,9 @@ export async function POST(request: Request) {
       return Response.json({ error: "Failed to record contact." }, { status: 500 });
     }
 
-    // 7. Fire instant email alert via Resend in the background
-    sendLeadEmail(cleanName, cleanEmail, cleanMessage).catch((e) => {
-      console.error("[sendLeadEmail-async-error]", e);
-    });
+    // The saved lead is the success condition; notification delivery is separate.
+    // Register it with Next.js so serverless execution keeps the task alive.
+    if (resend) after(() => sendLeadEmail(cleanName, cleanEmail, cleanMessage));
 
     return Response.json({ success: true });
   } catch (err) {

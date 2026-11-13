@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useModalFocus } from "./use-modal-focus";
 import { usePortfolio } from "./portfolio-provider";
 import type { Locale } from "@/lib/portfolio";
 import { copy } from "@/lib/portfolio";
@@ -11,7 +12,6 @@ interface AvailabilityBadgeProps {
 }
 
 export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
-  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { openCV } = usePortfolio();
@@ -19,23 +19,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
   const isEn = locale === "en";
   const content = copy[locale];
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+  useModalFocus(modalRef, isOpen, () => setIsOpen(false));
 
   const copyRecruiterInfo = async () => {
     const summary = isEn
@@ -76,7 +60,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
         <small className="pill-detail-hint">↗</small>
       </button>
 
-      {mounted && isOpen ? createPortal(
+      {isOpen ? createPortal(
         <div
           className="cv-modal-backdrop availability-modal-backdrop"
           onClick={() => setIsOpen(false)}
@@ -87,6 +71,7 @@ export function AvailabilityBadge({ locale }: AvailabilityBadgeProps) {
           <div
             className="availability-modal-card glass-panel"
             ref={modalRef}
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="avail-modal-header">

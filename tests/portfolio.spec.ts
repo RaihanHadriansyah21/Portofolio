@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { projects } from "../lib/portfolio";
 
+function testOrigin() {
+  return new URL(test.info().project.use.baseURL ?? "http://localhost:3000").origin;
+}
+
 test.describe("Portfolio Regression & E2E Verification Suite", () => {
   // =========================================================================
   // 1. NAVIGATION & MOBILE
@@ -231,7 +235,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
     test("2. Rejects malformed JSON payload with 400", async ({ request }) => {
       const res = await request.post("/api/chat/lead", {
         headers: {
-          origin: "http://localhost:3000",
+          origin: testOrigin(),
           "content-type": "application/json",
         },
         data: "invalid-json-string{",
@@ -243,13 +247,13 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
 
     test("3. Rejects invalid field validations with 400", async ({ request }) => {
       const resNoName = await request.post("/api/chat/lead", {
-        headers: { origin: "http://localhost:3000" },
+        headers: { origin: testOrigin() },
         data: { ...validPayload, name: "" },
       });
       expect(resNoName.status()).toBe(400);
 
       const resBadEmail = await request.post("/api/chat/lead", {
-        headers: { origin: "http://localhost:3000" },
+        headers: { origin: testOrigin() },
         data: { ...validPayload, email: "not-an-email" },
       });
       expect(resBadEmail.status()).toBe(400);
@@ -258,7 +262,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
     test("4. Rejects oversized payload with 413", async ({ request }) => {
       const hugeMessage = "A".repeat(20 * 1024); // 20 KB
       const res = await request.post("/api/chat/lead", {
-        headers: { origin: "http://localhost:3000" },
+        headers: { origin: testOrigin() },
         data: { ...validPayload, message: hugeMessage },
       });
       expect(res.status()).toBe(413);
@@ -268,7 +272,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
 
     test("5. Honeypot silently drops bot submission with 200 fake success", async ({ request }) => {
       const res = await request.post("/api/chat/lead", {
-        headers: { origin: "http://localhost:3000" },
+        headers: { origin: testOrigin() },
         data: {
           ...validPayload,
           company_site_hp: "https://spam-bot-target.org",
@@ -284,7 +288,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       for (let i = 0; i < 5; i++) {
         await request.post("/api/chat/lead", {
           headers: {
-            origin: "http://localhost:3000",
+            origin: testOrigin(),
             "x-forwarded-for": testIp,
           },
           data: validPayload,
@@ -293,7 +297,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
 
       const resOverLimit = await request.post("/api/chat/lead", {
         headers: {
-          origin: "http://localhost:3000",
+          origin: testOrigin(),
           "x-forwarded-for": testIp,
         },
         data: validPayload,
@@ -324,7 +328,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await submitBtn.click();
 
       // Immediately shows success state to deceive bot
-      await expect(page.locator("text=Message Delivered Successfully!")).toBeVisible();
+      await expect(page.locator("text=Message received!")).toBeVisible();
 
       // Reset form via "Send another message"
       await page.click("button:has-text('Send another message')");
@@ -371,7 +375,9 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await page.fill("#contact-message", "Discussing senior role opening.");
       await page.click("button[type='submit']:has-text('Send Message')");
 
-      await expect(page.locator("text=Message Delivered Successfully!")).toBeVisible();
+      await expect(page.locator("text=Message received!")).toBeVisible();
+      await expect(page.locator("#contact")).toContainText("Your message has been saved");
+      await expect(page.locator("#contact")).not.toContainText("alert was sent");
     });
   });
 
@@ -419,16 +425,13 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
     });
 
     test("Bitcoin Seq2Seq scrubber updates horizon stats, ARIA valuetext, and table highlight", async ({ page }) => {
-      await page.goto("/en/projects/bitcoin-forecasting");
+      await page.goto("/en/projects/bitcoin-forecasting", { waitUntil: "networkidle" });
 
       const slider = page.locator("#forecast-step-slider");
-      await slider.evaluate((el) => {
-        const input = el as HTMLInputElement;
-        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
-        setter?.call(input, "16");
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        input.dispatchEvent(new Event("change", { bubbles: true }));
-      });
+      await slider.focus();
+      // Use keyboard interaction rather than synthetic events before hydration.
+      await slider.press("Home");
+      for (let step = 1; step < 16; step++) await slider.press("ArrowRight");
 
       // Verify visual badge and ARIA update
       await expect(page.locator(".current-step-badge")).toContainText("+16 Hours Ahead");
@@ -452,26 +455,26 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await expect(page.locator("text=Separates heavy deep learning inference")).toBeVisible();
     });
 
-    test("DermaScan playground runs forward pass inference and toggles Grad-CAM overlay", async ({ page }) => {
+    test("DermaScan demo labels illustrative scores and resets when the sample changes", async ({ page }) => {
       await page.goto("/en/projects/dermascan");
-      await expect(page.locator("text=DermaScan Model Inference Playground")).toBeVisible();
+      const demo = page.getByTestId("dermascan-demo");
+      await expect(demo.getByText("DermaScan Interface Demo")).toBeVisible();
+      await expect(demo.getByText(/These are not model predictions/)).toBeVisible();
+      await demo.getByRole("button", { name: "Suspected Melanoma Lesion" }).click();
+      await expect(demo.getByText("88.7%")).toHaveCount(0);
+      await demo.getByRole("button", { name: "Show example scores" }).click();
+      await expect(demo.getByText("88.7%").first()).toBeVisible();
+      await expect(demo.getByText("Illustrative data", { exact: true })).toBeVisible();
+      await expect(demo.getByText(/ms \(TFLite\)/)).toHaveCount(0);
+      await expect(demo.getByRole("checkbox")).toHaveCount(0);
+      await demo.getByRole("button", { name: "Benign Keratosis Lesion" }).click();
+      await expect(demo.getByText("88.7%")).toHaveCount(0);
+      await expect(demo.getByText("85.2%")).toHaveCount(0);
 
-      // Select melanoma sample
-      await page.click("button:has-text('Suspected Melanoma Lesion')");
-      await expect(page.locator("text=Asymmetric structure")).toBeVisible();
-
-      // Run neural inference
-      await page.click("button:has-text('Run Neural Inference')");
-
-      // Wait for inference pass to complete
-      await expect(page.locator("text=Melanoma (mel)")).toBeVisible();
-      await expect(page.getByText("88.7%").first()).toBeVisible();
-
-      // Grad-CAM toggle should now be enabled
-      const gradCamCheckbox = page.locator("input[type='checkbox']");
-      await expect(gradCamCheckbox).toBeEnabled();
-      await gradCamCheckbox.check();
-      await expect(gradCamCheckbox).toBeChecked();
+      await page.goto("/id/projects/dermascan");
+      await expect(page.getByText(/Angka ini bukan prediksi model/)).toBeVisible();
+      await page.getByRole("button", { name: "Tampilkan skor contoh" }).click();
+      await expect(page.getByText("Data ilustratif", { exact: true })).toBeVisible();
     });
 
     test("Gojek Sentiment NLP sandbox updates classification and tokenization on preset select", async ({ page }) => {
@@ -678,4 +681,120 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await expect(modalBackdrop).not.toBeVisible();
     });
   });
+});
+
+
+test.describe("Accessible recruitment and certificate dialogs", () => {
+  for (const width of [1440, 390]) {
+    test(`Dialog focus stays inside and returns to the trigger at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.route("**/api/telemetry", (route) => route.fulfill({ status: 200, body: "{}" }));
+      for (const kind of ["availability", "certificate"]) {
+        await page.goto(kind === "availability" ? "/en" : "/en/credentials");
+        const trigger = page.locator(kind === "availability" ? ".availability-pill" : ".certificate-preview-button").first();
+        await trigger.click();
+        const dialog = page.getByRole("dialog");
+        await expect(dialog).toBeVisible();
+        await expect(dialog.getByRole("button", { name: /Close/ })).toBeFocused();
+        await expect(page.locator(".site-frame")).toHaveAttribute("inert", "");
+        for (const key of ["Shift+Tab", ...Array(12).fill("Tab"), ...Array(6).fill("Shift+Tab")]) {
+          await page.keyboard.press(key);
+          await expect.poll(() => dialog.evaluate((node) => node.contains(document.activeElement))).toBe(true);
+        }
+        await page.keyboard.press("Escape");
+        await expect(dialog).toHaveCount(0);
+        await expect(trigger).toBeFocused();
+        await expect(page.locator(".site-frame")).not.toHaveAttribute("inert", "");
+        await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe("");
+      }
+    });
+  }
+
+  test("Availability dialog hands focus to the CV dialog", async ({ page }) => {
+    await page.route("**/api/telemetry", (route) => route.fulfill({ status: 200, body: "{}" }));
+    await page.goto("/en");
+    await page.locator(".availability-pill").click();
+    await page.getByRole("button", { name: /Preview ATS CV/ }).click();
+    const cv = page.getByRole("dialog");
+    await expect(cv).toHaveCount(1);
+    await expect(cv.locator(".cv-modal-close-btn")).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(cv).toHaveCount(0);
+    await expect(page.locator(".site-frame")).not.toHaveAttribute("inert", "");
+  });
+});
+
+
+test("Homepage keeps the technology explorer accessible on demand in both languages", async ({ page }) => {
+  for (const locale of ["en", "id"]) {
+    await page.goto(`/${locale}`);
+    const details = page.locator(".home-skill-details");
+    const summary = details.locator("summary");
+    await expect(details).not.toHaveAttribute("open", "");
+    await expect(details.getByRole("button", { name: /FastAPI/ })).not.toBeVisible();
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(details).toHaveAttribute("open", "");
+    const technology = details.getByRole("button", { name: /FastAPI/ });
+    await expect(technology).toBeVisible();
+    await technology.click();
+    await expect(details.getByRole("link", { name: /Inspect Case Study|Buka Case Study/ }).first()).toBeVisible();
+    await summary.focus();
+    await page.keyboard.press("Enter");
+    await expect(details).not.toHaveAttribute("open", "");
+    await expect(summary).toBeFocused();
+    await expect(page.locator("#contact")).toHaveCount(1);
+  }
+});
+
+
+test("Reduced-motion preference stops the contact marquee and responds to preference changes", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/en");
+  const loop = page.locator(".contact-logo-loop");
+  await expect(loop).toHaveClass(/logoloop--reduced-motion/);
+  const links = loop.getByRole("link");
+  await expect(links).toHaveCount(4);
+  await expect(loop.locator(".logoloop__list")).toHaveCount(1);
+  for (const link of await links.all()) {
+    await link.focus();
+    await expect(link).toBeFocused();
+    await expect(link).toBeInViewport();
+  }
+  const track = loop.locator(".logoloop__track");
+  const transform = await track.evaluate((node) => getComputedStyle(node).transform);
+  await page.waitForTimeout(400);
+  expect(await track.evaluate((node) => getComputedStyle(node).transform)).toBe(transform);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect(loop).not.toHaveClass(/logoloop--reduced-motion/);
+  await expect.poll(() => loop.locator(".logoloop__list[inert]").count()).toBeGreaterThan(0);
+  const initial = await track.evaluate((node) => getComputedStyle(node).transform);
+  await expect.poll(() => track.evaluate((node) => getComputedStyle(node).transform)).not.toBe(initial);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(loop.locator(".logoloop__list")).toHaveCount(1);
+});
+
+test("Identity card supports keyboard flipping with reduced motion on mobile", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/en/about");
+  const flip = page.getByRole("button", { name: "Flip identity card" });
+  await flip.focus();
+  await expect(flip).toBeFocused();
+  await expect(flip).toHaveAttribute("aria-pressed", "false");
+  await page.keyboard.press("Enter");
+  await expect(flip).toHaveAttribute("aria-pressed", "true");
+  await page.keyboard.press("Space");
+  await expect(flip).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByRole("button", { name: /Enable 3D Physics/ })).toHaveCount(0);
+});
+
+test("Chat explains storage and asks visitors not to share sensitive information", async ({ page }) => {
+  for (const [locale, notice] of [["en", "Chat messages may be stored"], ["id", "Pesan percakapan dapat disimpan"]]) {
+    await page.goto(`/${locale}`);
+    await page.locator(".portfolio-chat-launcher").click();
+    await expect(page.locator(".portfolio-chat-privacy")).toContainText(notice);
+    await expect(page.locator(".portfolio-chat-privacy")).toContainText("API key");
+  }
 });

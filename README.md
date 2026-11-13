@@ -34,7 +34,7 @@ This portfolio is engineered specifically to answer the core questions engineeri
 ### 1. 100% Full Interactive Visualizer Coverage (All 7 Projects)
 Every project case study includes a fully functional, browser-based interactive inspector/visualizer to demonstrate architecture, logic, and output without requiring local environment setup:
 - 🔬 **SCOVIS**: *Interactive Multi-Tier Architecture Visualizer* (node-graph inspects Next.js, Supabase, FastAPI, Redis/RQ, and TensorFlow worker flow).
-- 🩺 **DermaScan**: *ML Skin-Lesion Confidence Playground* (real-time risk simulator, 5-class probability breakdown, and clinical disclaimers).
+- 🩺 **DermaScan**: *Interactive Interface Demo* (illustrative samples and fixed example scores, explicitly separated from live model predictions).
 - 🚗 **Vehicle Classification**: *MobileNetV2 Inspector & Benchmark Matrix* (4-class confidence explorer with model-export comparisons across SavedModel, TFLite, and TF.js).
 - 📱 **QuizInt**: *Mobile Flutter Interactive Simulator* (role-switching between Learner, Instructor, and Admin with live gamification mechanics).
 - ☁️ **Cloud Inventory API**: *Flask/MongoDB API Pipeline Inspector* (interactive CRUD simulator and 3-step VM topology inspector).
@@ -189,8 +189,8 @@ flowchart TD
 ## 🛠️ Local Development
 
 ### Prerequisites
-- Node.js `20.x` or newer
-- npm `10.x` or newer
+- Node.js `24.22.1` (see `.nvmrc`; `nvm use` if available)
+- npm `11.9.0` (see `packageManager` in `package.json`)
 
 ### Setup
 1. Clone the repository:
@@ -201,7 +201,7 @@ flowchart TD
 
 2. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 
 3. Create `.env.local` in the project root:
@@ -239,11 +239,18 @@ npm run lint
 # Compile production build
 npm run build
 
+# Install the Chromium version matched to the locked Playwright release
+npx playwright install chromium
+
 # Run Playwright End-to-End Tests across all 7 projects and locales
-npm run test
+npm test
 ```
 
 ---
+
+Browser tests start their own production server on port `3100` and disable live database, AI, and email bindings. Run `npm run build` first. For another local port, set `PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:3102`. When using an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its executable path instead of installing a browser.
+
+GitHub Actions runs the frozen install, lint, production build, TypeScript, and browser suite on pushes to `main` and pull requests. No application secrets are required. See [.github/workflows/quality.yml](.github/workflows/quality.yml).
 
 ## 🔒 Content Honesty & Privacy Standards
 

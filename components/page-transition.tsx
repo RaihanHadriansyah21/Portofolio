@@ -3,9 +3,11 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotion } from "./use-reduced-motion";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     // If navigating to a page with a hash (e.g. /id#contact), scroll to the anchor smoothly
@@ -14,7 +16,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       const timer = setTimeout(() => {
         const el = document.getElementById(targetId);
         if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
+          el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
         }
       }, 150);
       return () => clearTimeout(timer);
@@ -28,11 +30,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={pathname}
-        initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+        initial={reducedMotion ? false : { opacity: 0, y: 12, filter: "blur(4px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
+        exit={reducedMotion ? { opacity: 1 } : { opacity: 0, y: -8, filter: "blur(2px)" }}
         transition={{
-          duration: 0.28,
+          duration: reducedMotion ? 0 : 0.28,
           ease: [0.22, 1, 0.36, 1],
         }}
         style={{ width: "100%", minHeight: "calc(100vh - var(--header-height, 4.5rem))" }}

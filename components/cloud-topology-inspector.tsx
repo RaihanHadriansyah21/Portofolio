@@ -280,11 +280,12 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
         }}
       >
         {/* Mongo Operation */}
-        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
+        <div style={{ background: "#0a0a0d", color: "#f5f5f2", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
           <span style={{ fontSize: "0.72rem", opacity: 0.6, display: "block", marginBottom: "0.4rem" }}>
             {t.mongoQuery}
           </span>
           <pre
+            tabIndex={0}
             style={{
               fontSize: "0.75rem",
               margin: 0,
@@ -300,11 +301,12 @@ export function CloudTopologyInspector({ locale }: { locale: Locale }) {
         </div>
 
         {/* JSON Response */}
-        <div style={{ background: "#0a0a0d", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
+        <div style={{ background: "#0a0a0d", color: "#f5f5f2", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.08)", minWidth: 0, overflow: "hidden" }}>
           <span style={{ fontSize: "0.72rem", opacity: 0.6, display: "block", marginBottom: "0.4rem" }}>
             {t.responsePayload}
           </span>
           <pre
+            tabIndex={0}
             style={{
               fontSize: "0.75rem",
               margin: 0,

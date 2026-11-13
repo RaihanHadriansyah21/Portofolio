@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
 import './LogoLoop.css';
+import { useReducedMotion } from './use-reduced-motion';
 
 const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 } as const;
 
@@ -79,7 +80,8 @@ const useAnimationLoop = (
   seqHeight: number,
   isHovered: boolean,
   hoverSpeed: number | undefined,
-  isVertical: boolean
+  isVertical: boolean,
+  reducedMotion: boolean
 ): void => {
   const rafRef = useRef<number | null>(null);
   const lastTimestampRef = useRef<number | null>(null);
@@ -89,6 +91,11 @@ const useAnimationLoop = (
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+    if (reducedMotion) {
+      track.style.transform = "translate3d(0, 0, 0)";
+      velocityRef.current = 0;
+      return;
+    }
 
     const seqSize = isVertical ? seqHeight : seqWidth;
 
@@ -136,7 +143,7 @@ const useAnimationLoop = (
       }
       lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef]);
+  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef, reducedMotion]);
 };
 
 export interface LogoImageItem {
@@ -196,6 +203,7 @@ export const LogoLoop = memo(
     className,
     style
   }: LogoLoopProps) => {
+    const reducedMotion = useReducedMotion();
     const containerRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const seqRef = useRef<HTMLUListElement>(null);
@@ -255,7 +263,7 @@ export const LogoLoop = memo(
 
     useImageLoader(seqRef, updateDimensions, [logos, gap, logoHeight, isVertical]);
 
-    useAnimationLoop(trackRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical);
+    useAnimationLoop(trackRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical, reducedMotion);
 
     const cssVariables: Record<`--logoloop-${string}`, string | undefined> = useMemo(
       () => ({
@@ -270,6 +278,7 @@ export const LogoLoop = memo(
       () =>
         [
           'logoloop',
+          reducedMotion && 'logoloop--reduced-motion',
           isVertical ? 'logoloop--vertical' : 'logoloop--horizontal',
           fadeOut && 'logoloop--fade',
           scaleOnHover && 'logoloop--scale-hover',
@@ -277,7 +286,7 @@ export const LogoLoop = memo(
         ]
           .filter(Boolean)
           .join(' '),
-      [isVertical, fadeOut, scaleOnHover, className]
+      [isVertical, fadeOut, scaleOnHover, className, reducedMotion]
     );
 
     const handleMouseEnter = useCallback(() => {
@@ -342,18 +351,19 @@ export const LogoLoop = memo(
 
     const logoLists = useMemo(
       () =>
-        Array.from({ length: copyCount }, (_, copyIndex) => (
+        Array.from({ length: reducedMotion ? 1 : copyCount }, (_, copyIndex) => (
           <ul
             className="logoloop__list"
             key={`copy-${copyIndex}`}
             role="list"
             aria-hidden={copyIndex > 0}
+            inert={copyIndex > 0}
             ref={copyIndex === 0 ? seqRef : undefined}
           >
             {logos.map((item, itemIndex) => renderLogoItem(item, `${copyIndex}-${itemIndex}`))}
           </ul>
         )),
-      [copyCount, logos, renderLogoItem]
+      [copyCount, logos, renderLogoItem, reducedMotion]
     );
 
     const containerStyle: CSSProperties = useMemo(

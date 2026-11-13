@@ -3,6 +3,7 @@
 import { useEffect, useRef, useSyncExternalStore, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { useReducedMotion } from './use-reduced-motion';
 import type { Locale } from '@/lib/portfolio';
 
 const Lanyard = dynamic(() => import('./Lanyard'), {
@@ -92,6 +93,7 @@ export interface LanyardShowcaseProps {
 
 export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const isMobile = useIsMobile();
+  const reducedMotion = useReducedMotion();
   // `mounted` is kept for SSR/client boundary safety on mobile path only.
   // For the desktop 3D path, `isNearViewport` is the authoritative gate.
   const mounted = useMounted();
@@ -103,10 +105,10 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isNearViewport = useNearViewport(containerRef);
 
-  const shouldRender3D = !isMobile || enable3DOnMobile;
+  const shouldRender3D = (!isMobile || enable3DOnMobile) && !reducedMotion;
 
   return (
-    <div ref={containerRef} className="lanyard-canvas" aria-hidden="true">
+    <div ref={containerRef} className="lanyard-canvas" role="group" aria-label={locale === "id" ? "Kartu identitas Reyy" : "Reyy identity card"}>
       {/*
        * Render order:
        * 1. SSR / before hydration   → nothing (aria-hidden wrapper present for layout)
@@ -127,7 +129,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
           cardScale={2.4}
           imageFit="cover"
         />
-      ) : mounted && !isNearViewport && !isMobile ? (
+      ) : mounted && !isNearViewport && !isMobile && !reducedMotion ? (
         /* Pre-viewport skeleton: same visual as the dynamic loading fallback,
            same fixed height as the canvas — zero layout shift on mount. */
         <div className="lanyard-loading" aria-hidden="true">
@@ -175,12 +177,20 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
           />
 
           {/* 3D Perspective Flip Card */}
-          <div
+          <button
+            type="button"
+            className="lanyard-flip-button"
+            aria-label={locale === 'id' ? 'Balik kartu identitas' : 'Flip identity card'}
+            aria-pressed={isFlipped}
             onClick={() => setIsFlipped((prev) => !prev)}
             style={{
               width: '220px',
               height: '310px',
               perspective: '1000px',
+              padding: 0,
+              border: 0,
+              background: 'transparent',
+              color: 'inherit',
               cursor: 'pointer',
               zIndex: 3,
             }}
@@ -191,13 +201,14 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
-                transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                transition: reducedMotion ? 'none' : 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 transformStyle: 'preserve-3d',
                 transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
               }}
             >
               {/* Front Face */}
               <div
+                aria-hidden={isFlipped}
                 style={{
                   position: 'absolute',
                   width: '100%',
@@ -222,6 +233,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
 
               {/* Back Face */}
               <div
+                aria-hidden={!isFlipped}
                 style={{
                   position: 'absolute',
                   width: '100%',
@@ -244,14 +256,14 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
                 />
               </div>
             </div>
-          </div>
+          </button>
 
           {/* Hint & Mobile 3D Toggle */}
           <div style={{ marginTop: '1.25rem', textAlign: 'center', zIndex: 4 }}>
             <span style={{ fontSize: '0.74rem', opacity: 0.6, display: 'block', marginBottom: '0.4rem' }}>
               {locale === 'id' ? '👆 Ketuk kartu untuk membalik' : '👆 Tap card to flip'}
             </span>
-            <button
+            {!reducedMotion && <button
               type="button"
               onClick={() => setEnable3DOnMobile(true)}
               style={{
@@ -266,7 +278,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
               }}
             >
               {locale === 'id' ? '⚡ Aktifkan Fisika 3D' : '⚡ Enable 3D Physics'}
-            </button>
+            </button>}
           </div>
         </div>
       )}

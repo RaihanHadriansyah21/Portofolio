@@ -13,6 +13,25 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const content = copy[lang];
+  const home = lang === "id" ? {
+    flagship: "SCOVIS: rekomendasi AI, keputusan di tangan dosen.",
+    selected: "Proyek lain yang saya bangun.",
+    selectedIntro: "Eksplorasi computer vision, integrasi backend, dan pengalaman belajar mobile.",
+    capabilities: "Teknologi di balik proyek.",
+    exploreSkills: "Jelajahi teknologi dan proyek terkait",
+    learning: "Pelatihan yang mendukung karya.",
+    about: "Kenali Reyy lebih dekat.",
+    contact: "Mari membangun produk yang berguna.",
+  } : {
+    flagship: "SCOVIS: AI recommendations, lecturer decisions.",
+    selected: "More projects I’ve built.",
+    selectedIntro: "Explore computer vision, backend integration, and mobile learning experiences.",
+    capabilities: "The tools behind the projects.",
+    exploreSkills: "Explore technologies and related projects",
+    learning: "Training that supports the work.",
+    about: "A little more about Reyy.",
+    contact: "Let’s build something useful.",
+  };
   const flagship = projectBySlug("scovis");
   if (!flagship) notFound();
   const architectureLabels = lang === "id"
@@ -42,7 +61,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       };
 
   return (
-    <main id="main-content">
+    <main id="main-content" className="home-page">
       <section className="hero section-shell">
         <div className="hero-copy">
           <AvailabilityBadge locale={lang} />
@@ -68,13 +87,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         </div>
       </section>
 
-      <section className="proof-strip section-shell" aria-label="Core strengths">
-        {content.proof.map((item, index) => <div key={item}><span>0{index + 1}</span><p>{item}</p></div>)}
-      </section>
-
       <section className="section-shell section-block flagship-section">
         <div className="section-heading split-heading">
-          <div><p className="eyebrow">{content.flagship.eyebrow}</p><h2>{content.flagship.title}</h2></div>
+          <div><p className="eyebrow">{content.flagship.eyebrow}</p><h2>{home.flagship}</h2></div>
           <p>{content.flagship.intro}</p>
         </div>
         <div className="flagship-grid">
@@ -99,8 +114,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
       <section className="section-shell section-block">
         <div className="section-heading split-heading">
-          <div><p className="eyebrow">{content.selected.eyebrow}</p><h2>{content.selected.title}</h2></div>
-          <div><p>{content.selected.intro}</p><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
+          <div><p className="eyebrow">{content.selected.eyebrow}</p><h2>{home.selected}</h2></div>
+          <div><p>{home.selectedIntro}</p><Link className="text-link" href={`/${lang}/projects`}>{content.common.viewAll} ↗</Link></div>
         </div>
         <div className="projects-grid home-projects">
           {projects.slice(1, 4).map((project) => <ProjectCard project={project} locale={lang} key={project.slug} />)}
@@ -109,24 +124,27 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
       <section className="section-shell section-block capabilities-section">
         <div className="section-heading split-heading">
-          <div><p className="eyebrow">{content.capabilities.eyebrow}</p><h2>{content.capabilities.title}</h2></div>
+          <div><p className="eyebrow">{content.capabilities.eyebrow}</p><h2>{home.capabilities}</h2></div>
           <p>AI / Backend / Frontend / Mobile / Delivery</p>
         </div>
-        <div className="capability-grid">
-          {content.capabilities.groups.map((group, index) => (
-            <article key={group.title}><span>0{index + 1}</span><h3>{group.title}</h3><p>{group.body}</p></article>
-          ))}
-        </div>
-        <SkillMatrix locale={lang} />
+        <details className="home-skill-details glass-panel">
+          <summary>{home.exploreSkills}</summary>
+          <div className="capability-grid">
+            {content.capabilities.groups.map((group, index) => (
+              <article key={group.title}><span>0{index + 1}</span><h3>{group.title}</h3><p>{group.body}</p></article>
+            ))}
+          </div>
+          <SkillMatrix locale={lang} />
+        </details>
       </section>
 
       <section className="section-shell section-block credentials-preview">
         <div className="section-heading split-heading">
-          <div><p className="eyebrow">{content.learning.eyebrow}</p><h2>{content.learning.title}</h2></div>
+          <div><p className="eyebrow">{content.learning.eyebrow}</p><h2>{home.learning}</h2></div>
           <div><p>{content.learning.intro}</p><Link className="text-link" href={`/${lang}/credentials`}>{content.nav.credentials} ↗</Link></div>
         </div>
         <div className="credential-list glass-panel">
-          {credentials.slice(0, 4).map((credential, index) => (
+          {credentials.slice(0, 3).map((credential, index) => (
             <div className="credential-row" key={credential.title}>
               <span>0{index + 1}</span>
               <div><h3>{credential.title}</h3><p>{credential.issuer} · {credential.focus[lang]}</p></div>
@@ -137,13 +155,13 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       </section>
 
       <section className="section-shell section-block about-preview">
-        <div><p className="eyebrow">{content.about.eyebrow}</p><h2>{content.about.title}</h2></div>
+        <div><p className="eyebrow">{content.about.eyebrow}</p><h2>{home.about}</h2></div>
         <div><p>{content.about.body}</p><Link className="text-link" href={`/${lang}/about`}>{content.nav.about} ↗</Link></div>
       </section>
 
       <section className="section-shell section-block contact-section" id="contact">
         <p className="eyebrow">{content.contact.eyebrow}</p>
-        <h2>{content.contact.title}</h2>
+        <h2>{home.contact}</h2>
         <p>{content.contact.body}</p>
         <ContactLogoLoop locale={lang} />
         <ContactForm locale={lang} />

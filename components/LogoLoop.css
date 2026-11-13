@@ -31,6 +31,26 @@
   z-index: 0;
 }
 
+.logoloop--reduced-motion .logoloop__track {
+  width: 100%;
+  will-change: auto;
+}
+
+.logoloop--reduced-motion .logoloop__list {
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.logoloop--reduced-motion .logoloop__item,
+.logoloop--reduced-motion .logoloop__item:last-child {
+  margin: 0;
+}
+
+.logoloop--reduced-motion::before,
+.logoloop--reduced-motion::after { display: none; }
+
 .logoloop--vertical .logoloop__track {
   flex-direction: column;
   height: max-content;

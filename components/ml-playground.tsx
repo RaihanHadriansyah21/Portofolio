@@ -91,70 +91,48 @@ const samples: SampleImage[] = [
 
 const copy = {
   en: {
-    eyebrow: "Interactive AI Sandbox",
-    title: "DermaScan Model Inference Playground",
-    subtitle: "Test deep learning classification inference, confidence probabilities, and Grad-CAM attention overlay directly in your browser.",
-    selectSample: "Select Test Image Artifact",
-    runInference: "⚡ Run Neural Inference",
-    running: "Running Forward Pass…",
-    pipeline: "Inference Pipeline Telemetry",
-    latency: "Inference Latency",
-    gradCamToggle: "Show Grad-CAM Heatmap",
-    gradCamDesc: "Visualizes the convolutional feature map regions that most strongly influenced the classification decision.",
+    eyebrow: "Interactive UI Simulation",
+    title: "DermaScan Interface Demo",
+    subtitle: "Explore an illustrative interface with four sample categories and fixed example scores. These are not model predictions; no image analysis runs in this demo.",
+    selectSample: "Choose an illustrated sample",
+    runInference: "Show example scores",
+    pipeline: "Illustrative scores",
     disclaimerTitle: "Human-in-the-Loop Safeguard",
     disclaimerText: "This model is designed as an assistant decision-support tool, not an automated clinical diagnostic device. Final decisions must always be verified by medical professionals.",
-    topMatch: "Top Classification",
-    confidence: "Model Confidence",
-    awaiting: "Awaiting inference",
-    awaitingDetail: "Run the neural inference to reveal this sample's recorded demo output.",
+    topMatch: "Highest example score",
+    awaiting: "Choose a sample, then reveal scores",
+    awaitingDetail: "Fixed values for interface demonstration only.",
     notAvailable: "Not available",
-    testSample: "Selected test sample",
+    testSample: "Illustrated sample",
   },
   id: {
-    eyebrow: "Sandbox AI Interaktif",
-    title: "Playground Inferensi Model DermaScan",
-    subtitle: "Uji inferensi klasifikasi deep learning, probabilitas keyakinan model, dan overlay Grad-CAM attention heatmap langsung di browser Anda.",
-    selectSample: "Pilih Sampel Citra Uji",
-    runInference: "⚡ Jalankan Inferensi Neural",
-    running: "Menjalankan Forward Pass…",
-    pipeline: "Telemetri Pipeline Inferensi",
-    latency: "Latensi Inferensi",
-    gradCamToggle: "Tampilkan Heatmap Grad-CAM",
-    gradCamDesc: "Memvisualisasikan area peta fitur konvolusi yang paling kuat memengaruhi keputusan klasifikasi model.",
+    eyebrow: "Simulasi Antarmuka Interaktif",
+    title: "Demo Antarmuka DermaScan",
+    subtitle: "Jelajahi ilustrasi antarmuka dengan empat kategori sampel dan skor contoh tetap. Angka ini bukan prediksi model; demo ini tidak menganalisis gambar.",
+    selectSample: "Pilih ilustrasi sampel",
+    runInference: "Tampilkan skor contoh",
+    pipeline: "Skor ilustratif",
     disclaimerTitle: "Prinsip Human-in-the-Loop",
     disclaimerText: "Model ini dirancang sebagai alat bantu pendukung keputusan, bukan pengganti diagnosis medis otomatis. Keputusan akhir selalu memerlukan verifikasi tenaga medis profesional.",
-    topMatch: "Klasifikasi Teratas",
-    confidence: "Tingkat Keyakinan Model",
-    awaiting: "Menunggu inferensi",
-    awaitingDetail: "Jalankan inferensi neural untuk menampilkan keluaran demo yang direkam untuk sampel ini.",
+    topMatch: "Skor contoh tertinggi",
+    awaiting: "Pilih sampel, lalu tampilkan skor",
+    awaitingDetail: "Nilai tetap untuk demonstrasi antarmuka saja.",
     notAvailable: "Belum tersedia",
-    testSample: "Sampel uji terpilih",
+    testSample: "Ilustrasi sampel",
   },
 };
 
 export function MLPlayground({ locale }: { locale: Locale }) {
   const [selectedSample, setSelectedSample] = useState<SampleImage>(samples[0]);
-  const [isRunning, setIsRunning] = useState(false);
-  const [showGradCam, setShowGradCam] = useState(false);
-  const [hasInferred, setHasInferred] = useState(false);
-  const [activeLatency, setActiveLatency] = useState<number | null>(null);
+  const [hasRevealed, setHasRevealed] = useState(false);
 
   const t = copy[locale];
-
-  function handleRun() {
-    setIsRunning(true);
-    setHasInferred(false);
-    setTimeout(() => {
-      setIsRunning(false);
-      setHasInferred(true);
-      setActiveLatency(Math.floor(Math.random() * 12) + 32); // 32-44ms
-    }, 450);
-  }
 
   const topProb = selectedSample.probabilities[0];
 
   return (
     <div
+      data-testid="dermascan-demo"
       className="glass-panel"
       style={{
         borderRadius: "16px",
@@ -165,7 +143,7 @@ export function MLPlayground({ locale }: { locale: Locale }) {
     >
       {/* Header */}
       <div style={{ marginBottom: "1.5rem" }}>
-        <span style={{ fontSize: "0.75rem", color: "#4ade80", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        <span style={{ fontSize: "0.75rem", color: "var(--accent)", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
           ● {t.eyebrow}
         </span>
         <h3 style={{ fontSize: "1.35rem", fontWeight: 700, margin: "0.25rem 0 0.4rem" }}>
@@ -199,9 +177,7 @@ export function MLPlayground({ locale }: { locale: Locale }) {
                 type="button"
                 onClick={() => {
                   setSelectedSample(s);
-                  setShowGradCam(false);
-                  setHasInferred(false);
-                  setActiveLatency(null);
+                  setHasRevealed(false);
                 }}
                 style={{
                   padding: "0.6rem 0.75rem",
@@ -241,21 +217,8 @@ export function MLPlayground({ locale }: { locale: Locale }) {
               boxShadow: "inset 0 0 40px rgba(0,0,0,0.5)",
             }}
           >
-            {/* Grad-CAM Heatmap Overlay */}
-            {showGradCam && (
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: "radial-gradient(circle at 46% 48%, rgba(255, 0, 0, 0.65) 0%, rgba(255, 180, 0, 0.5) 35%, rgba(0, 150, 255, 0.3) 65%, transparent 85%)",
-                  mixBlendMode: "screen",
-                  animation: "fadeIn 200ms ease-out",
-                }}
-              />
-            )}
-
             {/* Canvas Badges */}
-            <div style={{ position: "relative", zIndex: 2, background: "rgba(0,0,0,0.7)", padding: "0.4rem 0.75rem", borderRadius: "6px", fontSize: "0.75rem" }}>
+            <div style={{ color: "#ffffff", position: "relative", zIndex: 2, background: "rgba(0,0,0,0.7)", padding: "0.4rem 0.75rem", borderRadius: "6px", fontSize: "0.75rem" }}>
               <span style={{ color: "#4ade80", fontWeight: 700 }}>
                 ● {t.testSample}
               </span>
@@ -269,24 +232,14 @@ export function MLPlayground({ locale }: { locale: Locale }) {
           <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem", alignItems: "center", flexWrap: "wrap" }}>
             <button
               type="button"
-              onClick={handleRun}
-              disabled={isRunning}
+              onClick={() => setHasRevealed(true)}
               className="button button-primary"
               style={{ fontSize: "0.82rem", padding: "0.55rem 1.1rem" }}
             >
-              {isRunning ? t.running : t.runInference}
+              {t.runInference}
             </button>
 
-            <label style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", cursor: hasInferred && !isRunning ? "pointer" : "not-allowed", opacity: hasInferred && !isRunning ? 0.9 : 0.5 }}>
-              <input
-                type="checkbox"
-                checked={showGradCam}
-                onChange={(e) => setShowGradCam(e.target.checked)}
-                disabled={!hasInferred || isRunning}
-                style={{ accentColor: "#4ade80", width: 16, height: 16 }}
-              />
-              <span>{t.gradCamToggle}</span>
-            </label>
+
           </div>
         </div>
 
@@ -297,35 +250,35 @@ export function MLPlayground({ locale }: { locale: Locale }) {
               <span style={{ fontSize: "0.8rem", opacity: 0.6, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 {t.pipeline}
               </span>
-              <span style={{ fontSize: "0.78rem", color: "#4ade80", background: "rgba(74, 222, 128, 0.12)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
-                {hasInferred && activeLatency !== null ? `${t.latency}: ~${activeLatency}ms (TFLite)` : t.awaiting}
+              <span style={{ fontSize: "0.78rem", color: "var(--accent)", background: "rgba(74, 222, 128, 0.12)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
+                {hasRevealed ? (locale === "en" ? "Illustrative data" : "Data ilustratif") : t.notAvailable}
               </span>
             </div>
 
             {/* Top Match Card */}
             <div style={{ background: "rgba(0,0,0,0.3)", padding: "1rem", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.08)", marginBottom: "1rem" }}>
               <span style={{ fontSize: "0.72rem", opacity: 0.6 }}>{t.topMatch}</span>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: "0.2rem" }}>
-                <strong style={{ fontSize: "1.1rem" }}>{hasInferred ? topProb.name : t.awaiting}</strong>
-                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--muted)" }}>{hasInferred ? `${topProb.score}%` : t.awaitingDetail}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "0.5rem", marginTop: "0.2rem" }}>
+                <strong style={{ fontSize: "1.1rem" }}>{hasRevealed ? topProb.name : t.awaiting}</strong>
+                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--muted)" }}>{hasRevealed ? `${topProb.score}%` : t.awaitingDetail}</span>
               </div>
             </div>
 
             {/* Probabilities Bars */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+            <div aria-live="polite" style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
               {selectedSample.probabilities.map((prob) => (
                 <div key={prob.name}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", marginBottom: "0.2rem" }}>
                     <span style={{ opacity: prob.isTop ? 1 : 0.7, fontWeight: prob.isTop ? 600 : 400 }}>
                       {prob.name}
                     </span>
-                    <span style={{ fontWeight: prob.isTop ? 700 : 400 }}>{hasInferred ? `${prob.score}%` : t.notAvailable}</span>
+                    <span style={{ fontWeight: prob.isTop ? 700 : 400 }}>{hasRevealed ? `${prob.score}%` : t.notAvailable}</span>
                   </div>
                   <div style={{ height: "6px", borderRadius: "3px", background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
                     <div
                       style={{
                         height: "100%",
-                        width: hasInferred ? `${prob.score}%` : "0%",
+                        width: hasRevealed ? `${prob.score}%` : "0%",
                         background: prob.isTop ? "var(--foreground, #fff)" : "rgba(255,255,255,0.35)",
                         borderRadius: "3px",
                         transition: "width 400ms cubic-bezier(0.4, 0, 0.2, 1)",
@@ -347,7 +300,7 @@ export function MLPlayground({ locale }: { locale: Locale }) {
               marginTop: "1.25rem",
             }}
           >
-            <strong style={{ fontSize: "0.78rem", color: "#fde047", display: "block", marginBottom: "0.15rem" }}>
+            <strong style={{ fontSize: "0.78rem", color: "var(--foreground)", display: "block", marginBottom: "0.15rem" }}>
               🛡️ {t.disclaimerTitle}
             </strong>
             <p style={{ margin: 0, fontSize: "0.72rem", opacity: 0.8, lineHeight: 1.45 }}>
