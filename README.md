@@ -250,7 +250,7 @@ npm test
 
 Browser tests start their own production server on port `3100` and disable live database, AI, and email bindings. Run `npm run build` first. For another local port, set `PLAYWRIGHT_TEST_BASE_URL=http://127.0.0.1:3102`. When using an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to its executable path instead of installing a browser.
 
-GitHub Actions runs the frozen install, lint, production build, TypeScript, and browser suite on pushes to `main` and pull requests. No application secrets are required. See [.github/workflows/quality.yml](.github/workflows/quality.yml).
+GitHub Actions runs the frozen install, lint, production build, TypeScript, and browser suite on pushes to `main`, `codex/**` preview branches, and pull requests. No application secrets are required. See [.github/workflows/quality.yml](.github/workflows/quality.yml).
 
 ## 🔒 Content Honesty & Privacy Standards
 
