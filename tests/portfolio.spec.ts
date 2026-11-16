@@ -836,10 +836,12 @@ for (const theme of ["dark", "light"]) {
   });
 }
 
-test("Identity card supports keyboard flipping with reduced motion on mobile", async ({ page }) => {
+test("Identity card defaults to physics and offers keyboard flipping in static mode on mobile", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/en/about");
+  await page.locator(".lanyard-canvas").scrollIntoViewIfNeeded();
+  await page.getByRole("button", { name: "Static view", exact: true }).click();
   const flip = page.getByRole("button", { name: "Flip identity card" });
   await flip.focus();
   await expect(flip).toBeFocused();

@@ -15,26 +15,6 @@ const Lanyard = dynamic(() => import('./Lanyard'), {
   ),
 });
 
-function subscribeResize(callback: () => void): () => void {
-  window.addEventListener('resize', callback);
-  return () => window.removeEventListener('resize', callback);
-}
-
-function getMobileSnapshot(): boolean {
-  return Boolean(
-    window.innerWidth <= 768 ||
-    (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
-  );
-}
-
-function getServerMobileSnapshot(): boolean {
-  return false;
-}
-
-function useIsMobile(): boolean {
-  return useSyncExternalStore(subscribeResize, getMobileSnapshot, getServerMobileSnapshot);
-}
-
 function useMounted(): boolean {
   return useSyncExternalStore(
     () => () => {},
@@ -92,12 +72,9 @@ export interface LanyardShowcaseProps {
 }
 
 export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
-  const isMobile = useIsMobile();
   const reducedMotion = useReducedMotion();
-  // `mounted` is kept for SSR/client boundary safety on mobile path only.
-  // For the desktop 3D path, `isNearViewport` is the authoritative gate.
   const mounted = useMounted();
-  const [viewMode, setViewMode] = useState<'auto' | '3d' | 'static'>('auto');
+  const [viewMode, setViewMode] = useState<'3d' | 'static'>('3d');
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
   // Ref attached to the outermost container so IntersectionObserver can watch
@@ -105,15 +82,14 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isNearViewport = useNearViewport(containerRef);
 
-  const shouldRender3D = viewMode === '3d' || (viewMode === 'auto' && !isMobile && !reducedMotion);
+  const shouldRender3D = viewMode === '3d';
 
   return (
     <div ref={containerRef} className="lanyard-canvas" role="group" aria-label={locale === "id" ? "Kartu identitas Reyy" : "Reyy identity card"}>
       {/*
        * Render order:
-       * Static flip card during SSR, on mobile, or with reduced motion.
-       * Desktop auto-loads physics near the viewport. An explicit choice can
-       * enable physics on any device, including when reduced motion is set.
+       * Physics is the default on every device, loaded near the viewport.
+       * The static flip card remains available during SSR and when selected.
        */}
       {mounted && isNearViewport && shouldRender3D ? (
         <>
