@@ -10,7 +10,7 @@ import { retrievePortfolioKnowledge } from "@/lib/ai/portfolio-knowledge";
 import { checkChatRateLimit } from "@/lib/chat-rate-limit";
 import type { ChatMode, PortfolioChatMessage } from "@/lib/ai/types";
 import type { Locale } from "@/lib/portfolio";
-import { supabase } from "@/lib/supabase";
+import { getServiceRoleSupabaseClient } from "@/lib/supabase-admin";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -70,10 +70,16 @@ function estimateTokens(text: string): number {
   return Math.ceil(text.length / 4);
 }
 
-function logToDb(action: () => Promise<unknown>) {
-  action().catch((error) => {
+async function logToDb(action: () => Promise<void>) {
+  try {
+    await action();
+  } catch (error) {
     console.error("[chat-db]", error instanceof Error ? error.message : error);
-  });
+  }
+}
+
+function throwOnDatabaseError(error: { message: string } | null, operation: string) {
+  if (error) throw new Error(`${operation}: ${error.message}`);
 }
 
 function hasValidOrigin(request: Request) {
@@ -224,12 +230,14 @@ export async function POST(request: Request) {
     return jsonError("The portfolio assistant is temporarily unavailable.", 503);
   }
 
-  // --- Database logging (fire-and-forget, never blocks the response) ---
-  const db = supabase;
+  // Persist the visitor's question before streaming. The previous anonymous,
+  // parallel fire-and-forget writes could be rejected by RLS or finish after
+  // a serverless invocation had already ended, leaving the admin dashboard empty.
+  const db = getServiceRoleSupabaseClient();
   if (db) {
-    logToDb(async () => {
+    await logToDb(async () => {
       const visitorHash = await visitorHashPromise;
-      await db.from("chat_sessions").upsert(
+      const { error: sessionError } = await db.from("chat_sessions").upsert(
         {
           id: sessionId,
           visitor_hash: visitorHash,
@@ -240,14 +248,15 @@ export async function POST(request: Request) {
         },
         { onConflict: "id", ignoreDuplicates: true },
       );
-    });
-    logToDb(async () => {
-      await db.from("chat_messages").insert({
+      throwOnDatabaseError(sessionError, "Could not save chat session");
+
+      const { error: messageError } = await db.from("chat_messages").insert({
         session_id: sessionId,
         role: "user",
         content: latestQuestion.slice(0, 2000),
         token_estimate: estimateTokens(latestQuestion),
       });
+      throwOnDatabaseError(messageError, "Could not save visitor question");
     });
   }
 
@@ -277,16 +286,17 @@ export async function POST(request: Request) {
           } satisfies GoogleLanguageModelOptions,
         },
         abortSignal: request.signal,
-        onFinish: ({ text }) => {
+        onFinish: async ({ text }) => {
           if (db && text) {
-            logToDb(async () => {
-              await db.from("chat_messages").insert({
+            await logToDb(async () => {
+              const { error } = await db.from("chat_messages").insert({
                 session_id: sessionId,
                 role: "assistant",
                 content: text.slice(0, 4000),
                 sources: knowledge.sources,
                 token_estimate: estimateTokens(text),
               });
+              throwOnDatabaseError(error, "Could not save assistant response");
             });
           }
         },
