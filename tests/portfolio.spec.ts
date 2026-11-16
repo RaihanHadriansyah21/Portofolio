@@ -840,8 +840,14 @@ test("Identity card defaults to physics and offers keyboard flipping in static m
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/en/about");
-  await page.locator(".lanyard-canvas").scrollIntoViewIfNeeded();
-  await page.getByRole("button", { name: "Static view", exact: true }).click();
+  const canvas = page.locator(".lanyard-canvas");
+  const staticView = page.getByRole("button", { name: "Static view", exact: true });
+  await canvas.scrollIntoViewIfNeeded();
+  const [canvasBox, staticViewBox] = await Promise.all([canvas.boundingBox(), staticView.boundingBox()]);
+  expect(canvasBox).not.toBeNull();
+  expect(staticViewBox).not.toBeNull();
+  expect(staticViewBox!.y).toBeGreaterThanOrEqual(canvasBox!.y + canvasBox!.height);
+  await staticView.click();
   const flip = page.getByRole("button", { name: "Flip identity card" });
   await flip.focus();
   await expect(flip).toBeFocused();

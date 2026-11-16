@@ -85,14 +85,14 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const shouldRender3D = viewMode === '3d';
 
   return (
-    <div ref={containerRef} className="lanyard-canvas" role="group" aria-label={locale === "id" ? "Kartu identitas Reyy" : "Reyy identity card"}>
-      {/*
-       * Render order:
-       * Physics is the default on every device, loaded near the viewport.
-       * The static flip card remains available during SSR and when selected.
-       */}
-      {mounted && isNearViewport && shouldRender3D ? (
-        <>
+    <div className="lanyard-showcase" role="group" aria-label={locale === "id" ? "Kartu identitas Reyy" : "Reyy identity card"}>
+      <div ref={containerRef} className="lanyard-canvas">
+        {/*
+         * Render order:
+         * Physics is the default on every device, loaded near the viewport.
+         * The static flip card remains available during SSR and when selected.
+         */}
+        {mounted && isNearViewport && shouldRender3D ? (
           <Lanyard
             position={[0, 1.2, 10]}
             gravity={[0, -40, 0]}
@@ -104,15 +104,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
             cardScale={2.4}
             imageFit="cover"
           />
-          <button
-            type="button"
-            className="lanyard-mode-button"
-            onClick={() => setViewMode('static')}
-          >
-            {locale === 'id' ? 'Tampilan statis' : 'Static view'}
-          </button>
-        </>
-      ) : mounted && !isNearViewport && shouldRender3D ? (
+        ) : mounted && !isNearViewport && shouldRender3D ? (
         /* Pre-viewport skeleton: same visual as the dynamic loading fallback,
            same fixed height as the canvas — zero layout shift on mount. */
         <div className="lanyard-loading" aria-hidden="true">
@@ -264,13 +256,24 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
             </button>
           </div>
         </div>
-      )}
+        )}
 
-      <span className="sr-only">
-        {locale === 'id'
-          ? 'Kartu identitas engineering Reyy interaktif.'
-          : 'Interactive Reyy engineering identity card.'}
-      </span>
+        <span className="sr-only">
+          {locale === 'id'
+            ? 'Kartu identitas engineering Reyy interaktif.'
+            : 'Interactive Reyy engineering identity card.'}
+        </span>
+      </div>
+
+      {mounted && isNearViewport && shouldRender3D && (
+        <button
+          type="button"
+          className="lanyard-mode-button"
+          onClick={() => setViewMode('static')}
+        >
+          {locale === 'id' ? 'Tampilan statis' : 'Static view'}
+        </button>
+      )}
     </div>
   );
 }
