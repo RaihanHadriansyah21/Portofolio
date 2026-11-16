@@ -141,7 +141,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
   if (isSuccess) {
     return (
       <div
-        className="glass-panel"
+        className="glass-panel contact-form-success"
         style={{
           borderRadius: "16px",
           padding: "2.5rem 2rem",

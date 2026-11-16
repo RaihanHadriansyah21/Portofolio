@@ -331,7 +331,22 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       await expect(page.locator("text=Message received!")).toBeVisible();
 
       // Reset form via "Send another message"
-      await page.click("button:has-text('Send another message')");
+      const resetButton = page.getByRole("button", { name: "Send another message" });
+      const contrast = await resetButton.evaluate((button) => {
+        const parse = (value: string) => (value.match(/\d+(?:\.\d+)?/g) ?? []).slice(0, 3).map(Number);
+        const luminance = ([red, green, blue]: number[]) => {
+          const channels = [red, green, blue].map((channel) => {
+            const normalized = channel / 255;
+            return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+        };
+        const foreground = luminance(parse(getComputedStyle(button).color));
+        const background = luminance(parse(getComputedStyle(button.closest(".contact-form-success")!).backgroundColor));
+        return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+      });
+      expect(contrast).toBeGreaterThanOrEqual(4.5);
+      await resetButton.click();
       await expect(page.locator("#contact-name")).toBeVisible();
       await expect(page.locator("#contact-name")).toHaveValue("");
     });
