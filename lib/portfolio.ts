@@ -38,29 +38,21 @@ export const projects: Project[] = [
     number: "01",
     title: "SCOVIS",
     year: "2026",
-    status: { en: "Thesis team project", id: "Proyek tim tugas akhir" },
+    status: { en: "Production / Active", id: "Produksi / Aktif" },
     tier: "Flagship",
     categories: ["Applied AI", "Full Stack", "Backend"],
     stack: ["Next.js", "TypeScript", "FastAPI", "TensorFlow", "Supabase", "Redis/RQ"],
     preview: {
-      src: "/projects/previews/scovis-lecturer-login.png",
+      src: "/projects/previews/scovis.png",
       alt: {
-        en: "Original SCOVIS lecturer sign-in interface, captured locally without an authenticated account",
-        id: "Antarmuka masuk dosen SCOVIS asli, diambil secara lokal tanpa akun terautentikasi",
+        en: "SCOVIS public landing page with the product identity and AI assessment assistant",
+        id: "Landing page publik SCOVIS dengan identitas produk dan asisten penilaian AI",
       },
-      fit: "contain",
-      caption: {
-        en: "Lecturer sign-in, captured from the local SCOVIS app.",
-        id: "Halaman masuk dosen, diambil dari aplikasi SCOVIS lokal.",
-      },
+      fit: "cover",
     },
     summary: {
-      en: "Handwritten-answer assessment with queued AI scoring, lecturer review, and controlled result release.",
-      id: "Penilaian jawaban tulisan tangan dengan antrean inferensi AI, tinjauan dosen, dan perilisan hasil terkontrol.",
-    },
-    contribution: {
-      en: "I worked on Next.js interfaces, FastAPI/AI integration, Supabase data flows, and tests as part of the thesis team.",
-      id: "Dalam tim tugas akhir, saya mengerjakan antarmuka Next.js, integrasi FastAPI/AI, alur data Supabase, dan pengujian.",
+      en: "A human-in-the-loop platform that connects 24-section answer submission, asynchronous image-based score classification, lecturer review, and controlled result release.",
+      id: "Platform human-in-the-loop yang menghubungkan pengumpulan jawaban 24 bagian, klasifikasi nilai berbasis gambar secara asinkron, review dosen, dan perilisan hasil yang terkontrol.",
     },
     context: {
       en: "SCOVIS is an undergraduate thesis team project for handling structured handwritten-answer assessment without turning model output into an automatic final grade. It classifies answer images directly instead of transcribing them with OCR, while keeping the lecturer responsible for the final decision.",

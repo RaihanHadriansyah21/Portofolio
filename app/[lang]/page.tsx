@@ -23,8 +23,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     about: "Kenali Reyy lebih dekat.",
     contact: "Mari membangun produk yang berguna.",
     aboutIntro: "Saya Reyy, lulusan Teknik Telekomunikasi Telkom University yang mencari posisi full-time di bidang software dan applied AI.",
-    reviewNote: "Model mengklasifikasikan gambar jawaban tanpa OCR. Dosen meninjau rekomendasi, mengubah nilai jika diperlukan, dan merilis hasil.",
-    scopeNote: "Cakupan implementasi dalam repository",
   } : {
     flagship: "SCOVIS: AI recommendations, lecturer decisions.",
     selected: "More projects I’ve built.",
@@ -35,8 +33,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     about: "A little more about Reyy.",
     contact: "Let’s build something useful.",
     aboutIntro: "I’m Reyy, a Telecommunication Engineering graduate from Telkom University looking for full-time software and applied AI roles.",
-    reviewNote: "The model classifies answer images without OCR. Lecturers review recommendations, override scores when needed, and release results.",
-    scopeNote: "Implementation scope documented in the repositories",
   };
   const flagship = projectBySlug("scovis");
   if (!flagship) notFound();
@@ -101,8 +97,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               <div><span>03</span><strong>{architectureLabels.inference}</strong><small>Redis/RQ · TensorFlow</small></div><i aria-hidden="true">→</i>
               <div><span>04</span><strong>{architectureLabels.review}</strong><small>{architectureLabels.lecturerOverride}</small></div>
             </div>
-            <p>{home.reviewNote}</p>
-            <p className="architecture-scope-note">{home.scopeNote}</p>
+            <p>{flagship.context[lang]}</p>
             <div className="architecture-stats">
               <div><strong>31</strong><span>{architectureLabels.documentedRoutes}</span></div>
               <div><strong>3 × 24</strong><span>{architectureLabels.backbonesSections}</span></div>

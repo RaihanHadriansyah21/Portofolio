@@ -885,9 +885,6 @@ button { color: inherit; font: inherit; }
   text-wrap: balance;
 }
 .home-page .hero { min-height: auto; }
-.home-page .hero-visual::before { background: none; }
-.home-page .portrait-grid,
-.home-page .portrait-orbit { display: none; }
 .home-page .hero h1 span { font-family: var(--font-geist-sans), sans-serif; font-size: 0.3em; }
 .home-page .hero-status { margin-top: 1.25rem; padding-top: 0; border: 0; font-family: var(--font-geist-sans), sans-serif; letter-spacing: normal; text-transform: none; }
 .home-page .about-preview { gap: 2rem; }
