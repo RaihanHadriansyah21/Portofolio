@@ -859,6 +859,21 @@ test("Identity card defaults to physics and offers keyboard flipping in static m
   await expect(page.getByRole("button", { name: /Enable 3D Physics/ })).toBeVisible();
 });
 
+test("Hero profile card keeps its pointer tilt animation enabled", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/en");
+  const profileCard = page.locator(".hero-profile-card .pc-card-wrapper");
+  await profileCard.scrollIntoViewIfNeeded();
+  // The pointer listeners are registered in a client-side effect after hydration.
+  await page.waitForTimeout(1_300);
+  const box = await profileCard.boundingBox();
+  expect(box).not.toBeNull();
+  const cardShell = profileCard.locator(".pc-card-shell");
+  await cardShell.dispatchEvent("pointerenter", { clientX: box!.x + box!.width * 0.85, clientY: box!.y + box!.height * 0.2 });
+  await cardShell.dispatchEvent("pointermove", { clientX: box!.x + box!.width * 0.85, clientY: box!.y + box!.height * 0.2 });
+  await expect.poll(() => profileCard.evaluate((element) => getComputedStyle(element).getPropertyValue("--rotate-x").trim())).not.toBe("0deg");
+});
+
 test("Chat explains storage and asks visitors not to share sensitive information", async ({ page }) => {
   for (const [locale, notice] of [["en", "Chat messages may be stored"], ["id", "Pesan percakapan dapat disimpan"]]) {
     await page.goto(`/${locale}`);
