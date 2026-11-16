@@ -7,7 +7,7 @@ import { ContactForm } from "@/components/contact-form";
 import { ContactLogoLoop } from "@/components/contact-logo-loop";
 import { HeroProfileCard } from "@/components/hero-profile-card";
 import { ProjectCard } from "@/components/project-card";
-import { copy, credentials, isLocale, profile, projectBySlug, projects } from "@/lib/portfolio";
+import { copy, credentials, isLocale, projectBySlug, projects } from "@/lib/portfolio";
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
@@ -22,6 +22,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     learning: "Pelatihan yang mendukung karya.",
     about: "Kenali Reyy lebih dekat.",
     contact: "Mari membangun produk yang berguna.",
+    aboutIntro: "Saya Reyy, lulusan Teknik Telekomunikasi Telkom University yang mencari posisi full-time di bidang software dan applied AI.",
+    reviewNote: "Model mengklasifikasikan gambar jawaban tanpa OCR. Dosen meninjau rekomendasi, mengubah nilai jika diperlukan, dan merilis hasil.",
+    scopeNote: "Cakupan implementasi dalam repository",
   } : {
     flagship: "SCOVIS: AI recommendations, lecturer decisions.",
     selected: "More projects I’ve built.",
@@ -31,6 +34,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     learning: "Training that supports the work.",
     about: "A little more about Reyy.",
     contact: "Let’s build something useful.",
+    aboutIntro: "I’m Reyy, a Telecommunication Engineering graduate from Telkom University looking for full-time software and applied AI roles.",
+    reviewNote: "The model classifies answer images without OCR. Lecturers review recommendations, override scores when needed, and release results.",
+    scopeNote: "Implementation scope documented in the repositories",
   };
   const flagship = projectBySlug("scovis");
   if (!flagship) notFound();
@@ -65,18 +71,11 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <section className="hero section-shell">
         <div className="hero-copy">
           <AvailabilityBadge locale={lang} />
-          <p className="eyebrow">{content.hero.eyebrow}</p>
           <h1><span>Reyy.</span>{content.hero.title}</h1>
           <p className="hero-intro">{content.hero.intro}</p>
           <HeroActionsClient locale={lang} />
           <div className="hero-status">
             <span>{content.hero.status}</span>
-            <span className="hero-social-links">
-              <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a> ·{" "}
-              <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a> ·{" "}
-              <a href={profile.instagram} target="_blank" rel="noreferrer">Instagram</a> ·{" "}
-              <a href="https://portoreyy.vercel.app" target="_blank" rel="noreferrer">Vercel</a>
-            </span>
           </div>
         </div>
 
@@ -102,7 +101,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               <div><span>03</span><strong>{architectureLabels.inference}</strong><small>Redis/RQ · TensorFlow</small></div><i aria-hidden="true">→</i>
               <div><span>04</span><strong>{architectureLabels.review}</strong><small>{architectureLabels.lecturerOverride}</small></div>
             </div>
-            <p>{flagship.context[lang]}</p>
+            <p>{home.reviewNote}</p>
+            <p className="architecture-scope-note">{home.scopeNote}</p>
             <div className="architecture-stats">
               <div><strong>31</strong><span>{architectureLabels.documentedRoutes}</span></div>
               <div><strong>3 × 24</strong><span>{architectureLabels.backbonesSections}</span></div>
@@ -141,7 +141,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <section className="section-shell section-block credentials-preview">
         <div className="section-heading split-heading">
           <div><p className="eyebrow">{content.learning.eyebrow}</p><h2>{home.learning}</h2></div>
-          <div><p>{content.learning.intro}</p><Link className="text-link" href={`/${lang}/credentials`}>{content.nav.credentials} ↗</Link></div>
+          <Link className="text-link" href={`/${lang}/credentials`}>{content.nav.credentials} ↗</Link>
         </div>
         <div className="credential-list glass-panel">
           {credentials.slice(0, 3).map((credential, index) => (
@@ -156,7 +156,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
       <section className="section-shell section-block about-preview">
         <div><p className="eyebrow">{content.about.eyebrow}</p><h2>{home.about}</h2></div>
-        <div><p>{content.about.body}</p><Link className="text-link" href={`/${lang}/about`}>{content.nav.about} ↗</Link></div>
+        <div><p>{home.aboutIntro}</p><Link className="text-link" href={`/${lang}/about`}>{content.nav.about} ↗</Link></div>
       </section>
 
       <section className="section-shell section-block contact-section" id="contact">

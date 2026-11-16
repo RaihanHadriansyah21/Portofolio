@@ -17,10 +17,12 @@ export type Project = {
     alt: LocalizedText;
     fit: "cover" | "contain";
     position?: string;
+    caption?: LocalizedText;
   };
   summary: LocalizedText;
   context: LocalizedText;
   role: LocalizedText;
+  contribution?: LocalizedText;
   features: LocalizedText[];
   architecture: LocalizedText[];
   decisions: LocalizedText[];
@@ -36,21 +38,29 @@ export const projects: Project[] = [
     number: "01",
     title: "SCOVIS",
     year: "2026",
-    status: { en: "Production / Active", id: "Produksi / Aktif" },
+    status: { en: "Thesis team project", id: "Proyek tim tugas akhir" },
     tier: "Flagship",
     categories: ["Applied AI", "Full Stack", "Backend"],
     stack: ["Next.js", "TypeScript", "FastAPI", "TensorFlow", "Supabase", "Redis/RQ"],
     preview: {
-      src: "/projects/previews/scovis.png",
+      src: "/projects/previews/scovis-lecturer-login.png",
       alt: {
-        en: "SCOVIS public landing page with the product identity and AI assessment assistant",
-        id: "Landing page publik SCOVIS dengan identitas produk dan asisten penilaian AI",
+        en: "Original SCOVIS lecturer sign-in interface, captured locally without an authenticated account",
+        id: "Antarmuka masuk dosen SCOVIS asli, diambil secara lokal tanpa akun terautentikasi",
       },
-      fit: "cover",
+      fit: "contain",
+      caption: {
+        en: "Lecturer sign-in, captured from the local SCOVIS app.",
+        id: "Halaman masuk dosen, diambil dari aplikasi SCOVIS lokal.",
+      },
     },
     summary: {
-      en: "A human-in-the-loop platform that connects 24-section answer submission, asynchronous image-based score classification, lecturer review, and controlled result release.",
-      id: "Platform human-in-the-loop yang menghubungkan pengumpulan jawaban 24 bagian, klasifikasi nilai berbasis gambar secara asinkron, review dosen, dan perilisan hasil yang terkontrol.",
+      en: "Handwritten-answer assessment with queued AI scoring, lecturer review, and controlled result release.",
+      id: "Penilaian jawaban tulisan tangan dengan antrean inferensi AI, tinjauan dosen, dan perilisan hasil terkontrol.",
+    },
+    contribution: {
+      en: "I worked on Next.js interfaces, FastAPI/AI integration, Supabase data flows, and tests as part of the thesis team.",
+      id: "Dalam tim tugas akhir, saya mengerjakan antarmuka Next.js, integrasi FastAPI/AI, alur data Supabase, dan pengujian.",
     },
     context: {
       en: "SCOVIS is an undergraduate thesis team project for handling structured handwritten-answer assessment without turning model output into an automatic final grade. It classifies answer images directly instead of transcribing them with OCR, while keeping the lecturer responsible for the final decision.",
@@ -465,15 +475,15 @@ export const copy = {
     nav: { work: "Work", credentials: "Certificates", about: "About", contact: "Contact" },
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
-      title: "AI/ML Engineer & Full-Stack Developer",
-      intro: "I move machine-learning work beyond the notebook, connecting models to APIs, data, interfaces, and deployment-ready product workflows.",
-      primary: "Explore my work",
+      title: "Full-stack development & applied AI.",
+      intro: "I connect machine-learning models to APIs and web interfaces.",
+      primary: "View projects",
       secondary: "Meet Reyy",
       availability: "Open to full-time opportunities",
       status: "Graduated (S.T.) · Bandung, Indonesia",
     },
     proof: ["Applied AI systems", "Model-to-product integration", "Web, backend & mobile", "Evidence-led engineering"],
-    flagship: { eyebrow: "Flagship case study", title: "AI that stays accountable to people.", intro: "SCOVIS is the clearest expression of how I work: machine learning surrounded by intentional product, data, review, and deployment systems." },
+    flagship: { eyebrow: "Flagship case study", title: "AI assessment with lecturer review.", intro: "SCOVIS connects answer submission, asynchronous inference, and lecturer review." },
     selected: { eyebrow: "Selected work", title: "Built across the stack, grounded in evidence.", intro: "Public projects, ordered by the strength of their engineering story rather than presented as an undifferentiated list." },
     capabilities: { eyebrow: "Capabilities", title: "From experiment to usable system.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, and NLP." },
@@ -481,7 +491,7 @@ export const copy = {
       { title: "Web & Mobile", body: "Next.js, React, TypeScript, Tailwind CSS, Flutter, Dart, responsive interfaces, and role-based workflows." },
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, documentation, and measured limitations." },
     ] },
-    learning: { eyebrow: "Selected certificates", title: "Continuous learning with depth behind it.", intro: "Technical courses, certificates, and submissions support the project evidence; they do not replace it." },
+    learning: { eyebrow: "Selected certificates", title: "Training in AI and software development.", intro: "Coursework in Python, machine learning, and deep learning." },
     about: { eyebrow: "About", title: "Hello, I’m Mohammad Raihan Hadriansyah Prasetya. Reyy for short.", body: "I am a Telecommunication Engineering graduate (S.T.) from Telkom University with yudisium completed and November 2026 commencement, actively pursuing full-time engineering roles. I am drawn to problems where models, software systems, and real user workflows have to work together, not just look convincing in a notebook." },
     contact: { eyebrow: "Let’s talk", title: "Building an AI or software team with real product ambition?", body: "I am exploring full-time AI/ML and full-stack engineering opportunities in startups and larger technology companies.", cta: "Connect on LinkedIn" },
     common: { viewCase: "View case study", viewAll: "View all projects", repository: "Repository", evidence: "Evidence", limitations: "Limits & next steps", architecture: "How it works", role: "My contribution", back: "Back to projects", all: "All", noResults: "No projects in this filter yet." },
@@ -490,15 +500,15 @@ export const copy = {
     nav: { work: "Proyek", credentials: "Sertifikat", about: "Tentang", contact: "Kontak" },
     hero: {
       eyebrow: "Applied AI · Full-Stack Product Engineering",
-      title: "AI/ML Engineer & Full-Stack Developer",
-      intro: "Saya membawa pekerjaan machine learning keluar dari notebook dengan menghubungkan model ke API, data, antarmuka, dan alur produk yang siap dideploy.",
-      primary: "Jelajahi karya saya",
+      title: "Full-stack development & applied AI.",
+      intro: "Saya menghubungkan model machine learning dengan API dan antarmuka web.",
+      primary: "Lihat proyek",
       secondary: "Kenali Reyy",
       availability: "Terbuka untuk peluang full-time",
       status: "Lulusan S1 (S.T.) · Bandung, Indonesia",
     },
     proof: ["Sistem applied AI", "Integrasi model-ke-produk", "Web, backend & mobile", "Engineering berbasis bukti"],
-    flagship: { eyebrow: "Case study utama", title: "AI yang tetap bertanggung jawab kepada manusia.", intro: "SCOVIS adalah representasi terjelas dari cara saya bekerja: machine learning yang dikelilingi sistem produk, data, peninjauan, dan deployment yang dirancang dengan sengaja." },
+    flagship: { eyebrow: "Case study utama", title: "Penilaian AI dengan tinjauan dosen.", intro: "SCOVIS menghubungkan pengumpulan jawaban, inferensi asinkron, dan tinjauan dosen." },
     selected: { eyebrow: "Karya terpilih", title: "Dibangun lintas stack, berpijak pada bukti.", intro: "Proyek publik yang diurutkan berdasarkan kekuatan cerita engineering, bukan ditampilkan sebagai daftar tanpa hierarki." },
     capabilities: { eyebrow: "Kapabilitas", title: "Dari eksperimen menjadi sistem yang dapat digunakan.", groups: [
       { title: "AI & Data", body: "TensorFlow, Keras, scikit-learn, pandas, NumPy, OpenCV, sequence modeling, computer vision, dan NLP." },
@@ -506,7 +516,7 @@ export const copy = {
       { title: "Web & Mobile", body: "Next.js, React, TypeScript, Tailwind CSS, Flutter, Dart, antarmuka responsif, dan alur berbasis peran." },
       { title: "Delivery & Quality", body: "Docker Compose, Caddy, Vercel, Railway, CI, pytest, Vitest, Playwright, dokumentasi, dan batasan yang terukur." },
     ] },
-    learning: { eyebrow: "Sertifikat terpilih", title: "Belajar berkelanjutan dengan kedalaman nyata.", intro: "Kelas teknis, sertifikat, dan submission mendukung bukti proyek; bukan menggantikannya." },
+    learning: { eyebrow: "Sertifikat terpilih", title: "Pelatihan AI dan pengembangan software.", intro: "Pembelajaran Python, machine learning, dan deep learning." },
     about: { eyebrow: "Tentang", title: "Halo, saya Mohammad Raihan Hadriansyah Prasetya, biasa dipanggil Reyy.", body: "Saya adalah lulusan S1 Teknik Telekomunikasi (S.T.) dari Telkom University yang telah lulus yudisium (wisuda November 2026) dan siap bekerja penuh waktu (full-time). Saya tertarik pada masalah ketika model, sistem perangkat lunak, dan alur pengguna nyata harus bekerja bersama, bukan sekadar terlihat meyakinkan di notebook." },
     contact: { eyebrow: "Mari berbicara", title: "Sedang membangun tim AI atau software dengan ambisi produk yang nyata?", body: "Saya sedang menjajaki peluang full-time AI/ML dan full-stack engineering di startup maupun perusahaan teknologi besar.", cta: "Terhubung di LinkedIn" },
     common: { viewCase: "Lihat case study", viewAll: "Lihat semua proyek", repository: "Repository", evidence: "Bukti", limitations: "Batasan & langkah berikutnya", architecture: "Cara kerja", role: "Kontribusi saya", back: "Kembali ke proyek", all: "Semua", noResults: "Belum ada proyek dalam filter ini." },

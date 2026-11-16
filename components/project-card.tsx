@@ -36,7 +36,7 @@ export function ProjectCard({
     <article className={`project-card glass-panel ${featured ? "project-card-featured" : ""}`}>
       <div className="project-card-top">
         <span className="project-number">{project.number}</span>
-        <span className="project-tier">{project.tier}</span>
+        {project.tier !== "Featured" && <span className="project-tier">{project.tier}</span>}
       </div>
       <Link
         aria-label={`${content.common.viewCase}: ${project.title}`}
@@ -55,6 +55,7 @@ export function ProjectCard({
         />
         <span className="project-preview-cue">{content.common.viewCase} ↗</span>
       </Link>
+      {project.preview.caption && <p className="project-preview-caption">{project.preview.caption[locale]}</p>}
       <div className="project-card-copy">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.25rem" }}>
           <p className="eyebrow" style={{ margin: 0 }}>{project.categories.join(" · ")}</p>
@@ -74,6 +75,12 @@ export function ProjectCard({
           </Link>
         </Heading>
         <p>{project.summary[locale]}</p>
+        {featured && project.contribution && (
+          <div className="project-contribution">
+            <strong>{content.common.role}</strong>
+            <p>{project.contribution[locale]}</p>
+          </div>
+        )}
       </div>
       <div className="tag-list" role="list" aria-label="Technology stack">
         {project.stack.slice(0, featured ? 6 : 4).map((item) => <span role="listitem" key={item}>{item}</span>)}

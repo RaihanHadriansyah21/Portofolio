@@ -150,7 +150,6 @@ export function ContactForm({ locale }: { locale: Locale }) {
           margin: "2rem auto 0",
           border: "1px solid #4ade80",
           background: "var(--surface)",
-          boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35)",
           animation: "fadeIn 250ms ease-out",
         }}
       >
@@ -192,15 +191,13 @@ export function ContactForm({ locale }: { locale: Locale }) {
 
   return (
     <div
-      className="glass-panel"
+      className="glass-panel contact-form-panel"
       style={{
         borderRadius: "16px",
-        padding: "2.25rem 2rem",
         maxWidth: "680px",
         margin: "2rem auto 0",
         border: "1px solid var(--line-strong)",
         background: "var(--surface)",
-        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.3)",
       }}
     >
       <div style={{ marginBottom: "1.75rem" }}>
@@ -259,7 +256,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 240px), 1fr))",
             gap: "1.25rem",
           }}
         >
@@ -289,12 +286,11 @@ export function ContactForm({ locale }: { locale: Locale }) {
                 width: "100%",
                 padding: "0.75rem 0.95rem",
                 borderRadius: "10px",
-                border: "1px solid var(--line-strong)",
+                border: "1px solid var(--field-border)",
                 background: "var(--surface-raised)",
                 color: "var(--foreground)",
                 fontSize: "0.9rem",
-                outline: "none",
-                transition: "all 150ms ease",
+                transition: "background-color 150ms ease, color 150ms ease",
               }}
             />
           </div>
@@ -325,12 +321,11 @@ export function ContactForm({ locale }: { locale: Locale }) {
                 width: "100%",
                 padding: "0.75rem 0.95rem",
                 borderRadius: "10px",
-                border: "1px solid var(--line-strong)",
+                border: "1px solid var(--field-border)",
                 background: "var(--surface-raised)",
                 color: "var(--foreground)",
                 fontSize: "0.9rem",
-                outline: "none",
-                transition: "all 150ms ease",
+                transition: "background-color 150ms ease, color 150ms ease",
               }}
             />
           </div>
@@ -362,12 +357,11 @@ export function ContactForm({ locale }: { locale: Locale }) {
               width: "100%",
               padding: "0.75rem 0.95rem",
               borderRadius: "10px",
-              border: "1px solid var(--line-strong)",
+              border: "1px solid var(--field-border)",
               background: "var(--surface-raised)",
               color: "var(--foreground)",
               fontSize: "0.9rem",
-              outline: "none",
-              transition: "all 150ms ease",
+              transition: "background-color 150ms ease, color 150ms ease",
             }}
           />
         </div>
@@ -399,15 +393,14 @@ export function ContactForm({ locale }: { locale: Locale }) {
               width: "100%",
               padding: "0.75rem 0.95rem",
               borderRadius: "10px",
-              border: "1px solid var(--line-strong)",
+              border: "1px solid var(--field-border)",
               background: "var(--surface-raised)",
               color: "var(--foreground)",
               fontSize: "0.9rem",
               lineHeight: 1.55,
               resize: "vertical",
-              outline: "none",
               fontFamily: "inherit",
-              transition: "all 150ms ease",
+              transition: "background-color 150ms ease, color 150ms ease",
             }}
           />
         </div>
@@ -415,16 +408,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
         {errorMessage && (
           <div
             role="alert"
-            style={{
-              padding: "0.75rem 1rem",
-              borderRadius: "8px",
-              background: "rgba(239, 68, 68, 0.12)",
-              border: "1px solid rgba(239, 68, 68, 0.35)",
-              color: "#fca5a5",
-              fontSize: "0.84rem",
-              fontWeight: 500,
-              lineHeight: 1.45,
-            }}
+            className="form-error"
           >
             {errorMessage}
           </div>
@@ -433,12 +417,10 @@ export function ContactForm({ locale }: { locale: Locale }) {
         <button
           type="submit"
           disabled={isSubmitting || !name.trim() || !email.trim()}
-          className="button button-primary"
+          className="button button-primary contact-submit"
           style={{
             width: "100%",
             justifyContent: "center",
-            padding: "0.85rem 1.5rem",
-            fontSize: "0.95rem",
             fontWeight: 600,
             cursor: isSubmitting || !name.trim() || !email.trim() ? "not-allowed" : "pointer",
             marginTop: "0.5rem",

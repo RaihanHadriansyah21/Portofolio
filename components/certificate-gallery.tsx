@@ -102,7 +102,11 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
             maxWidth: "600px",
           }}
         >
+          <label htmlFor="certificate-search" style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+            {lang === "id" ? "Cari sertifikat" : "Search certificates"}
+          </label>
           <input
+            id="certificate-search"
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -111,11 +115,10 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
               width: "100%",
               padding: "0.75rem 2.5rem 0.75rem 1rem",
               borderRadius: "10px",
-              border: "1px solid rgba(255, 255, 255, 0.12)",
-              background: "var(--surface-sunken, rgba(0, 0, 0, 0.25))",
+              border: "1px solid var(--field-border)",
+              background: "var(--surface-raised)",
               color: "inherit",
               fontSize: "0.88rem",
-              outline: "none",
             }}
           />
           {searchQuery && (
@@ -125,9 +128,10 @@ export function CertificateGallery({ items, lang }: { items: Certificate[]; lang
               aria-label={copy.clearSearch}
               style={{
                 position: "absolute",
-                right: "0.75rem",
-                top: "50%",
-                transform: "translateY(-50%)",
+                right: 0,
+                bottom: 0,
+                minWidth: "44px",
+                minHeight: "44px",
                 background: "none",
                 border: "none",
                 color: "inherit",

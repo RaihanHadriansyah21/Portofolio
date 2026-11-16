@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { copy, profile, type Locale } from "@/lib/portfolio";
+import { ShareProfileButton } from "./share-profile-button";
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   const content = copy[locale];
@@ -11,6 +12,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           Reyy<span>.</span>
         </Link>
         <p>AI/ML Engineer &amp; Full-Stack Developer</p>
+        <ShareProfileButton locale={locale} variant="pill" />
         <div className="footer-status-pill">
           <span className="footer-status-dot" />
           <span>

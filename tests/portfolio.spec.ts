@@ -79,7 +79,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
     test("English route (/en) renders verified English copy across surfaces", async ({ page }) => {
       await page.goto("/en");
       await expect(page.locator("html")).toHaveAttribute("lang", "en");
-      await expect(page.locator(".hero-actions a.button-primary")).toContainText("Explore my work");
+      await expect(page.locator(".hero-actions a.button-primary")).toContainText("View projects");
       await expect(page.locator(".hero-actions button.button-secondary")).toContainText("Preview CV");
       await expect(page.locator("#contact h3")).toContainText("Send a Direct Message");
     });
@@ -87,7 +87,7 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
     test("Indonesian route (/id) renders verified Indonesian copy across surfaces", async ({ page }) => {
       await page.goto("/id");
       await expect(page.locator("html")).toHaveAttribute("lang", "id");
-      await expect(page.locator(".hero-actions a.button-primary")).toContainText("Jelajahi karya saya");
+      await expect(page.locator(".hero-actions a.button-primary")).toContainText("Lihat proyek");
       await expect(page.locator(".hero-actions button.button-secondary")).toContainText("Pratinjau CV");
       await expect(page.locator("#contact h3")).toContainText("Kirim Pesan Langsung");
     });
@@ -139,11 +139,11 @@ test.describe("Portfolio Regression & E2E Verification Suite", () => {
       const heroPreview = page.locator(".hero-actions button.button-secondary");
       const secondaryRow = page.locator(".hero-secondary-actions");
 
-      await expect(heroPrimary).toContainText("Explore my work");
+      await expect(heroPrimary).toContainText("View projects");
       await expect(heroPreview).toContainText("Preview CV");
       await expect(secondaryRow).toBeVisible();
       await expect(secondaryRow.locator("a")).toContainText("Meet Reyy");
-      await expect(secondaryRow.locator("button")).toContainText("Share Profile");
+      await expect(page.locator(".footer-brand button")).toContainText("Share Profile");
 
       // Mobile check
       await page.setViewportSize({ width: 375, height: 667 });
@@ -748,32 +748,93 @@ test("Homepage keeps the technology explorer accessible on demand in both langua
 });
 
 
-test("Reduced-motion preference stops the contact marquee and responds to preference changes", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("Contact links stay visible and keyboard accessible with either motion preference", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/en");
-  const loop = page.locator(".contact-logo-loop");
-  await expect(loop).toHaveClass(/logoloop--reduced-motion/);
+  const loop = page.getByRole("navigation", { name: "Reyy contact links" });
   const links = loop.getByRole("link");
   await expect(links).toHaveCount(4);
-  await expect(loop.locator(".logoloop__list")).toHaveCount(1);
+  await links.first().scrollIntoViewIfNeeded();
+  await links.first().focus();
   for (const link of await links.all()) {
-    await link.focus();
     await expect(link).toBeFocused();
     await expect(link).toBeInViewport();
+    await page.keyboard.press("Tab");
   }
-  const track = loop.locator(".logoloop__track");
-  const transform = await track.evaluate((node) => getComputedStyle(node).transform);
+  const positions = () => links.evaluateAll((nodes) => nodes.map((node) => {
+    const rect = node.getBoundingClientRect();
+    return { x: rect.x + window.scrollX, y: rect.y + window.scrollY, width: rect.width, height: rect.height };
+  }));
+  const initial = await positions();
   await page.waitForTimeout(400);
-  expect(await track.evaluate((node) => getComputedStyle(node).transform)).toBe(transform);
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect(loop).not.toHaveClass(/logoloop--reduced-motion/);
-  await expect.poll(() => loop.locator(".logoloop__list[inert]").count()).toBeGreaterThan(0);
-  const initial = await track.evaluate((node) => getComputedStyle(node).transform);
-  await expect.poll(() => track.evaluate((node) => getComputedStyle(node).transform)).not.toBe(initial);
+  expect(await positions()).toEqual(initial);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(loop.locator(".logoloop__list")).toHaveCount(1);
+  await expect(links).toHaveCount(4);
+  expect(await positions()).toEqual(initial);
 });
+
+for (const theme of ["dark", "light"]) {
+  test(`Contact focus, error contrast and certificate search remain usable in ${theme} mode`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript((value) => localStorage.setItem("reyy-theme", value), theme);
+    let failure: number | "network" = 500;
+    await page.route("**/api/chat/lead", (route) => failure === "network"
+      ? route.abort("failed")
+      : route.fulfill({ status: failure, contentType: "application/json", body: JSON.stringify({ error: "Local test failure" }) }));
+    const contrast = (first: string, second: string) => {
+      const luminance = (color: string) => {
+        const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map((value) => {
+          const channel = value / 255;
+          return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
+        return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+      };
+      const values = [luminance(first), luminance(second)].sort((a, b) => a - b);
+      return (values[1] + 0.05) / (values[0] + 0.05);
+    };
+    for (const locale of ["en", "id"]) {
+      await page.goto(`/${locale}`);
+      const first = page.locator("#contact-name");
+      await first.scrollIntoViewIfNeeded();
+      await first.focus();
+      for (const id of ["contact-name", "contact-email", "contact-role", "contact-message"]) {
+        const field = page.locator(`#${id}`);
+        await expect(field).toBeFocused();
+        const styles = await field.evaluate((element) => {
+          const style = getComputedStyle(element);
+          return { outline: style.outlineStyle, width: parseFloat(style.outlineWidth), border: style.borderColor,
+            background: style.backgroundColor, panel: getComputedStyle(element.closest(".contact-form-panel")!).backgroundColor };
+        });
+        expect(styles.outline).not.toBe("none");
+        expect(styles.width).toBeGreaterThanOrEqual(2);
+        expect(contrast(styles.border, styles.background)).toBeGreaterThanOrEqual(3);
+        expect(contrast(styles.border, styles.panel)).toBeGreaterThanOrEqual(3);
+        await page.keyboard.press("Tab");
+      }
+      await first.fill("Local regression check");
+      await page.locator("#contact-email").fill("local@example.com");
+      for (const scenario of [429, 500, "network"] as const) {
+        failure = scenario;
+        await page.locator(".contact-submit").click();
+        const alert = page.locator("#contact [role=alert]");
+        await expect(alert).toBeVisible();
+        await expect(page.locator(".contact-submit")).toBeEnabled();
+        const colors = await alert.evaluate((element) => ({ color: getComputedStyle(element).color, background: getComputedStyle(element).backgroundColor }));
+        expect(contrast(colors.color, colors.background)).toBeGreaterThanOrEqual(4.5);
+      }
+      await page.goto(`/${locale}/credentials`);
+      const label = locale === "en" ? "Search certificates" : "Cari sertifikat";
+      const search = page.getByRole("textbox", { name: label, exact: true });
+      await search.scrollIntoViewIfNeeded();
+      await search.focus();
+      expect(await search.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe("none");
+      await search.fill("TensorFlow");
+      await expect(page.locator('label[for="certificate-search"]')).toBeVisible();
+      await page.getByRole("button", { name: locale === "en" ? "Clear search" : "Hapus pencarian", exact: true }).click();
+      await expect(search).toHaveValue("");
+    }
+  });
+}
 
 test("Identity card supports keyboard flipping with reduced motion on mobile", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

@@ -1,7 +1,6 @@
 'use client';
 
 import { FaEnvelope, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa6';
-import LogoLoop from '@/components/LogoLoop';
 import type { LogoNodeItem } from '@/components/LogoLoop';
 import type { Locale } from '@/lib/portfolio';
 import { profile } from '@/lib/portfolio';
@@ -59,20 +58,16 @@ export interface ContactLogoLoopProps {
 
 export function ContactLogoLoop({ locale }: ContactLogoLoopProps) {
   return (
-    <div className="contact-loop-shell">
-      <LogoLoop
-        logos={contactLogos}
-        speed={56}
-        direction="left"
-        logoHeight={28}
-        gap={22}
-        hoverSpeed={0}
-        scaleOnHover
-        fadeOut
-        fadeOutColor="var(--invert-background)"
-        ariaLabel={locale === 'id' ? 'Tautan kontak Reyy' : 'Reyy contact links'}
-        className="contact-logo-loop"
-      />
-    </div>
+    <nav className="contact-loop-shell" aria-label={locale === 'id' ? 'Tautan kontak Reyy' : 'Reyy contact links'}>
+      <ul className="contact-links">
+        {contactLogos.map((logo) => (
+          <li key={logo.title}>
+            <a href={logo.href} aria-label={locale === 'id' ? `Hubungi Reyy melalui ${logo.title}` : logo.ariaLabel}>
+              {logo.node}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

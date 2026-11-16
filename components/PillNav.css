@@ -76,12 +76,12 @@
   background: var(--pill-bg, #111);
   color: var(--pill-text, #fff);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.07em;
+  letter-spacing: normal;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   cursor: pointer;
 }
