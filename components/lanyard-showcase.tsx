@@ -97,7 +97,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   // `mounted` is kept for SSR/client boundary safety on mobile path only.
   // For the desktop 3D path, `isNearViewport` is the authoritative gate.
   const mounted = useMounted();
-  const [enable3DOnMobile, setEnable3DOnMobile] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'auto' | '3d' | 'static'>('auto');
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
 
   // Ref attached to the outermost container so IntersectionObserver can watch
@@ -105,31 +105,38 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isNearViewport = useNearViewport(containerRef);
 
-  const shouldRender3D = (!isMobile || enable3DOnMobile) && !reducedMotion;
+  const shouldRender3D = viewMode === '3d' || (viewMode === 'auto' && !isMobile && !reducedMotion);
 
   return (
     <div ref={containerRef} className="lanyard-canvas" role="group" aria-label={locale === "id" ? "Kartu identitas Reyy" : "Reyy identity card"}>
       {/*
        * Render order:
-       * 1. SSR / before hydration   → nothing (aria-hidden wrapper present for layout)
-       * 2. Client, out of viewport  → lanyard-loading skeleton (existing CSS, no JS weight)
-       * 3. Client, near viewport    → Lanyard dynamic import fires; loading fallback shown
-       *                               briefly while chunk arrives, then full 3D experience
-       * Mobile path is unchanged and bypasses the IntersectionObserver gate entirely.
+       * Static flip card during SSR, on mobile, or with reduced motion.
+       * Desktop auto-loads physics near the viewport. An explicit choice can
+       * enable physics on any device, including when reduced motion is set.
        */}
       {mounted && isNearViewport && shouldRender3D ? (
-        <Lanyard
-          position={[0, 1.2, 10]}
-          gravity={[0, -40, 0]}
-          fov={18}
-          frontImage="/react-bits/lanyard/reyy-pass-front.svg"
-          backImage="/react-bits/lanyard/reyy-pass-back.svg"
-          lanyardImage="/react-bits/lanyard/reyy-band.svg"
-          lanyardWidth={1.0}
-          cardScale={2.4}
-          imageFit="cover"
-        />
-      ) : mounted && !isNearViewport && !isMobile && !reducedMotion ? (
+        <>
+          <Lanyard
+            position={[0, 1.2, 10]}
+            gravity={[0, -40, 0]}
+            fov={18}
+            frontImage="/react-bits/lanyard/reyy-pass-front.svg"
+            backImage="/react-bits/lanyard/reyy-pass-back.svg"
+            lanyardImage="/react-bits/lanyard/reyy-band.svg"
+            lanyardWidth={1.0}
+            cardScale={2.4}
+            imageFit="cover"
+          />
+          <button
+            type="button"
+            className="lanyard-mode-button"
+            onClick={() => setViewMode('static')}
+          >
+            {locale === 'id' ? 'Tampilan statis' : 'Static view'}
+          </button>
+        </>
+      ) : mounted && !isNearViewport && shouldRender3D ? (
         /* Pre-viewport skeleton: same visual as the dynamic loading fallback,
            same fixed height as the canvas — zero layout shift on mount. */
         <div className="lanyard-loading" aria-hidden="true">
@@ -263,9 +270,9 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
             <span style={{ fontSize: '0.74rem', opacity: 0.6, display: 'block', marginBottom: '0.4rem' }}>
               {locale === 'id' ? '👆 Ketuk kartu untuk membalik' : '👆 Tap card to flip'}
             </span>
-            {!reducedMotion && <button
+            <button
               type="button"
-              onClick={() => setEnable3DOnMobile(true)}
+              onClick={() => setViewMode('3d')}
               style={{
                 fontSize: '0.72rem',
                 padding: '0.35rem 0.75rem',
@@ -278,7 +285,7 @@ export function LanyardShowcase({ locale }: LanyardShowcaseProps) {
               }}
             >
               {locale === 'id' ? '⚡ Aktifkan Fisika 3D' : '⚡ Enable 3D Physics'}
-            </button>}
+            </button>
           </div>
         </div>
       )}

@@ -848,7 +848,7 @@ test("Identity card supports keyboard flipping with reduced motion on mobile", a
   await expect(flip).toHaveAttribute("aria-pressed", "true");
   await page.keyboard.press("Space");
   await expect(flip).toHaveAttribute("aria-pressed", "false");
-  await expect(page.getByRole("button", { name: /Enable 3D Physics/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Enable 3D Physics/ })).toBeVisible();
 });
 
 test("Chat explains storage and asks visitors not to share sensitive information", async ({ page }) => {
